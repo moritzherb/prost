@@ -362,8 +362,8 @@ const app: Record<string, string> = {
   'Open settings': 'Einstellungen öffnen',
   
   // Missing Settings translations
-  'Just cards and buttons you need': 'Nur Karten und Buttons, die du brauchst',
-  'Explanations stay behind ? button': 'Erklärungen findest du hinter dem ?-Button',
+  'Just the cards and buttons you need': 'Nur Karten und Buttons, die du brauchst',
+  'Explanations stay behind the ? button': 'Erklärungen findest du hinter dem ?-Button',
   'Phone, Wallpaper, Order': 'Handy, Hintergrundbild, Reihenfolge',
   'Privacy, Terms of use, Imprint': 'Datenschutz, Nutzungsbedingungen, Impressum',
   'Every sip can be water or an anti-alcoholic drink. No pressure, ever.': 'Jeder Schluck kann auch Wasser oder ein alkoholfreies Getränk sein. Ganz ohne Druck.',
