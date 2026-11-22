@@ -21,8 +21,8 @@ type Toggle = 'sound' | 'haptics' | 'clean' | 'knowAll';
 const OPTIONS: { key: Toggle; icon: RowGlyph; label: string; hint?: string }[] = [
   { key: 'sound', icon: 'sound', label: tx('Sounds') },
   { key: 'haptics', icon: 'vibrate', label: tx('Vibration') },
-  { key: 'clean', icon: 'clean', label: tx('Clean table'), hint: tx('Just the cards and the buttons you need') },
-  { key: 'knowAll', icon: 'know', label: tx('We know the games'), hint: tx('The explanations stay behind the ? button') },
+  { key: 'clean', icon: 'clean', label: tx('Clean table'), hint: tx('Just cards and buttons you need') },
+  { key: 'knowAll', icon: 'know', label: tx('We know the games'), hint: tx('Explanations stay behind ? button') },
 ];
 
 /** In the new look: whose home screen. */
