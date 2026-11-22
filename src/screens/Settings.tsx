@@ -18,7 +18,7 @@ import { useApp } from '../state/AppState';
 
 type Toggle = 'sound' | 'haptics' | 'clean' | 'knowAll';
 
-const OPTIONS: { key: Toggle; icon: RowGlyph; label: string; hint: string }[] = [
+const OPTIONS: { key: Toggle; icon: RowGlyph; label: string; hint?: string }[] = [
   { key: 'sound', icon: 'sound', label: tx('Sounds') },
   { key: 'haptics', icon: 'vibrate', label: tx('Vibration') },
   { key: 'clean', icon: 'clean', label: tx('Clean table'), hint: tx('Just the cards and the buttons you need') },
