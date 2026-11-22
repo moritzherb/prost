@@ -360,6 +360,14 @@ const app: Record<string, string> = {
   'prost! speaks your phone’s language: {lang}.': 'prost! spricht die Sprache deines Handys: {lang}.',
   'To change it, set the language in your phone’s settings. German or English: anything else shows in English.': 'Ändern kannst du sie in den Einstellungen deines Handys. Deutsch oder Englisch: alles andere zeigt prost! auf Englisch.',
   'Open settings': 'Einstellungen öffnen',
+  
+  // Missing Settings translations
+  'Just the cards and the buttons you need': 'Nur die Karten und Buttons, die du brauchst',
+  'The explanations stay behind the ? button': 'Die Erklärungen findest du hinter dem ?-Button',
+  'Phone, Wallpaper, Order': 'Handy, Hintergrundbild, Reihenfolge',
+  'Privacy, Terms of use, Imprint': 'Datenschutz, Nutzungsbedingungen, Impressum',
+  'Every sip can be water or an anti-alcoholic drink. No pressure, ever.': 'Jeder Schluck kann auch Wasser oder ein alkoholfreies Getränk sein. Ganz ohne Druck.',
+  'Never drink and drive! Plan your ride home.': 'Nie alkoholisiert fahren! Plane deinen Heimweg.',
 };
 
 export default app;
