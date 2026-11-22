@@ -370,8 +370,8 @@ export default function Settings() {
       </section>
 
       <Sheet open={langOpen} onClose={() => setLangOpen(false)} title={t('Language')} closeLabel={t('Done')}>
-        <p className="lead">{t('Prost uses your phone´s language: {lang}.', { lang: LANGS.find((l) => l.id === getLang())?.label ?? '' })}</p>
-        <p className="fine-print">{t('To change it, set the language in your phone´s settings.')}</p>
+        <p className="lead">{t('Prost uses your system´s language: {lang}.', { lang: LANGS.find((l) => l.id === getLang())?.label ?? '' })}</p>
+        <p className="fine-print">{t('To change it, set the language in your settings.')}</p>
         {isNative && (
           <BigButton onClick={() => toNative({ type: 'settings' })}>{t('Open settings')}</BigButton>
         )}
