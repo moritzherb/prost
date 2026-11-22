@@ -21,7 +21,7 @@ type Toggle = 'sound' | 'haptics' | 'clean' | 'knowAll';
 const OPTIONS: { key: Toggle; icon: RowGlyph; label: string; hint?: string }[] = [
   { key: 'sound', icon: 'sound', label: tx('Sounds') },
   { key: 'haptics', icon: 'vibrate', label: tx('Vibration') },
-  { key: 'clean', icon: 'clean', label: tx('Clean table'), hint: tx('Just the ards and buttons you need') },
+  { key: 'clean', icon: 'clean', label: tx('Clean table'), hint: tx('Just the cards and buttons you need') },
   { key: 'knowAll', icon: 'know', label: tx('We know the games'), hint: tx('Explanations stay behind the ? button') },
 ];
 
