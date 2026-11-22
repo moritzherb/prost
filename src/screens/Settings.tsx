@@ -21,8 +21,8 @@ type Toggle = 'sound' | 'haptics' | 'clean' | 'knowAll';
 const OPTIONS: { key: Toggle; icon: RowGlyph; label: string; hint?: string }[] = [
   { key: 'sound', icon: 'sound', label: tx('Sounds') },
   { key: 'haptics', icon: 'vibrate', label: tx('Vibration') },
-  { key: 'clean', icon: 'clean', label: tx('Clean table'), hint: tx('Just cards and buttons you need') },
-  { key: 'knowAll', icon: 'know', label: tx('We know the games'), hint: tx('Explanations stay behind ? button') },
+  { key: 'clean', icon: 'clean', label: tx('Clean table'), hint: tx('Just the ards and buttons you need') },
+  { key: 'knowAll', icon: 'know', label: tx('We know the games'), hint: tx('Explanations stay behind the ? button') },
 ];
 
 /** In the new look: whose home screen. */
@@ -370,8 +370,8 @@ export default function Settings() {
       </section>
 
       <Sheet open={langOpen} onClose={() => setLangOpen(false)} title={t('Language')} closeLabel={t('Done')}>
-        <p className="lead">{t('prost! speaks your phone’s language: {lang}.', { lang: LANGS.find((l) => l.id === getLang())?.label ?? '' })}</p>
-        <p className="fine-print">{t('To change it, set the language in your phone’s settings. German or English: anything else shows in English.')}</p>
+        <p className="lead">{t('Prost uses your phone´s language: {lang}.', { lang: LANGS.find((l) => l.id === getLang())?.label ?? '' })}</p>
+        <p className="fine-print">{t('To change it, set the language in your phone´s settings.')}</p>
         {isNative && (
           <BigButton onClick={() => toNative({ type: 'settings' })}>{t('Open settings')}</BigButton>
         )}
