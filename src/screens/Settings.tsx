@@ -19,8 +19,8 @@ import { useApp } from '../state/AppState';
 type Toggle = 'sound' | 'haptics' | 'clean' | 'knowAll';
 
 const OPTIONS: { key: Toggle; icon: RowGlyph; label: string; hint: string }[] = [
-  { key: 'sound', icon: 'sound', label: tx('Sounds'),
-  { key: 'haptics', icon: 'vibrate', label: tx('Vibration'),
+  { key: 'sound', icon: 'sound', label: tx('Sounds') },
+  { key: 'haptics', icon: 'vibrate', label: tx('Vibration') },
   { key: 'clean', icon: 'clean', label: tx('Clean table'), hint: tx('Just the cards and the buttons you need') },
   { key: 'knowAll', icon: 'know', label: tx('We know the games'), hint: tx('The explanations stay behind the ? button') },
 ];
@@ -138,7 +138,7 @@ function ResetHomeRow() {
         <span className="setting-emoji" aria-hidden="true"><RowIcon name="reset" /></span>
         <span className="setting-text">
           <span className="setting-label">{t('Reset home screen')}</span>
-          <span className="setting-hint">{done ? '✓'}</span>
+          <span className="setting-hint">{done && '✓'}</span>
         </span>
       </button>
       {/* It can't be undone (your own order and the games you took off go), so it asks first. */}
@@ -275,7 +275,7 @@ export default function Settings() {
               <span className="setting-emoji" aria-hidden="true"><RowIcon name={o.icon} /></span>
               <span className="setting-text">
                 <span className="setting-label">{t(o.label)}</span>
-                <span className="setting-hint">{t(o.hint)}</span>
+                {o.hint && <span className="setting-hint">{t(o.hint)}</span>}
               </span>
               <span className="switch">
                 <span className="switch-knob" />
