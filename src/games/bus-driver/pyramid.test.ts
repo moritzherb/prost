@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Card } from '../../lib/cards';
-import { buildPyramid, dealTiebreak, flipTiebreak, layMatches, mostCards, pyramidCardCount, pyramidRows, rowOfFlip, rowSips } from './pyramid';
+import { buildPyramid, dealTiebreak, flipTiebreak, layMatches, mostCards, pyramidCardCount, pyramidRows, rowOfFlip, rowSips } from './pyramidLogic';
 
 const c = (value: number, suit: Card['suit'] = 'spades'): Card => ({ value, suit });
 
