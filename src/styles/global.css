@@ -22,6 +22,7 @@
   --muted: #625f55;
   --line: #d8d2c2;
   --accent: #b8f01e; /* lime: fills */
+  --card-back: color-mix(in oklab, var(--accent) 42%, #0e1a0c); /* deep shade of the accent: card backs stay out of the 10% */
   --accent-ink: #3f7200; /* lime that reads as text on the background */
   --accent-soft: rgba(150, 200, 20, 0.2);
   --sun: #ffd23f;
@@ -2517,7 +2518,7 @@ li {
 
 .pcard-back {
   transform: rotateY(180deg);
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.16) 0 4px, transparent 4px 10px), var(--accent);
+  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.16) 0 4px, transparent 4px 10px), var(--card-back);
   box-shadow: inset 0 0 0 calc(var(--cw) * 0.06) #fff;
 }
 
@@ -2815,7 +2816,7 @@ li {
   width: 16px;
   height: 22px;
   border-radius: 3px;
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 5px), var(--accent);
+  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 5px), var(--card-back);
   box-shadow: inset 0 0 0 1.5px #fff;
 }
 
@@ -4185,7 +4186,7 @@ li {
   width: calc(11.4 * var(--qw));
   height: calc(16 * var(--qw));
   border-radius: calc(1.2 * var(--qw));
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 5px), var(--accent);
+  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 5px), var(--card-back);
   box-shadow: inset 0 0 0 calc(0.65 * var(--qw)) #fff, 0 1px 3px rgba(0, 0, 0, 0.35);
   transform: translate(-50%, -50%) rotate(var(--rot));
   transition: transform 0.18s var(--spring);
@@ -6119,7 +6120,7 @@ li {
 }
 
 .ftd-card.back {
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 5px), var(--accent);
+  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 5px), var(--card-back);
   box-shadow: inset 0 0 0 calc(6 * var(--qw)) #fff, 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
@@ -7232,7 +7233,7 @@ li {
   height: 22px;
   margin-left: -5px;
   border-radius: 3px;
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 5px), var(--accent);
+  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 5px), var(--card-back);
   box-shadow: inset 0 0 0 1.5px #fff;
 }
 
@@ -7289,7 +7290,7 @@ li {
   width: 30px;
   height: 42px;
   border-radius: 5px;
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 5px), var(--accent);
+  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 5px), var(--card-back);
   box-shadow: inset 0 0 0 2px #fff, 2px 2px 0 rgba(0, 0, 0, 0.25);
   color: var(--on-accent);
   font-family: var(--font-display);
@@ -7511,7 +7512,7 @@ li {
   width: calc(var(--sp-card) * 0.72);
   height: calc(var(--sp-card) * 1.01);
   border-radius: 8px;
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 5px), var(--accent);
+  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 5px), var(--card-back);
   box-shadow: inset 0 0 0 3px #fff, 3px 3px 0 var(--surface-2), 6px 6px 0 var(--line);
   transition: transform 0.12s ease;
 }
@@ -8280,7 +8281,7 @@ li {
 }
 
 .tr-stock {
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 3px, transparent 3px 7px), var(--accent);
+  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 3px, transparent 3px 7px), var(--card-back);
   box-shadow: inset 0 0 0 calc(var(--mw) * 0.07) #fff, 3px 3px 0 var(--surface-2), 6px 6px 0 var(--line);
 }
 
@@ -11684,7 +11685,7 @@ li {
   position: absolute;
   inset: 0;
   border-radius: calc(2 * var(--qw));
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 5px), var(--accent);
+  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px 5px), var(--card-back);
   box-shadow: inset 0 0 0 calc(1 * var(--qw)) #fff, 0 2px 6px rgba(0, 0, 0, 0.35);
   /* Fanned a little round the middle, however many lie there. */
   transform: rotate(calc((var(--i) - (var(--n) - 1) / 2) * 7deg)) translate(calc((var(--i) - (var(--n) - 1) / 2) * calc(0.6 * var(--qw))), calc(var(--i) * calc(-0.5 * var(--qw))));
