@@ -351,7 +351,7 @@ function Stack({ n, big, fx, label }: { n: number; big?: boolean; fx?: StackFx; 
         <i
           key={`give-${fx?.key}-${j}`}
           className="rs-give"
-          style={{ '--k': layers + give - 1 - j, '--d': j, '--side': j % 2 ? -1 : 1 } as CSSProperties}
+          style={{ '--k': layers + give - 1 - j, '--d': j, '--side': 1 } as CSSProperties}
         />
       ))}
     </span>
