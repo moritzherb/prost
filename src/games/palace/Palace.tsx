@@ -18,6 +18,7 @@ import Finished from '../../components/Finished';
 import Avatar from '../../components/Avatar';
 import { usePhotoOf } from '../../net/photos';
 import Glyph from '../../components/Glyph';
+import { flyCopy } from '../../lib/cardFly';
 
 /* ---------------- Messages between phones ---------------- */
 
@@ -548,10 +549,11 @@ function PlayerView({ view, act, connected }: { view: PhoneView; act: (a: Act) =
     act(a);
   };
   const play = (cards = sel) => {
-    if (!cards.length || !fits(view.need, cards[0].value, cards.length) || leaving.length) return;
+    if (!cards.length || !fits(view.need, cards[0].value, cards.length) || leaving.length) return false;
     setLeaving(cards);
     setSel([]);
     window.setTimeout(() => act({ t: 'play', cards }), 220);
+    return true;
   };
   const isLeaving = (c: Card) => leaving.some((y) => same(y, c));
 
@@ -608,7 +610,7 @@ function PlayerView({ view, act, connected }: { view: PhoneView; act: (a: Act) =
             ? (c) => {
                 // Dragged onto the pile: the chosen cards go, or just this one (and its like, if only four fit).
                 const cards = sel.some((y) => same(y, c)) ? sel : fits(view.need, c.value) ? [c] : from.filter((y) => y.value === c.value);
-                play(cards);
+                return play(cards);
               }
             : undefined
         }
@@ -768,13 +770,16 @@ export function HandSpread({
   isDim?: (c: Card) => boolean;
   onTap?: (c: Card) => void;
   /** A card dragged onto the pile (an element marked .pl-drop). */
-  onDrop?: (c: Card) => void;
+  /** A card let go of over the pile; says whether it's played. */
+  onDrop?: (c: Card) => boolean;
   empty?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   // A card held by a finger: where it went (a tap if it hardly moved).
   const [drag, setDrag] = useState<{ key: string; x: number; y: number; dx: number; dy: number; id: number } | null>(null);
   const moved = useRef(false);
+  /** The card just let go of over the pile: hidden at once (a copy flies on from where it was let go). */
+  const [dropped, setDropped] = useState<string | null>(null);
   const [box, setBox] = useState({ w: 320, h: 220 });
   useLayoutEffect(() => {
     const el = ref.current;
@@ -845,9 +850,9 @@ export function HandSpread({
                 transform: held
                   ? `translate(${left + held.dx}px, ${top0 + row * shift + held.dy}px) scale(1.06)`
                   : `translate(${left}px, ${top0 + row * shift}px) ${gone ? `translateY(${-ch * 0.9}px) scale(0.85)` : `translateY(${sel ? -LIFT : drop}px) rotate(${angle}deg)`}`,
-                opacity: gone ? 0 : undefined,
+                opacity: gone || dropped === k ? 0 : undefined,
                 zIndex: held ? 99 : i + 1,
-                transition: held ? 'none' : undefined,
+                transition: held || dropped === k ? 'none' : undefined,
               } as CSSProperties
             }
             disabled={!onTap}
@@ -869,7 +874,13 @@ export function HandSpread({
               setDrag(null);
               if (!moved.current) return;
               const under = document.elementsFromPoint(e.clientX, e.clientY).find((el) => el.closest('.pl-drop'));
-              if (under) onDrop?.(c);
+              if (!under || !onDrop) return;
+              // Played: on from right where it was let go onto the pile, no sliding back to the hand first.
+              const card = e.currentTarget;
+              const from = card.getBoundingClientRect();
+              if (!onDrop(c)) return;
+              flyCopy(card, from, under.closest('.pl-drop')!.getBoundingClientRect(), { duration: 240 });
+              setDropped(k);
             }}
             onPointerCancel={() => setDrag(null)}
             onClick={() => {
