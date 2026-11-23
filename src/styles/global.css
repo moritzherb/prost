@@ -4862,8 +4862,9 @@ li {
 .mx-mat-layer {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   border-radius: 6.6%;
-  background: var(--mat) center / cover;
 }
 
 /* The cardboard's edge: copies of the mat stacked below the print (straight down from it, in 3D,
@@ -4871,7 +4872,8 @@ li {
    the cardboard and a little darker towards the table (the copies' grain gives it its layered look). */
 .mx-mat-layer.edge {
   transform: translateZ(calc(var(--i) * calc(-0.37 * var(--qw))));
-  filter: grayscale(1) brightness(2.1) contrast(0.5) brightness(calc(1 - var(--i) * 0.037));
+  background: #efeadc;
+  filter: brightness(calc(1 - var(--i) * 0.037));
 }
 
 /* The two dice on the mat, under the cup. */

@@ -8,7 +8,6 @@ import { pick } from '../../lib/random';
 import { useCrewButton, useTurnBubble } from '../../lib/turn';
 import { useApp } from '../../state/AppState';
 import type { GameProps } from '../types';
-import mat from './mat.webp';
 import { allowedAfter, announce, believe, isDouble, MAEXCHEN, newRound, peek, reveal, shake, valueOf, VALUES, type Round, type Value } from './logic';
 import Finished from '../../components/Finished';
 import Avatar from '../../components/Avatar';
@@ -398,12 +397,40 @@ function Die({ n }: { n: number }) {
 function Coaster() {
   return (
     <span className="mx-coaster" aria-hidden>
-      <span className="mx-mat" style={{ '--mat': `url(${mat})` } as CSSProperties}>
-        {/* The cardboard's white edge: the mat a few times over, stacked below the print. */}
+      <span className="mx-mat">
+        {/* The cardboard's white edge: layers stacked below the print. */}
         {[6, 5, 4, 3, 2, 1].map((i) => (
           <span key={i} className="mx-mat-layer edge" style={{ '--i': i } as CSSProperties} />
         ))}
-        <span className="mx-mat-layer" />
+        {/* The print: drawn here (no picture to load, so the mat is there with the cup), and no
+            brewery's: a plain pub mat of our own. */}
+        <svg className="mx-mat-layer" viewBox="0 0 100 100">
+          <defs>
+            <radialGradient id="mx-mat-paper" cx="0.35" cy="0.3" r="0.9">
+              <stop offset="0" stopColor="#f7f1df" />
+              <stop offset="1" stopColor="#e6dcc0" />
+            </radialGradient>
+          </defs>
+          <rect width="100" height="100" rx="6.6" fill="url(#mx-mat-paper)" />
+          <rect x="4" y="4" width="92" height="92" rx="4" fill="none" stroke="#1f3f8f" strokeWidth="0.8" />
+          {/* Two hop cones and a bar between them, where a crest would be. */}
+          <g fill="#c9a23a" stroke="#8a6a1c" strokeWidth="0.4">
+            <ellipse cx="38" cy="17" rx="3.4" ry="4.6" />
+            <ellipse cx="62" cy="17" rx="3.4" ry="4.6" />
+            <rect x="43" y="16" width="14" height="2" rx="1" />
+          </g>
+          <text x="50" y="52" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontStyle="italic" fontWeight="700" fontSize="27" fill="#1f3f8f" stroke="#c9a23a" strokeWidth="0.35" transform="rotate(-8 50 46)">
+            Prost
+          </text>
+          <text x="50" y="66" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontSize="6" letterSpacing="0.6" fill="#a3302a">
+            GUT GESCHÜTTELT
+          </text>
+          <rect x="22" y="70" width="56" height="0.6" fill="#c9a23a" />
+          <path d="M0 84h100v9.4a6.6 6.6 0 0 1-6.6 6.6H6.6A6.6 6.6 0 0 1 0 93.4z" fill="#1f3f8f" />
+          <text x="50" y="94.4" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontSize="5.2" letterSpacing="0.8" fill="#e8c66a">
+            · MÄXCHEN ·
+          </text>
+        </svg>
       </span>
     </span>
   );
