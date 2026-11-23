@@ -18904,6 +18904,8 @@ html.table-phone .game-bar .top-bar-side.right {
  * on). A buzzer phone: one big round red button in the middle, nothing else to read. Prefix pq-.
  */
 .pq {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -19015,13 +19017,20 @@ html.table-phone .game-bar .top-bar-side.right {
   letter-spacing: 0.04em;
 }
 
-/* The bottom: always this tall, whoever buzzed or not. */
+/* The bottom: always this tall, whoever buzzed or not; who buzzed sits in the middle of the room
+   above the buttons, clear of them. */
 .pq-master-foot {
-  height: 124px;
+  height: 170px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   gap: 10px;
+}
+
+.pq-master-foot > .pq-buzzed,
+.pq-master-foot > .pq-waiting {
+  flex: 1;
+  display: grid;
+  place-items: center;
 }
 
 .pq-waiting {
@@ -19075,59 +19084,220 @@ html.table-phone .game-bar .top-bar-side.right {
   place-items: center;
 }
 
-/* The buzzer: a big red dome on a dark ring; pressed, it sinks; somebody else's buzz, it greys. */
+/* The buzzer, as on a quiz show: a red dome in a black housing, seen a little from above, nothing
+   written on it. Pressed, the dome sinks into its housing; while someone else answers it takes their
+   colour; not your turn to buzz, it's dull. */
 .pq-buzzer {
-  --size: min(72vw, 46dvh, 300px);
+  --size: min(72vw, 44dvh, 300px);
+  --cap: #e53935;
+  position: relative;
   width: var(--size);
   height: var(--size);
   border-radius: 50%;
-  padding: calc(var(--size) * 0.06);
-  background: #1b1c19;
-  box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.6), inset 0 0 0 2px rgba(255, 255, 255, 0.06);
+  padding: calc(var(--size) * 0.085);
+  background: radial-gradient(circle at 50% 35%, #45463f, #1a1b17 62%, #0f100d);
+  box-shadow:
+    0 calc(var(--size) * 0.055) 0 #090a08,
+    0 calc(var(--size) * 0.09) calc(var(--size) * 0.12) -6px rgba(0, 0, 0, 0.7),
+    inset 0 2px 1px rgba(255, 255, 255, 0.14),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.7);
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .pq-buzzer-cap {
-  display: grid;
-  place-items: center;
+  display: block;
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #ff8a80, #e53935 45%, #a51d18 100%);
-  box-shadow: 0 calc(var(--size) * 0.04) 0 #7d1410, inset 0 -6px 14px rgba(0, 0, 0, 0.25);
-  color: #fff;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: calc(var(--size) * 0.13);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
-  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, filter 0.2s;
-  overflow: hidden;
-  padding: 0 10px;
+  background:
+    radial-gradient(ellipse 34% 22% at 38% 26%, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0) 100%),
+    radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--cap) 70%, #fff), var(--cap) 52%, color-mix(in srgb, var(--cap) 60%, #000) 100%);
+  /* The dome's side, standing up out of the housing. */
+  box-shadow:
+    0 calc(var(--size) * 0.045) 0 color-mix(in srgb, var(--cap) 50%, #000),
+    0 calc(var(--size) * 0.06) calc(var(--size) * 0.05) rgba(0, 0, 0, 0.55),
+    inset 0 -8px 16px rgba(0, 0, 0, 0.28);
+  translate: 0 calc(var(--size) * -0.03);
+  transition:
+    translate 0.07s ease-out,
+    box-shadow 0.07s ease-out,
+    filter 0.25s ease;
 }
 
 .pq-buzzer:not(:disabled):active .pq-buzzer-cap {
-  transform: translateY(calc(var(--size) * 0.03));
-  box-shadow: 0 calc(var(--size) * 0.01) 0 #7d1410, inset 0 -3px 10px rgba(0, 0, 0, 0.3);
+  translate: 0 calc(var(--size) * 0.012);
+  box-shadow:
+    0 calc(var(--size) * 0.008) 0 color-mix(in srgb, var(--cap) 50%, #000),
+    0 calc(var(--size) * 0.015) calc(var(--size) * 0.02) rgba(0, 0, 0, 0.5),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.32);
 }
 
 .pq-buzzer.off .pq-buzzer-cap {
-  filter: grayscale(0.85) brightness(0.7);
+  filter: grayscale(0.85) brightness(0.65);
 }
 
-/* Somebody buzzed: the cap takes their colour and their name, and pulses once. */
+/* Somebody buzzed: the dome takes their colour, pressed down. */
+.pq-buzzer.locked {
+  --cap: var(--chip);
+}
+
 .pq-buzzer.locked .pq-buzzer-cap {
   filter: none;
-  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--chip) 60%, #fff), var(--chip) 55%, color-mix(in srgb, var(--chip) 70%, #000));
-  color: #151612;
-  text-shadow: none;
-  font-size: calc(var(--size) * 0.1);
-  animation: pq-pop 0.45s var(--spring) both;
+  translate: 0 calc(var(--size) * 0.012);
+  box-shadow:
+    0 calc(var(--size) * 0.008) 0 color-mix(in srgb, var(--cap) 50%, #000),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.32);
 }
 
-.pq-buzzer.mine .pq-buzzer-cap {
-  box-shadow: 0 0 0 8px color-mix(in srgb, var(--chip) 40%, transparent), 0 calc(var(--size) * 0.04) 0 rgba(0, 0, 0, 0.3);
+/* You buzzed first: the whole screen glows in your colour, the buzzer rings, the line says so. */
+.pq.answering::before {
+  content: '';
+  position: absolute;
+  inset: -40px calc(-1 * var(--gutter)) -40px;
+  z-index: -1;
+  background: radial-gradient(ellipse 70% 55% at 50% 62%, color-mix(in srgb, var(--chip) 38%, transparent), transparent 75%);
+  animation: pq-glow 1.4s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes pq-glow {
+  from {
+    opacity: 0.55;
+  }
+}
+
+.pq-buzzer.mine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--chip) 70%, transparent);
+  animation: pq-ring 1.2s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pq-ring {
+  to {
+    box-shadow: 0 0 0 calc(var(--size) * 0.16) transparent;
+  }
+}
+
+.pq-buzz-status.mine {
+  color: var(--chip);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  animation: pq-pop 0.5s var(--spring) both;
+}
+
+/* An answer judged, on every phone: a big tick or cross in the colour of who answered, then gone. */
+.pq-verdict {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 210px;
+  padding: 22px 28px 20px;
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.6), inset 0 0 0 3px var(--mark);
+  translate: -50% -50%;
+  pointer-events: none;
+  animation: pq-verdict 1.6s var(--spring) both;
+}
+
+.pq-verdict.right {
+  --mark: var(--good);
+}
+
+.pq-verdict.wrong {
+  --mark: var(--bad);
+}
+
+.pq-verdict-mark {
+  font-size: 3.4rem;
+  line-height: 1;
+  color: var(--mark);
+}
+
+.pq-verdict-word {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.7rem;
+  color: var(--mark);
+}
+
+.pq-verdict-name {
+  font-weight: 700;
+  color: var(--chip);
+}
+
+.pq-verdict.wrong .pq-verdict-mark {
+  animation: sp-nope 0.35s ease 0.25s;
+}
+
+@keyframes pq-verdict {
+  0% {
+    opacity: 0;
+    scale: 0.5;
+  }
+  18% {
+    opacity: 1;
+    scale: 1.06;
+  }
+  28%,
+  80% {
+    opacity: 1;
+    scale: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+
+/* Setup, in teams: each team's colour (tap for another) and its name. */
+.pq-teams {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pq-team {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px 6px 6px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.pq-team-color {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--chip);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.35);
+}
+
+.pq-team-name {
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  border: 0;
+  border-radius: 10px;
+  padding: 0 10px;
+  background: var(--surface-2);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
 }
 
 .pq-dot {
