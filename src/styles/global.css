@@ -16310,7 +16310,8 @@ button.profile-avatar:not(:disabled):active {
 
 .ftd-deckphone-head {
   flex: none;
-  justify-content: flex-end;
+  /* From the top: the line naming the dealer stays put whatever the question below it says. */
+  justify-content: flex-start;
   height: calc(0.75rem * 1.4 + 6px + 1.7rem * 1.05 * 2);
 }
 
@@ -16336,8 +16337,14 @@ button.profile-avatar:not(:disabled):active {
   margin: 0;
 }
 
-.ftd-deckphone-next {
-  margin-top: auto;
+/* An empty line still keeps its room: the keys under it never move up. */
+.ftd-deckphone-low .ftd-ask-sub:empty {
+  display: block;
+}
+
+/* What it was: in the middle between the deck and the next button. */
+.ftd-deckphone-low .bd-result {
+  margin-block: auto;
 }
 
 /* A card covered on its right by the next one in a hand: its bottom corner would peek out under the

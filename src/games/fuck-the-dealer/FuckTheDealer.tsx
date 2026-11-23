@@ -183,6 +183,13 @@ function Lobby({ room, onStart }: { room: ReturnType<typeof useRoom>; onStart: (
               role="radio"
               aria-checked={m.id === deck?.id}
               className={`chip${m.id === deck?.id ? ' active' : ''}`}
+              // The same tap feedback as the dealer chips below: felt at once.
+              onPointerDown={() => {
+                if (m.id === deck?.id) return;
+                sfx.pop();
+                buzz();
+                setDeckPick(m.id);
+              }}
               onClick={() => setDeckPick(m.id)}
             >
               {m.host ? t('This phone') : t('{name}’s phone', { name: m.name })}
@@ -273,8 +280,6 @@ function TableView({ session, onAgain }: { session: Session; onAgain?: () => voi
   const known = useApp().knows('fuck-the-dealer');
   const g = session.game;
   const seats = session.seats;
-  // The resolved card stays face up next to the table until it lands on its pile.
-  const [landed, setLanded] = useState(true);
   const [flight, setFlight] = useState<{ value: number; from: DOMRect; key: number } | null>(null);
   const slot = useRef<HTMLDivElement>(null);
   const timer = useRef<number>(undefined);
@@ -284,10 +289,14 @@ function TableView({ session, onAgain }: { session: Session; onAgain?: () => voi
   const out = 52 - g.deck.length;
   // A new result came in from the deck phone: show it, then fly it onto its pile.
   const resultKey = r ? `${out}-${r.card.value}${r.card.suit}` : null;
+  // The result that has landed on its pile (one already there when this phone came in counts).
+  // Per result, not a flag set after the fact: the first frame of a new result already keeps the
+  // card off its pile and the count where it was.
+  const [landedKey, setLandedKey] = useState(resultKey);
+  const landed = !r || landedKey === resultKey;
   useEffect(() => {
     window.clearTimeout(timer.current);
-    if (!r) return setLanded(true);
-    setLanded(false);
+    if (!r || landedKey === resultKey) return;
     timer.current = window.setTimeout(() => {
       if (r.outcome === 'first') celebrate();
       else if (r.outcome === 'second') {
@@ -297,7 +306,7 @@ function TableView({ session, onAgain }: { session: Session; onAgain?: () => voi
       timer.current = window.setTimeout(() => {
         const from = slot.current?.getBoundingClientRect();
         if (from) setFlight({ value: r.card.value, from, key: out });
-        setLanded(true);
+        setLandedKey(resultKey);
       }, LAND_MS - 450);
     }, 450);
     // eslint-disable-next-line react-hooks/exhaustive-deps
