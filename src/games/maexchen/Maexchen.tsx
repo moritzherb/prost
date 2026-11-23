@@ -419,17 +419,23 @@ function Coaster() {
             <ellipse cx="62" cy="17" rx="3.4" ry="4.6" />
             <rect x="43" y="16" width="14" height="2" rx="1" />
           </g>
-          <text x="50" y="52" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontStyle="italic" fontWeight="700" fontSize="27" fill="#1f3f8f" stroke="#c9a23a" strokeWidth="0.35" transform="rotate(-8 50 46)">
-            Prost
-          </text>
-          <text x="50" y="66" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontSize="6" letterSpacing="0.6" fill="#a3302a">
-            GUT GESCHÜTTELT
-          </text>
+          {/* The best throw, two and one, where a brewery's name would be: no words, nothing to translate. */}
+          <g transform="rotate(-8 50 48)">
+            <rect x="24" y="32" width="24" height="24" rx="4.5" fill="#fbf7ea" stroke="#1f3f8f" strokeWidth="1.2" />
+            <rect x="52" y="36" width="24" height="24" rx="4.5" fill="#fbf7ea" stroke="#1f3f8f" strokeWidth="1.2" transform="rotate(14 64 48)" />
+            <g fill="#a3302a">
+              <circle cx="30.5" cy="38.5" r="2.6" />
+              <circle cx="41.5" cy="49.5" r="2.6" />
+              <circle cx="64" cy="48" r="2.8" transform="rotate(14 64 48)" />
+            </g>
+          </g>
           <rect x="22" y="70" width="56" height="0.6" fill="#c9a23a" />
           <path d="M0 84h100v9.4a6.6 6.6 0 0 1-6.6 6.6H6.6A6.6 6.6 0 0 1 0 93.4z" fill="#1f3f8f" />
-          <text x="50" y="94.4" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontSize="5.2" letterSpacing="0.8" fill="#e8c66a">
-            · MÄXCHEN ·
-          </text>
+          <g fill="#e8c66a">
+            {[34, 42, 50, 58, 66].map((x) => (
+              <circle key={x} cx={x} cy="92.4" r="1.3" />
+            ))}
+          </g>
         </svg>
       </span>
     </span>

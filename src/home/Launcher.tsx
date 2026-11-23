@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { StoryBar } from '../components/Stories';
 import { PhoneIcon, SearchIcon } from '../components/Icons';
 import Tap from '../components/Tap';
 import { GAMES } from '../games/registry';
@@ -69,7 +68,6 @@ export default function Launcher({
       <header className="la-glance">
         <span className="la-date">{date}</span>
       </header>
-      <StoryBar />
       <div className="la-widgets">
         <CrewCookie players={players} />
         {recent[0] ? (

@@ -14,6 +14,8 @@ const palace: GameDefinition = {
   maxPlayers: MAX_PLAYERS,
   minutes: [15, 30],
   explains: true,
+  // A clean table would change nothing here: no switch for it.
+  table: 'full',
   needs: [tx('Every player’s phone (plus one for the table, if you like)')],
   rules: [
     tx('Everyone joins the same room on their own phone. The host’s phone lies in the middle as the table. One deck of 52 cards, 2 to 5 players.'),

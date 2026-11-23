@@ -82,21 +82,9 @@ html[data-look='pop'][data-theme='dark'] {
   --pop-chip-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.16), 0 3px 6px rgba(0, 0, 0, 0.4), 0 12px 18px -10px rgba(0, 0, 0, 0.85);
 }
 
-/* ---------- The ground: plain, a soft light from the top. A fixed layer of its own (as the grain
-   was), so nothing on the page has to be redrawn with it. No grain in this look. ---------- */
-
-html[data-look='pop'] body {
-  background: transparent;
-}
-
-html[data-look='pop'] body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: radial-gradient(120% 40% at 50% 46%, var(--pop-glow), transparent 80%), var(--bg);
-}
+/* ---------- The ground: the page's own background (html), no layer of its own. A fixed ground
+   behind the page (z-index -1) made iPhones keep the page in a second layer over it, and that layer
+   could go missing: the screen turned the ground's colour, all or in part. No grain in this look. */
 
 html[data-look='pop'] body::after {
   display: none;

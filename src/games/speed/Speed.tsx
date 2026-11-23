@@ -285,7 +285,7 @@ export default function Speed() {
 
   const nope = (i: number) => {
     buzz([30, 30, 30]);
-    setShake(`${i}-${Date.now()}`);
+    setShake((prev) => `${i}-${(prev ? +prev.split('-')[1] : 0) + 1}`);
     const now = Date.now();
     misses.current = [...misses.current.filter((at) => now - at < SPAM_WINDOW), now];
     if (misses.current.length >= SPAM_MISSES) {
@@ -461,7 +461,7 @@ function MyHalf({
             <button
               key={`${c.value}${c.suit}`}
               type="button"
-              className={`sp-card${isExtra ? ' extra' : ''}${isExtra && i === side.hand.length - 1 ? ' back-next' : ''}${shake?.startsWith(`${i}-`) ? ' nope' : ''}`}
+              className={`sp-card${isExtra ? ' extra' : ''}${isExtra && i === side.hand.length - 1 ? ' back-next' : ''}${shake?.startsWith(`${i}-`) ? ` nope${+shake.split('-')[1] % 2 ? ' again' : ''}` : ''}`}
               onPointerDown={() => onCard(i)}
               aria-label={isExtra ? t('Put this card back') : t('Play this card')}
             >

@@ -12,6 +12,8 @@ const fuckTheDealer: GameDefinition = {
   minPlayers: 2,
   intensity: 3,
   explains: true,
+  // A clean table would change nothing here: no switch for it.
+  table: 'full',
   needs: [tx('A second phone as the deck')],
   phones: tx('2 phones'),
   rules: [

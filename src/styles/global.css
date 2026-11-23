@@ -5065,7 +5065,8 @@ li {
 .mx-compare {
   display: flex;
   gap: 8px;
-  animation: mx-fade-in 0.3s ease 1.1s both;
+  /* With the line above it, not after it. */
+  animation: mx-fade-in 0.3s ease 0.95s both;
 }
 
 .mx-compare-cell {
@@ -7485,7 +7486,21 @@ li {
   animation: sp-nope 0.3s ease;
 }
 
+/* The same shake on the next tap too: a new name, so it starts again (the same class wouldn't). */
+.sp-card.nope.again {
+  animation-name: sp-nope-again;
+}
+
 @keyframes sp-nope {
+  25% {
+    transform: translateX(-6px) rotate(-3deg);
+  }
+  75% {
+    transform: translateX(6px) rotate(3deg);
+  }
+}
+
+@keyframes sp-nope-again {
   25% {
     transform: translateX(-6px) rotate(-3deg);
   }
@@ -18297,7 +18312,7 @@ html.table-phone .game-bar .top-bar-side.right {
 /*
  * The patience games for one (Beat the Deck, Clock Patience, Accordion): a line on top, the felt
  * filling the screen, and the pile with the one button at the bottom. Every part keeps its size
- * whatever happens: nothing moves but the cards. Prefixes: sol- (all), btd-, clk-, acc-.
+ * whatever happens: nothing moves but the cards. Prefixes: sol- (all), btd-, acc-.
  */
 .sol {
   display: flex;
@@ -18442,35 +18457,6 @@ html.table-phone .game-bar .top-bar-side.right {
   gap: 10px;
 }
 
-/* Clock Patience: twelve places round the clock, the Kings in the middle. */
-.clk-face {
-  --cw: min(calc((100vw - 2 * var(--gutter)) * 0.15), 9dvh, 64px);
-  container-type: size;
-}
-
-.clk-place {
-  position: absolute;
-  translate: -50% -50%;
-  display: grid;
-  justify-items: center;
-}
-
-.clk-place.next .sol-card {
-  outline: 3px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: calc(var(--cw) * 0.12);
-}
-
-.clk-hour {
-  position: absolute;
-  bottom: calc(-1.1em - 2px);
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.clk-down,
-.clk-laid,
 .acc-n {
   position: absolute;
   top: -7px;
@@ -18486,13 +18472,6 @@ html.table-phone .game-bar .top-bar-side.right {
   font-size: 0.68rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-}
-
-.clk-laid {
-  right: auto;
-  left: -7px;
-  background: var(--ink);
-  color: var(--bg);
 }
 
 /* Accordion: the line of piles, wrapped in rows, as many as there are. */

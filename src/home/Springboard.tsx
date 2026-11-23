@@ -23,7 +23,6 @@ import { useRows } from './useRows';
 import { GAMES } from '../games/registry';
 import LibrarySearch from './LibrarySearch';
 import { CrewWidget, LastWidget } from './Widgets';
-import { StoryBar } from '../components/Stories';
 
 export interface HomeProps {
   players: Player[];
@@ -319,7 +318,6 @@ export default function Springboard({ players, recent, returning, dock, wall, on
         <div className="sb-strip" ref={strip}>
           {pages.map((list, i) => (
             <section key={i} className={`sb-page${i ? ' sb-more' : ''}`} aria-label={t('Page {n}', { n: i + 1 })}>
-              {i === 0 && <StoryBar />}
               {i === 0 && (
                 <div className="sb-widgets">
                   <CrewWidget players={players} />
