@@ -18020,8 +18020,27 @@ html[data-look='pop'] .kc-slot {
 }
 
 .vt-pick.on.mixed {
-  background: linear-gradient(to bottom right, #ff8ac0 calc(50% - 0.5px), #6cb6ff calc(50% + 0.5px));
+  /* The rim splits with the fill: darker pink round the pink half, darker blue round the blue. */
+  border: 3px solid transparent;
+  background:
+    linear-gradient(to bottom right, #ff8ac0 calc(50% - 0.5px), #6cb6ff calc(50% + 0.5px)) padding-box,
+    linear-gradient(to bottom right, #d94a8c calc(50% - 0.5px), #2f7fd0 calc(50% + 0.5px)) border-box;
   color: #151612;
+}
+
+/* The rim a darker shade of the fill instead of the lime. */
+.vt-pick.on.princess,
+.vt-pick.on.she {
+  box-shadow: inset 0 0 0 3px #d94a8c;
+}
+
+.vt-pick.on.king,
+.vt-pick.on.he {
+  box-shadow: inset 0 0 0 3px #2f7fd0;
+}
+
+.vt-pick.on.mixed {
+  box-shadow: none;
 }
 
 .vt-pick.on.princess .vt-pick-label,
