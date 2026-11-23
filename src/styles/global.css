@@ -15969,6 +15969,13 @@ button.profile-avatar:not(:disabled):active {
   transition: transform 0.15s var(--ease-out);
 }
 
+/* The bid that would add up to the round's tricks: greyed, can't be made. */
+.fz-bid-btn:disabled {
+  background: var(--surface-2);
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
 .fz-bid-btn:active,
 .fz-pick:active {
   transform: scale(0.94);
