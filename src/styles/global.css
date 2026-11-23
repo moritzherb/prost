@@ -2183,7 +2183,8 @@ li {
 /* Over a game: up to three buttons on the right (the crew, clean table, rules); the left as wide as
    two of them, so with two the name stays in the middle, a little smaller on narrow phones. */
 .top-bar.game-bar {
-  grid-template-columns: minmax(96px, auto) minmax(0, 1fr) minmax(96px, auto);
+  /* Equal sides: the name sits in the very middle in every game, however many buttons flank it. */
+  grid-template-columns: minmax(96px, 1fr) minmax(0, max-content) minmax(96px, 1fr);
 }
 
 .game-bar .top-bar-title {
@@ -2210,48 +2211,31 @@ li {
   gap: 10px;
 }
 
-/* Who's on (the games' own line saying so is hidden): a small bubble between the corner buttons. */
-.turn-bubble {
-  display: inline-flex;
+/* Who's on, in a game that names them: their face beside the quit button, clear of the name. */
+.game-bar .top-bar-side:first-child {
+  display: flex;
   align-items: center;
-  gap: 6px;
-  max-width: 100%;
-  height: 30px;
-  padding: 0 12px 0 3px;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--chip) 22%, var(--surface));
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 700;
-  text-transform: none;
-  letter-spacing: 0;
-  vertical-align: middle;
-  animation: pop-in 0.3s var(--spring) both;
+  gap: 8px;
 }
 
-.turn-bubble-avatar {
+.turn-chip {
   flex: none;
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   overflow: hidden;
   background: var(--chip);
-  font-size: 0.85rem;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--chip);
+  font-size: 0.95rem;
+  animation: pop-in 0.3s var(--spring) both;
 }
 
-.turn-bubble-name {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.play-screen.clean > .top-bar .top-bar-title {
-  padding-top: 0;
-  display: flex;
-  justify-content: center;
+.turn-chip > * {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .who-drinks {
@@ -10930,7 +10914,7 @@ li {
 .home-me .avatar-photo,
 .profile-avatar .avatar-photo,
 .as-seat-avatar .avatar-photo,
-.turn-bubble-avatar .avatar-photo {
+.turn-chip .avatar-photo {
   width: 100%;
   height: 100%;
 }
@@ -10974,7 +10958,7 @@ li {
 .home-me .avatar-initial,
 .profile-avatar .avatar-initial,
 .as-seat-avatar .avatar-initial,
-.turn-bubble-avatar .avatar-initial,
+.turn-chip .avatar-initial,
 .avatar-stack > span .avatar-initial,
 .person-chip-avatar .avatar-initial,
 .pl-seat-avatar .avatar-initial,
@@ -18017,37 +18001,6 @@ html[data-look='pop'] .kc-slot {
   background: var(--surface);
   color: var(--ink);
   box-shadow: inset 0 0 0 2px var(--accent);
-}
-
-/* Clean table: the game's name stays in the bar, small, over who's on (the bar keeps its height). */
-.gb-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  max-width: 100%;
-  min-width: 0;
-}
-
-.gb-name {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 0.8rem;
-  line-height: 1.1;
-  color: var(--muted);
-}
-
-.gb-stack .turn-bubble {
-  height: 24px;
-  font-size: 0.8rem;
-}
-
-.gb-stack .turn-bubble-avatar {
-  width: 20px;
-  height: 20px;
 }
 
 /* Who it's about, in colour: pink for her (Princess, She), blue for him (King, He), both split

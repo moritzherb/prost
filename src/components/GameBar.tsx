@@ -12,10 +12,10 @@ export const isClean = (game: GameDefinition, setting: boolean | undefined) => (
 
 /**
  * The bar over every game: quit on the left, the game's name, the rules and the clean-table switch.
- * With a clean table it's just the two small buttons (quit and the switch back) and, between them, the
- * game's name, small, over a bubble with who's on (the game's own line saying so is hidden).
- * A game that's always clean has the rules there instead of the switch; on a setup screen (nothing
- * a clean table would change) there's no switch either.
+ * The name looks and sits the same in every game, clean table or not. Who's on (in a game that
+ * names them) is a small face beside the quit button, clear of the name. With a clean table the
+ * switch back stands where the rules were; a game that's always clean has the rules there; on a
+ * setup screen (nothing a clean table would change) there's no switch.
  */
 export default function GameBar({
   game,
@@ -54,23 +54,12 @@ export default function GameBar({
   return (
     <TopBar
       className="game-bar"
-      title={
-        clean ? (
-          // The game's name stays (small), who's on under it.
-          <span className="gb-stack">
-            <span className="gb-name">{t(game.name)}</span>
-            {turn && (
-              <span key={turn.name} className="turn-bubble" style={{ '--chip': turn.color } as CSSProperties} aria-live="polite">
-                <span className="turn-bubble-avatar">
-                  <Avatar name={turn.name} color={turn.color} photo={turn.photo} />
-                </span>
-                <span className="turn-bubble-name">{turn.name}</span>
-              </span>
-            )}
+      title={t(game.name)}
+      left={
+        turn && (
+          <span key={turn.name} className="turn-chip" style={{ '--chip': turn.color } as CSSProperties} role="status" aria-label={t('{name}’s turn', { name: turn.name })}>
+            <Avatar name={turn.name} color={turn.color} photo={turn.photo} />
           </span>
-        ) : (
-          // Just the name: the game's own emoji is its icon on the home screen, not a label.
-          t(game.name)
         )
       }
       onBack={onExit}

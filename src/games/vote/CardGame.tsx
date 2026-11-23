@@ -5,7 +5,7 @@ import Finished from '../../components/Finished';
 import { t } from '../../i18n';
 import { buzz, sfx } from '../../lib/fx';
 import { pick, shuffle } from '../../lib/random';
-import { useTurnBubble, useCrewButton } from '../../lib/turn';
+import { useCrewButton } from '../../lib/turn';
 import { useApp } from '../../state/AppState';
 import type { GameProps } from '../types';
 import Glyph from '../../components/Glyph';
@@ -128,7 +128,6 @@ export default function CardGame<C>(props: CardGameProps<C>) {
 
   // Without a player list nobody reads in turn: the table just plays.
   const reader = s && !s.over && players.length ? players[s.round.reader % players.length] : null;
-  useTurnBubble(reader);
   const stage = useRef<HTMLDivElement>(null);
   useFit(stage, s && !s.over ? s.drawn : null);
 

@@ -6,7 +6,7 @@ import Tap from '../../components/Tap';
 import { getLang, t, tx } from '../../i18n';
 import { buzz, celebrate, sfx } from '../../lib/fx';
 import { pick } from '../../lib/random';
-import { useCrewButton, usePlaying, useTurnBubble, useYourTurn } from '../../lib/turn';
+import { useCrewButton, usePlaying, useYourTurn } from '../../lib/turn';
 import { useApp, type Player } from '../../state/AppState';
 import type { GameProps } from '../types';
 import Finished from '../../components/Finished';
@@ -148,7 +148,6 @@ export function FiveThousandTable({
   }, [won]);
 
   const me = players[g.current];
-  useTurnBubble(won ? null : me);
   // How the turn ended (not a win: that has the big 5000).
   const ended = g.phase === 'over' && !won ? g.end : null;
   const score = g.scores[g.current];
