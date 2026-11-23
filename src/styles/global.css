@@ -18205,6 +18205,33 @@ html.table-phone .game-bar .top-bar-side.right {
   animation: hr-swap-in 0.42s var(--spring) both;
 }
 
+/* Pants Down, set up: the host's phone as the table (its row stays, so nothing jumps). */
+.hr-table-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.hr-table-tag svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* A card that has just come (swapped in): it drops onto its place. */
+.hr-player .hr-felt-cards .hr-card,
+.hr-player .hr-fan-card {
+  animation: hr-swap-in 0.42s var(--spring) both;
+}
+
+/* Swapped away: its copy is flying, the card itself waits unseen for the new table. */
+.hr-card.leaving,
+.hr-fan-card.leaving {
+  visibility: hidden;
+}
+
 @keyframes hr-swap-in {
   from {
     opacity: 0;
