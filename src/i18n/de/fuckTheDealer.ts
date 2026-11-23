@@ -87,6 +87,7 @@ const fuckTheDealer: Record<string, string> = {
   '{n} sips': '{n} Schlucke',
   'Which phone is the deck?': 'Welches Handy ist das Deck?',
   '{name}’s phone': 'Handy von {name}',
+  'This phone': 'Dieses Handy',
   '{name} has the deck': '{name} hat das Deck',
   'This phone just watches this game.': 'Dieses Handy schaut bei diesem Spiel nur zu.',
 };
