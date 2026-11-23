@@ -408,6 +408,28 @@ html[data-os='android'] .app-icon {
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
 }
 
+/* A game's own drawing (components/GameArt.tsx): bigger than a line icon, a thing on the tile. */
+.game-art {
+  display: inline-block;
+  width: 1.15em;
+  height: 1.15em;
+  vertical-align: middle;
+  overflow: visible;
+}
+
+.app-icon svg.game-art {
+  width: calc(var(--ic, 60px) * 0.68);
+  height: calc(var(--ic, 60px) * 0.68);
+  margin-top: calc(var(--ic, 60px) * 0.03);
+  filter: drop-shadow(0 calc(var(--ic, 60px) * 0.04) calc(var(--ic, 60px) * 0.04) rgba(0, 0, 0, 0.32));
+}
+
+.launch-emoji svg.game-art {
+  display: block;
+  width: 150px;
+  height: 150px;
+}
+
 .app-icon.lime svg {
   filter: none;
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState, type CSSProperties } from 'react';
+import { GameGlyph } from '../home/AppIcon';
 import Avatar from '../components/Avatar';
 import BigButton from '../components/BigButton';
 import { CloseIcon, RowIcon } from '../components/Icons';
@@ -291,7 +292,9 @@ function Lobby() {
                   navigate(paths.online(g.id));
                 }}
               >
-                <span className="online-game-emoji">{g.emoji}</span>
+                <span className="online-game-emoji">
+                  <GameGlyph game={g} />
+                </span>
                 <span className="online-game-text">
                   <span className="online-game-name">{t(g.name)}</span>
                   <span className="online-game-tagline">{t(g.tagline)}</span>
