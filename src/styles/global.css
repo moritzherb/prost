@@ -10370,7 +10370,7 @@ li {
   top: 0;
   left: 0;
   transform-origin: 50% 120%;
-  transition: transform 0.25s var(--spring), filter 0.2s ease, opacity 0.2s var(--ease-out);
+  transition: transform 0.25s var(--spring), opacity 0.2s var(--ease-out);
 }
 
 .pl-card:disabled {
@@ -10385,8 +10385,16 @@ li {
   box-shadow: 0 0 0 4px var(--accent), 0 12px 24px -8px rgba(17, 18, 20, 0.5);
 }
 
-.pl-card.dim {
-  filter: brightness(0.62) saturate(0.4);
+/* Can't be played now: a dark veil over it. A filter on every card of a hand made iPhones paint the
+   whole hand again on every move. */
+.pl-card.dim::after,
+.vr-card.dim::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: calc(var(--cw) * 0.12);
+  background: rgba(16, 17, 14, 0.45);
+  pointer-events: none;
 }
 
 .pl-hand-empty {
@@ -19024,7 +19032,7 @@ html.table-phone .game-bar .top-bar-side.right {
   height: calc(var(--cw) * 1.4);
   border-radius: calc(var(--cw) * 0.12);
   touch-action: none;
-  transition: transform 0.2s var(--spring), filter 0.2s;
+  transition: transform 0.2s var(--spring);
 }
 
 .vr-card-in {
@@ -19061,9 +19069,6 @@ html.table-phone .game-bar .top-bar-side.right {
   box-shadow: 0 0 0 3px var(--accent), 0 10px 20px -8px rgba(0, 0, 0, 0.5);
 }
 
-.vr-card.dim {
-  filter: brightness(0.6);
-}
 
 .vr-actions {
   height: 54px;

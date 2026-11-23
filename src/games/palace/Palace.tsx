@@ -552,7 +552,8 @@ function PlayerView({ view, act, connected }: { view: PhoneView; act: (a: Act) =
     if (!cards.length || !fits(view.need, cards[0].value, cards.length) || leaving.length) return false;
     setLeaving(cards);
     setSel([]);
-    window.setTimeout(() => act({ t: 'play', cards }), 220);
+    // A moment for the cards to leave the hand, short enough not to feel like waiting.
+    window.setTimeout(() => act({ t: 'play', cards }), 140);
     return true;
   };
   const isLeaving = (c: Card) => leaving.some((y) => same(y, c));
