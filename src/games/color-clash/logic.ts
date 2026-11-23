@@ -152,8 +152,10 @@ export function play(g0: Game, seat: number, cardId: number, chosen?: Color): Ga
   let g = moveOn(g0, seat);
   const hand = g.hands[seat].filter((c) => c.id !== cardId);
   g = say({ ...g, hands: g.hands.map((h, i) => (i === seat ? hand : h)), discard: [...g.discard, card], color: card.color ?? chosen!, drawn: null }, { k: 'play', by: seat, card });
-  // Out of cards: that's the game (a penalty played last doesn't matter any more).
-  if (!hand.length) return { ...g, winner: seat, lastCard: null, penalty: null };
+  // Out of cards: that's the game. Unless it was a +2 or +4: that goes round first, and if it comes
+  // back to you, you take it and play on (you've won once someone else takes it).
+  const penaltyCard = card.kind === 'burden' || card.kind === 'overload';
+  if (!hand.length && !penaltyCard) return { ...g, winner: seat, lastCard: null, penalty: null };
   // Down to one: say so before the next player moves.
   g = { ...g, lastCard: hand.length === 1 ? { seat, called: false } : g.lastCard?.seat === seat ? null : g.lastCard };
   const next = step(g, seat);
@@ -179,7 +181,10 @@ export function take(g0: Game, seat: number): Game {
   const p = g0.penalty;
   if (!p || g0.winner != null || seat !== g0.turn) return g0;
   const g = moveOn(g0, seat);
-  return say({ ...drawFor(g, seat, p.n), penalty: null, lastCard: g.lastCard?.seat === seat ? null : g.lastCard }, { k: 'take', by: seat, n: p.n });
+  const after = say({ ...drawFor(g, seat, p.n), penalty: null, lastCard: g.lastCard?.seat === seat ? null : g.lastCard }, { k: 'take', by: seat, n: p.n });
+  // Whoever went out on the +2 or +4 has won, now that someone else took it.
+  const out = after.hands.findIndex((h, i) => i !== seat && !h.length);
+  return out >= 0 ? { ...after, winner: out, lastCard: null } : after;
 }
 
 /** Nothing to play (or rather not): draw one. Playable, it may go down at once; else the turn passes. */

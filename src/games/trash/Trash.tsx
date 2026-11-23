@@ -6,7 +6,7 @@ import { t } from '../../i18n';
 import { rankLabel, type Card } from '../../lib/cards';
 import { buzz, celebrate, sfx } from '../../lib/fx';
 import { pick } from '../../lib/random';
-import { useCrewButton, useTurnBubble, useYourTurn } from '../../lib/turn';
+import { useCrewButton, useYourTurn } from '../../lib/turn';
 import { useApp, type Player } from '../../state/AppState';
 import type { GameProps } from '../types';
 import { draw, fitsDown, newGame, nextRound, place, slotFor, swapsJack, takeDiscard, toss, usable, type Game, type Who } from './logic';
@@ -146,7 +146,6 @@ export function TrashTable({
   }, [phase, lost]);
 
   const player = two[g.turn];
-  useTurnBubble(phase === 'round-over' || phase === 'game-over' ? null : player);
   // A move on this phone: the card glides from where it was touched. A move from the other phone:
   // work out where the card in play came from (the stock, the discard pile or a slot).
   const own = useRef(false);
@@ -544,7 +543,9 @@ function ghostFly(el: HTMLElement, [from, to]: [string, string], timing: Keyfram
   ghost.style.setProperty('--cw', getComputedStyle(el).getPropertyValue('--cw'));
   (el.closest('.tr') ?? document.body).appendChild(ghost);
   el.style.visibility = 'hidden';
-  const a = ghost.animate([{ transform: `${from} rotate(180deg)` }, { transform: `${to} rotate(180deg)` }], timing);
+  // Turned like the middle it stands for ('none' can't be combined with a turn: just the turn then).
+  const turned = (tf: string) => (tf === 'none' ? 'rotate(180deg)' : `${tf} rotate(180deg)`);
+  const a = ghost.animate([{ transform: turned(from) }, { transform: turned(to) }], timing);
   a.onfinish = a.oncancel = () => {
     ghost.remove();
     el.style.visibility = '';

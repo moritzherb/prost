@@ -48,6 +48,25 @@ describe('President', () => {
     expect(g.log.at(-1)).toEqual({ k: 'close', by: 1 });
   });
 
+  it('once you pass, you sit out the rest of the trick', () => {
+    let g = playing([[c(8), c(12), c(13)], [c(9), c(7), c(14)], [c(10), c(11), c(7, 'hearts')]]);
+    g = play(g, 0, [c(8)]);
+    g = pass(g, 1); // seat 1 passes: out of this trick
+    expect(g.turn).toBe(2);
+    g = play(g, 2, [c(10)]);
+    // Seat 1 passed: it's seat 0's turn, not seat 1's.
+    expect(g.turn).toBe(0);
+    g = play(g, 0, [c(12)]);
+    expect(g.turn).toBe(2);
+    g = pass(g, 2);
+    // Everyone else is out of the trick: seat 0 closes it and leads.
+    expect(g.trick).toHaveLength(0);
+    expect(g.turn).toBe(0);
+    // A new trick: everyone plays again.
+    g = play(g, 0, [c(13)]);
+    expect(g.turn).toBe(1);
+  });
+
   it('an Ace closes the trick right away', () => {
     let g = playing([[c(13), c(7)], [c(14), c(8)], [c(9), c(10)]]);
     g = play(g, 0, [c(13)]);

@@ -44,6 +44,8 @@ interface Session {
   game: Game;
   /** The phone that's the deck (missing: any guest phone, as saved before it could be chosen). */
   deckId?: string;
+  /** The phone that's the table (missing: the host's). Another one when the host's is the deck. */
+  tableId?: string;
 }
 
 /** `at`: the state the move was made on (see stamp), so a double tap or a tap made on an old state is dropped. */
@@ -130,10 +132,13 @@ function useFtd() {
 export default function FuckTheDealer() {
   const { room, isHost, myId, session, act, setHostSession } = useFtd();
   if (!session) return isHost ? <Lobby room={room} onStart={setHostSession} /> : <WaitForTable host={room.members.find((m) => m.host)?.name} />;
-  if (isHost) return <TableView session={session} onAgain={() => setHostSession(null)} />;
-  // Another phone than the one picked as the deck: it just waits.
-  if (session.deckId && session.deckId !== myId) return <WaitForTable host={room.members.find((m) => m.host)?.name} deck={room.members.find((m) => m.id === session.deckId)?.name} />;
-  return <DeckView session={session} act={act} />;
+  const again = isHost ? () => setHostSession(null) : undefined;
+  // The deck: the phone picked (saved before it could be picked: any guest's).
+  if (session.deckId ? session.deckId === myId : !isHost) return <DeckView session={session} act={act} onAgain={again} />;
+  // The table: the host's, or the one standing in for it while the host's is the deck.
+  if (session.tableId ? session.tableId === myId : isHost) return <TableView session={session} onAgain={again} />;
+  // Neither the deck nor the table: this phone just waits.
+  return <WaitForTable host={room.members.find((m) => m.host)?.name} deck={room.members.find((m) => m.id === session.deckId)?.name} />;
 }
 
 /* ---------------- Host: pick the first dealer ---------------- */
@@ -144,10 +149,13 @@ function Lobby({ room, onStart }: { room: ReturnType<typeof useRoom>; onStart: (
   const players = room.members;
   const [chosen, setDealerId] = useState<string | null>(null);
   const dealerId = chosen && players.some((p) => p.id === chosen) ? chosen : (players[0]?.id ?? '');
-  const decks = room.members.filter((m) => !m.host && m.online);
-  // Which phone is the deck (with more than one in the room, any of them).
+  // Any phone can be the deck, this one too (the table then goes on another); a guest's by default.
+  const online = room.members.filter((m) => m.online);
+  const guests = online.filter((m) => !m.host);
   const [deckPick, setDeckPick] = useState<string | null>(null);
-  const deck = decks.find((m) => m.id === deckPick) ?? decks[0];
+  const deck = guests.length ? (online.find((m) => m.id === deckPick) ?? guests[0]) : undefined;
+  const table = deck?.host ? guests[0] : undefined;
+  const decks = guests;
   // New players join the room (its code and QR code are in the crew sheet).
   useCrewButton('room');
   return (
@@ -166,9 +174,9 @@ function Lobby({ room, onStart }: { room: ReturnType<typeof useRoom>; onStart: (
         </span>
         <span>{deck ? t('Deck phone: {name}', { name: deck.name }) : t('Connect a second phone to this room. It becomes the deck.')}</span>
       </div>
-      {decks.length > 1 && (
+      {guests.length > 0 && (
         <div className="ftd-deck-pick" role="radiogroup" aria-label={t('Which phone is the deck?')}>
-          {decks.map((m) => (
+          {online.map((m) => (
             <button
               key={m.id}
               type="button"
@@ -177,7 +185,7 @@ function Lobby({ room, onStart }: { room: ReturnType<typeof useRoom>; onStart: (
               className={`chip${m.id === deck?.id ? ' active' : ''}`}
               onClick={() => setDeckPick(m.id)}
             >
-              {t('{name}’s phone', { name: m.name })}
+              {m.host ? t('This phone') : t('{name}’s phone', { name: m.name })}
             </button>
           ))}
         </div>
@@ -211,6 +219,7 @@ function Lobby({ room, onStart }: { room: ReturnType<typeof useRoom>; onStart: (
               seats: players.map((p) => ({ id: p.id, name: p.name, avatar: p.avatar, color: p.color })),
               game: newGame(players.length, Math.max(0, players.findIndex((p) => p.id === dealerId))),
               deckId: deck?.id,
+              tableId: table?.id,
             })
           }
         >
@@ -259,7 +268,7 @@ function Handover({ session, children }: { session: Session; children?: React.Re
   );
 }
 
-function TableView({ session, onAgain }: { session: Session; onAgain: () => void }) {
+function TableView({ session, onAgain }: { session: Session; onAgain?: () => void }) {
   const photoOf = usePhotoOf();
   const known = useApp().knows('fuck-the-dealer');
   const g = session.game;
@@ -302,9 +311,11 @@ function TableView({ session, onAgain }: { session: Session; onAgain: () => void
           <>
             <Finished game="fuck-the-dealer" />
             <Tally session={session} />
-            <div className="sticky-action">
-              <BigButton onClick={onAgain}>{t('Play again')}</BigButton>
-            </div>
+            {onAgain && (
+              <div className="sticky-action">
+                <BigButton onClick={onAgain}>{t('Play again')}</BigButton>
+              </div>
+            )}
           </>
         ) : (
           <div className="ftd-next-dealer">
@@ -402,7 +413,7 @@ function Tally({ session }: { session: Session }) {
 
 /* ---------------- Second phone: the deck, in the dealer's hand ---------------- */
 
-function DeckView({ session, act }: { session: Session; act: (a: Act) => void }) {
+function DeckView({ session, act, onAgain }: { session: Session; act: (a: Act) => void; onAgain?: () => void }) {
   const known = useApp().knows('fuck-the-dealer');
   const [peek, setPeek] = useState(false);
   const g = session.game;
@@ -425,6 +436,11 @@ function DeckView({ session, act }: { session: Session; act: (a: Act) => void })
           <>
             <Finished game="fuck-the-dealer" />
             <p className="lead center">{t('Game over. The table shows who drank what.')}</p>
+            {onAgain && (
+              <div className="sticky-action">
+                <BigButton onClick={onAgain}>{t('Play again')}</BigButton>
+              </div>
+            )}
           </>
         ) : (
           <div className="sticky-action">

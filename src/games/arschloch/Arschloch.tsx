@@ -247,7 +247,7 @@ function Table({
       <>
         <Over g={g} seats={seats} photoOf={photoOf} me={me} isHost={isHost} onNewGame={onNewGame} />
         {/* The card that brought the last Jack, turned over big on top of the end. */}
-        {reveal && <Reveal key={reveal.id} e={reveal.e} seats={seats} onClose={() => setReveal(null)} />}
+        {reveal && <Reveal key={reveal.id} e={reveal.e} seats={seats} onClose={suspense ? undefined : () => setReveal(null)} />}
         {sip && (
           <span key={sip.id} ref={onTurnedCard} className="as-sip" aria-live="polite">
             {sip.text}
@@ -396,7 +396,7 @@ function Table({
         </div>
       )}
       {/* Outside the circle: it's moved, and a fixed overlay inside it would sit on the circle. */}
-      {reveal && <Reveal key={reveal.id} e={reveal.e} seats={seats} onClose={() => setReveal(null)} />}
+      {reveal && <Reveal key={reveal.id} e={reveal.e} seats={seats} onClose={suspense ? undefined : () => setReveal(null)} />}
       {sip && (
         <span key={sip.id} ref={onTurnedCard} className="as-sip" aria-live="polite">
           {sip.text}
@@ -477,7 +477,8 @@ function FanHand({ cards, selected, onTap }: { cards: Card[]; selected: Card | n
  * The turned-over card, big on everyone's phone: a magnifying glass looks it over, then it turns,
  * with what was said, what it was, and who takes the pile.
  */
-function Reveal({ e, seats, onClose }: { e: Extract<Entry, { k: 'call' }>; seats: Seat[]; onClose: () => void }) {
+/** Tapped away only once the card has turned (`onClose` missing until then). */
+function Reveal({ e, seats, onClose }: { e: Extract<Entry, { k: 'call' }>; seats: Seat[]; onClose?: () => void }) {
   return (
     <button type="button" className={`ar-reveal${e.lied ? ' lied' : ' true'}`} role="status" aria-label={t('Close')} onClick={onClose}>
       <span className="ar-reveal-card">

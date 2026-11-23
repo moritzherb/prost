@@ -287,9 +287,10 @@ function slide(from: string, to: string, show: () => void): boolean {
     if (andShow) showNext();
     // The screen under the veil is drawn anew (an iPhone can leave it unpainted after a veil).
     repaint();
-    v.style.opacity = '';
-    v.style.display = '';
-    v.style.pointerEvents = '';
+    // Off the page between slides: a hidden layer kept on it could stay on an iPhone's screen in its
+    // last state (the ground colour over everything, taps going through) after a big change under it,
+    // such as a game opening from the room.
+    v.remove();
     strip.release();
     if (stopSlide === stop) stopSlide = null;
     if (slideDone === done) slideDone = null;
@@ -332,6 +333,7 @@ function slide(from: string, to: string, show: () => void): boolean {
  */
 function rootOnTop(hash: string) {
   go(hash, 'replace', GAME_ROOT);
+  repaint();
   afterPaint(() => {
     if (history.state !== GAME_ROOT || window.location.hash !== hash) return;
     history.pushState(GAME_TOP, '', hash);
@@ -533,6 +535,8 @@ if (typeof window !== 'undefined') {
       pendingGame = null;
       history.replaceState(GAME_ROOT, '', hash);
       window.dispatchEvent(new HashChangeEvent('hashchange'));
+      // The game drawn anew once its entries are settled (see repaint).
+      repaint();
       return;
     }
     // Swiped forward onto the top game entry: back onto the bottom one (it's the same game, so

@@ -6,9 +6,9 @@ import { shuffle } from '../../lib/random';
  * - 32 cards (7 to Ace, Ace highest), 3 to 6 players, all dealt out, one at a time.
  * - The first round, whoever holds the 7 of clubs starts. After that the Arschloch starts.
  * - Lead one card or several of the same value (up to four). Then, in turn, play as many cards
- *   of one higher value, or pass. Passing costs a sip, and you may play again on your next turn.
- * - Once everyone else has passed in a row, the trick is closed: whoever played last hands out a
- *   sip and leads the next trick. An Ace can't be beaten: it closes the trick right away.
+ *   of one higher value, or pass. Passing costs a sip, and you sit out the rest of the trick.
+ * - Once everyone else has passed, the trick is closed: whoever played last hands out a sip and
+ *   leads the next trick. An Ace can't be beaten: it closes the trick right away.
  * - Out of cards: you're out, the earlier the better. The last one with cards is the Arschloch.
  *   Ranks: President, Vice President, citizens, Vice Arschloch, Arschloch (with 3 players: only
  *   President, citizen and Arschloch).
@@ -66,6 +66,8 @@ export interface Game {
   turn: number;
   /** Passes in a row since the last play. */
   passes: number;
+  /** Seats that passed in this trick: they sit out the rest of it (missing in games saved before). */
+  passed?: number[];
   /** Seats in the order they ran out of cards (the last one in a finished round is the Arschloch). */
   out: number[];
   /** Ranks from the round before (they decide the exchange), by seat; null in the first round. */
@@ -100,6 +102,7 @@ const fresh = (players: number) => ({
   trick: [] as Play[],
   discard: [] as Card[],
   passes: 0,
+  passed: [] as number[],
   out: [] as number[],
   got: Array.from({ length: players }, () => [] as Card[]),
 });
@@ -237,6 +240,7 @@ function close(g: Game): Game {
     trick: [],
     discard: [...g.discard, ...g.trick.flatMap((p) => p.cards)],
     passes: 0,
+    passed: [],
     sips,
     turn: inPlay(g, last.by) ? last.by : nextIn(g, last.by),
     log: pushLog(g.log, { k: 'close', by: last.by }),
@@ -258,19 +262,31 @@ export function play(g: Game, who: number, cards: Card[]): Game {
   if (hands.filter((h) => h.length).length <= 1) return finish(next);
   // An Ace can't be beaten: the trick is closed right away.
   if (cards[0].value === ACE) return close(next);
-  next = { ...next, turn: nextIn(next, who) };
-  return next;
+  // Nobody left in the trick to answer: it's closed.
+  const to = nextInTrick(next, who);
+  if (to === null) return close(next);
+  return { ...next, turn: to };
+}
+
+/** The next seat after `from` still in this trick (cards left, not passed); null if there's none. */
+function nextInTrick(g: Pick<Game, 'hands' | 'passed'>, from: number) {
+  const n = g.hands.length;
+  for (let k = 1; k < n; k++) {
+    const s = (from + k) % n;
+    if (inPlay(g, s) && !(g.passed ?? []).includes(s)) return s;
+  }
+  return null;
 }
 
 export function pass(g: Game, who: number): Game {
   if (g.phase !== 'play' || g.turn !== who || !g.trick.length) return g;
   const sips = g.sips.map((x, s) => (s === who ? { ...x, drunk: x.drunk + 1 } : x));
-  const next: Game = { ...g, sips, passes: g.passes + 1, log: pushLog(g.log, { k: 'pass', by: who }) };
-  // Everyone still in, other than whoever played last, has passed.
+  const next: Game = { ...g, sips, passes: g.passes + 1, passed: [...(g.passed ?? []), who], log: pushLog(g.log, { k: 'pass', by: who }) };
+  // Back round to whoever played last, or nobody left in the trick: it's closed.
   const last = toBeat(g)!.by;
-  const others = g.hands.filter((h, s) => h.length && s !== last).length;
-  if (next.passes >= others) return close(next);
-  return { ...next, turn: nextIn(next, who) };
+  const to = nextInTrick(next, who);
+  if (to === null || to === last) return close(next);
+  return { ...next, turn: to };
 }
 
 /** Every card in the game, wherever it is. */

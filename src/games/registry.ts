@@ -24,9 +24,14 @@ import colorClash from './color-clash';
 import spellbound from './fantasy';
 import numberFlip from './number-flip';
 import megaTicTacToe from './mega-ttt';
+import beatTheDeck from './beat-the-deck';
+import clockPatience from './clock-patience';
+import accordion from './accordion';
+import vierer from './vierer';
+import pubQuiz from './pub-quiz';
 
 /** Every game in the app. New games get imported and added here. */
-export const GAMES: GameDefinition[] = [busDriver, hoseRunter, kingsCup, klatschen, fuckTheDealer, fiveThousand, maexchen, schweinerei, speed, palace, president, arschloch, horseRace, trash, whoDrinks, princessTreatment, tenBut, party, ratScrew, colorClash, spellbound, numberFlip, megaTicTacToe].map(
+export const GAMES: GameDefinition[] = [busDriver, hoseRunter, kingsCup, klatschen, fuckTheDealer, fiveThousand, maexchen, schweinerei, speed, palace, president, arschloch, horseRace, trash, whoDrinks, princessTreatment, tenBut, party, ratScrew, colorClash, spellbound, numberFlip, megaTicTacToe, beatTheDeck, clockPatience, accordion, vierer, pubQuiz].map(
   // The store app: no swearing or pants in the icons (names: i18n/store.ts).
   (g) => (storeSafe && STORE_EMOJI[g.emoji] ? { ...g, emoji: STORE_EMOJI[g.emoji] } : g),
 );

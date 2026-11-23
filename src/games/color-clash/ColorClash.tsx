@@ -577,10 +577,15 @@ function flyBacks(from: DOMRect, to: DOMRect, n: number, delay: number) {
   return delay + shown * gap;
 }
 
-/** Backs fly from the deck onto your new cards, one after another; each card turns up as its back lands. */
+/**
+ * Backs fly from the deck onto your new cards, one after another, and turn over where they land:
+ * the back turns edge-on, the card turns up from edge-on (the others in the hand make room meanwhile).
+ */
 function flyInto(from: DOMRect, cards: HTMLElement[], delay: number) {
   if (reducedMotion()) return delay;
-  const gap = cards.length > 4 ? 90 : 140;
+  const FLY = 460;
+  const TURN = 150;
+  const gap = cards.length > 4 ? 120 : 170;
   cards.forEach((card, k) => {
     const to = card.getBoundingClientRect();
     const el = document.createElement('i');
@@ -593,15 +598,17 @@ function flyInto(from: DOMRect, cards: HTMLElement[], delay: number) {
     const start = delay + k * gap;
     const a = el.animate(
       [
-        { transform: 'translate(0, 0) scale(1) rotate(0deg)', opacity: 1 },
-        { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 40}px) scale(${(1 + s) / 2}) rotate(${dx > 0 ? 10 : -10}deg)`, opacity: 1, offset: 0.5 },
-        { transform: `translate(${dx}px, ${dy}px) scale(${s}) rotate(0deg)`, opacity: 1 },
+        { transform: 'translate(0, 0) scale(1, 1)' },
+        { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 30}px) scale(${(1 + s) / 2}, ${(1 + s) / 2})`, offset: 0.45 },
+        { transform: `translate(${dx}px, ${dy}px) scale(${s}, ${s})`, offset: FLY / (FLY + TURN) },
+        { transform: `translate(${dx}px, ${dy}px) scale(0, ${s})` },
       ],
-      { duration: 520, delay: start, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'backwards' },
+      { duration: FLY + TURN, delay: start, easing: 'cubic-bezier(0.3, 0, 0.2, 1)', fill: 'backwards' },
     );
     a.onfinish = a.oncancel = () => el.remove();
-    // Individual properties: they add to the card's own fan transform instead of replacing it.
-    card.animate([{ opacity: 0, scale: 0.9 }, { opacity: 0, scale: 0.9, offset: 0.01 }, { opacity: 1, scale: 1 }], { duration: 160, delay: start + 500, easing: 'ease-out', fill: 'backwards' });
+    // Individual properties: they add to the card's own place in the fan instead of replacing it.
+    card.animate([{ opacity: 0 }, { opacity: 0 }], { duration: FLY + TURN, delay: start, fill: 'backwards' });
+    card.animate([{ scale: '0 1' }, { scale: '1 1' }], { duration: TURN, delay: start + FLY + TURN, easing: 'ease-out', fill: 'backwards' });
   });
   return delay + cards.length * gap;
 }

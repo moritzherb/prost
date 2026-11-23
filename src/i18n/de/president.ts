@@ -51,11 +51,11 @@ const president: Record<string, string> = {
   '{name} passes.': '{name} passt.',
   'Nobody beats {name}: they lead.': 'Niemand schlägt {name}: neuer Stich.',
   'Play {n}× one value higher than {rank}, or pass.': 'Spiel {n}× einen Wert höher als {rank} oder passe.',
-  'You may pass. You can still play on your next turn.': 'Du darfst passen. Im nächsten Zug darfst du wieder spielen.',
   'Once everyone else has passed, the trick is closed: whoever played last leads. An Ace closes the trick right away.': 'Haben alle anderen gepasst, ist der Stich zu: Wer zuletzt gespielt hat, spielt aus. Ein Ass schließt den Stich sofort.',
   Pass: 'Passen',
   Passed: 'Gepasst',
   'End of the round: everyone keeps their rank into the next one.': 'Ende der Runde: Jeder nimmt seinen Rang mit in die nächste.',
+  'Once you pass, you sit out the rest of the trick.': 'Wer passt, setzt für den Rest des Stichs aus.',
 };
 
 export default president;

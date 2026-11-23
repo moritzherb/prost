@@ -360,14 +360,18 @@ const app: Record<string, string> = {
   'Prost uses your system´s language: {lang}.': 'Prost verwendet die Systemsprache: {lang}.',
   'To change it, set the language in your settings.': 'Ändern kannst du sie in den Einstellungen.',
   'Open settings': 'Einstellungen öffnen',
-  
-  // Missing Settings translations
-  'Just the cards and buttons you need': 'Nur Karten und Buttons, die du brauchst',
-  'Explanations stay behind the ? button': 'Erklärungen findest du hinter dem ?-Button',
-  'Phone, Wallpaper, Order': 'Handy, Hintergrundbild, Reihenfolge',
-  'Privacy, Terms of use, Imprint': 'Datenschutz, Nutzungsbedingungen, Impressum',
-  'Every sip can be water or an anti-alcoholic drink. No pressure, ever.': 'Jeder Schluck kann auch Wasser oder ein alkoholfreies Getränk sein. Ganz ohne Druck.',
-  'Never drink and drive! Plan your ride home.': 'Nie alkoholisiert fahren! Plane deinen Heimweg.',
+  // Friends and stories (placeholders until there are accounts).
+  'Your friend code': 'Dein Freundescode',
+  'Their code': 'Ihr Code',
+  'Their name': 'Ihr Name',
+  'Add friend': 'Freund hinzufügen',
+  'No friends added yet. Swap codes with your crew.': 'Noch keine Freunde. Tauscht eure Codes aus.',
+  '{name}’s story': 'Story von {name}',
+  '{n} min': '{n} Min.',
+  'Playing {game} right now': 'Spielt gerade {game}',
+  Friends: 'Freunde',
+  'Your code, and the friends you’ve added': 'Dein Code und deine Freunde',
+  'More options': 'Mehr Optionen',
 };
 
 export default app;

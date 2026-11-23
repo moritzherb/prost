@@ -192,7 +192,8 @@ function Table({
       const r = ranksFrom(g.out)[me];
       if (r === 'president') celebrate();
       recordRank(r);
-    } else if (last?.k === 'pass' && last.by === me) {
+    } else if (g.log.slice(last?.k === 'close' ? -2 : -1).some((e) => e.k === 'pass' && e.by === me)) {
+      // Your pass (and the trick it closed, if it did).
       text = t('Passed');
     }
     if (text) {

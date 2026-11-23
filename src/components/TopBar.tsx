@@ -10,6 +10,8 @@ interface Props {
   onBack?: () => void;
   icon?: 'back' | 'close';
   right?: ReactNode;
+  /** Beside the left button (a game's who's-on chip). */
+  left?: ReactNode;
   className?: string;
 }
 
@@ -31,7 +33,7 @@ export function RoundButton({ onClick, label, children, accent }: { onClick: () 
 }
 
 /** Same layout on every screen: escape hatch top-left, title in the middle, extras on the right. */
-export default function TopBar({ title, onBack, icon = 'back', right, className }: Props) {
+export default function TopBar({ title, onBack, icon = 'back', right, left, className }: Props) {
   // A long word in the title ("Pferderennen" on a 320-wide phone) gets smaller instead of cut.
   const heading = useRef<HTMLHeadingElement>(null);
   useFitWords(heading, typeof title === 'string' ? title : '', 13);
@@ -43,6 +45,7 @@ export default function TopBar({ title, onBack, icon = 'back', right, className 
             {icon === 'back' ? <BackIcon /> : <CloseIcon />}
           </RoundButton>
         )}
+        {left}
       </div>
       <h1 ref={heading} className="top-bar-title">
         {title}

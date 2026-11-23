@@ -2183,7 +2183,8 @@ li {
 /* Over a game: up to three buttons on the right (the crew, clean table, rules); the left as wide as
    two of them, so with two the name stays in the middle, a little smaller on narrow phones. */
 .top-bar.game-bar {
-  grid-template-columns: minmax(96px, auto) minmax(0, 1fr) minmax(96px, auto);
+  /* Equal sides: the name sits in the very middle in every game, however many buttons flank it. */
+  grid-template-columns: minmax(96px, 1fr) minmax(0, max-content) minmax(96px, 1fr);
 }
 
 .game-bar .top-bar-title {
@@ -2206,52 +2207,31 @@ li {
  * counters and explanations (below, game by game: `.play-screen.clean …`). The tables fill
  * whatever room that frees.
  */
-.play-screen.clean {
-  gap: 10px;
-}
-
-/* Who's on (the games' own line saying so is hidden): a small bubble between the corner buttons. */
-.turn-bubble {
-  display: inline-flex;
+/* Who's on, in a game that names them: their face beside the quit button, clear of the name. */
+.game-bar .top-bar-side:first-child {
+  display: flex;
   align-items: center;
-  gap: 6px;
-  max-width: 100%;
-  height: 30px;
-  padding: 0 12px 0 3px;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--chip) 22%, var(--surface));
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 700;
-  text-transform: none;
-  letter-spacing: 0;
-  vertical-align: middle;
-  animation: pop-in 0.3s var(--spring) both;
+  gap: 8px;
 }
 
-.turn-bubble-avatar {
+.turn-chip {
   flex: none;
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   overflow: hidden;
   background: var(--chip);
-  font-size: 0.85rem;
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--chip);
+  font-size: 0.95rem;
+  animation: pop-in 0.3s var(--spring) both;
 }
 
-.turn-bubble-name {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.play-screen.clean > .top-bar .top-bar-title {
-  padding-top: 0;
-  display: flex;
-  justify-content: center;
+.turn-chip > * {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .who-drinks {
@@ -4878,8 +4858,9 @@ li {
 .mx-mat-layer {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   border-radius: 6.6%;
-  background: var(--mat) center / cover;
 }
 
 /* The cardboard's edge: copies of the mat stacked below the print (straight down from it, in 3D,
@@ -4887,7 +4868,8 @@ li {
    the cardboard and a little darker towards the table (the copies' grain gives it its layered look). */
 .mx-mat-layer.edge {
   transform: translateZ(calc(var(--i) * calc(-0.37 * var(--qw))));
-  filter: grayscale(1) brightness(2.1) contrast(0.5) brightness(calc(1 - var(--i) * 0.037));
+  background: #efeadc;
+  filter: brightness(calc(1 - var(--i) * 0.037));
 }
 
 /* The two dice on the mat, under the cup. */
@@ -7580,9 +7562,29 @@ li {
 }
 
 .sp-ready {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* Too many cards: the warning floats over the hand's top edge, so the hand never moves. */
+.sp-mine {
+  position: relative;
+}
+
+.sp-warn {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -30px;
+  z-index: 2;
+  margin: 0;
+  text-align: center;
 }
 
 .sp-ready-hint {
@@ -9181,10 +9183,10 @@ li {
 .hr-dealer,
 .hr-stopper {
   position: absolute;
-  top: -6px;
-  right: -8px;
-  min-width: 22px;
-  height: 22px;
+  top: -3px;
+  right: -9px;
+  min-width: 18px;
+  height: 18px;
   padding: 0 5px;
   border-radius: 999px;
   display: grid;
@@ -10930,7 +10932,7 @@ li {
 .home-me .avatar-photo,
 .profile-avatar .avatar-photo,
 .as-seat-avatar .avatar-photo,
-.turn-bubble-avatar .avatar-photo {
+.turn-chip .avatar-photo {
   width: 100%;
   height: 100%;
 }
@@ -10974,7 +10976,7 @@ li {
 .home-me .avatar-initial,
 .profile-avatar .avatar-initial,
 .as-seat-avatar .avatar-initial,
-.turn-bubble-avatar .avatar-initial,
+.turn-chip .avatar-initial,
 .avatar-stack > span .avatar-initial,
 .person-chip-avatar .avatar-initial,
 .pl-seat-avatar .avatar-initial,
@@ -11364,8 +11366,9 @@ li {
 }
 
 .as .pl-hand {
-  flex: 1.3 1 0;
-  min-height: 136px;
+  /* Just the room the fanned cards need: the rest goes to the table, nothing empty above the hand. */
+  flex: none;
+  height: clamp(140px, 19dvh, 190px);
 }
 
 .as-pass {
@@ -12358,7 +12361,6 @@ li {
 .play-screen.clean .pl-hint,
 .play-screen.clean .hr-zone-label,
 .play-screen.clean .hr-hint,
-.play-screen.clean .hr-last,
 .play-screen.clean .ftd-tablephone > .kc-status,
 .play-screen.clean .ftd-misses {
   display: none;
@@ -12389,6 +12391,7 @@ li {
 
 /* Hose runter: the clean table only takes the words away, keeping their room: nothing moves. */
 .play-screen.clean .hr-status-round,
+.play-screen.clean .hr-last,
 .play-screen.clean .hr-hand-label {
   visibility: hidden;
 }
@@ -14235,7 +14238,8 @@ button.profile-avatar:not(:disabled):active {
 
 /* A wrong slap: the cards paid go off the top of the slapper's pile, one after another… */
 .rs-stack i.rs-give {
-  animation: rs-give 0.5s cubic-bezier(0.4, 0, 0.7, 0.4) calc(var(--d) * 0.14s) both;
+  /* Each off the top only once the one above it has gone: never one sliding out from under another. */
+  animation: rs-give 0.5s cubic-bezier(0.4, 0, 0.7, 0.4) calc(var(--d) * 0.42s) both;
 }
 
 @keyframes rs-give {
@@ -14276,7 +14280,7 @@ button.profile-avatar:not(:disabled):active {
 /* …and one slides in under each of the others' piles, which lift for it. */
 .rs-stack i.rs-get {
   /* Slow enough to follow the card all the way under. */
-  animation: rs-get 1.1s cubic-bezier(0.25, 0.7, 0.3, 1) calc(0.25s + var(--d) * 0.3s) both;
+  animation: rs-get 1.1s cubic-bezier(0.25, 0.7, 0.3, 1) calc(0.25s + var(--d) * 0.42s) both;
 }
 
 @keyframes rs-get {
@@ -14350,7 +14354,9 @@ button.profile-avatar:not(:disabled):active {
   --cw: clamp(92px, min(36vw, 19dvh), 160px);
   position: relative;
   flex: 1 1 0;
-  min-height: calc(var(--cw) * 1.6);
+  min-height: calc(var(--cw) * 1.6 + 64px);
+  /* A band of its own at the foot for Take the pile: the button never lies on the cards. */
+  padding-bottom: 64px;
   display: grid;
   place-items: center;
 }
@@ -15495,7 +15501,8 @@ button.profile-avatar:not(:disabled):active {
 .fz-table-area::before {
   content: '';
   position: absolute;
-  inset: 14% 2% 4%;
+  /* Wide as the table, down to its foot: room for the trick between the players. */
+  inset: 4% -2% 0;
   z-index: -1;
   border-radius: 50%;
   background:
@@ -15890,7 +15897,8 @@ button.profile-avatar:not(:disabled):active {
 .fz-status {
   align-self: center;
   max-width: 100%;
-  margin: 0;
+  /* Midway between the line above and the round table. */
+  margin: 18px 0 0;
   padding: 6px 16px;
   border-radius: 18px;
   text-align: center;
@@ -16357,7 +16365,8 @@ html[data-look] .play-screen > .top-bar .round-btn {
 .rs-flash {
   position: absolute;
   left: 50%;
-  top: 50%;
+  /* The middle of the pile (above the button's band). */
+  top: calc(50% - 32px);
   z-index: 3;
   max-width: 90%;
   display: flex;
@@ -17983,7 +17992,6 @@ html[data-look='pop'] .kc-slot {
   background: var(--bg);
   opacity: 0;
   pointer-events: none;
-  will-change: opacity;
   contain: strict;
 }
 
@@ -18020,37 +18028,6 @@ html[data-look='pop'] .kc-slot {
   box-shadow: inset 0 0 0 2px var(--accent);
 }
 
-/* Clean table: the game's name stays in the bar, small, over who's on (the bar keeps its height). */
-.gb-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  max-width: 100%;
-  min-width: 0;
-}
-
-.gb-name {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 0.8rem;
-  line-height: 1.1;
-  color: var(--muted);
-}
-
-.gb-stack .turn-bubble {
-  height: 24px;
-  font-size: 0.8rem;
-}
-
-.gb-stack .turn-bubble-avatar {
-  width: 20px;
-  height: 20px;
-}
-
 /* Who it's about, in colour: pink for her (Princess, She), blue for him (King, He), both split
    corner to corner for Mixed. The 10/10 card takes the same colour. */
 .vt-pick.on.princess,
@@ -18066,8 +18043,27 @@ html[data-look='pop'] .kc-slot {
 }
 
 .vt-pick.on.mixed {
-  background: linear-gradient(to bottom right, #ff8ac0 calc(50% - 0.5px), #6cb6ff calc(50% + 0.5px));
+  /* The rim splits with the fill: darker pink round the pink half, darker blue round the blue. */
+  border: 3px solid transparent;
+  background:
+    linear-gradient(to bottom right, #ff8ac0 calc(50% - 0.5px), #6cb6ff calc(50% + 0.5px)) padding-box,
+    linear-gradient(to bottom right, #d94a8c calc(50% - 0.5px), #2f7fd0 calc(50% + 0.5px)) border-box;
   color: #151612;
+}
+
+/* The rim a darker shade of the fill instead of the lime. */
+.vt-pick.on.princess,
+.vt-pick.on.she {
+  box-shadow: inset 0 0 0 3px #d94a8c;
+}
+
+.vt-pick.on.king,
+.vt-pick.on.he {
+  box-shadow: inset 0 0 0 3px #2f7fd0;
+}
+
+.vt-pick.on.mixed {
+  box-shadow: none;
 }
 
 .vt-pick.on.princess .vt-pick-label,
@@ -18103,19 +18099,12 @@ html[data-look='pop'] .kc-slot {
   left: 14px;
 }
 
-.hr-felt .hr-last {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 8px;
+.hr-player .hr-last {
   display: block;
-  height: auto;
-  margin: 0;
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 0.8rem;
-  text-align: center;
+  height: 1.35em;
+  margin: -6px 0;
+  font-size: 0.85rem;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 
@@ -18140,10 +18129,12 @@ html.table-phone .game-bar .top-bar-side.right {
 }
 
 .hr-host .hr-felt-side {
+  position: relative;
   flex: 1 1 auto;
   justify-content: center;
   margin-top: 4px;
-  margin-bottom: max(12px, env(safe-area-inset-bottom));
+  /* Down to the bottom: the same gap there as at the sides (the screen keeps 20px under it). */
+  margin-bottom: calc(var(--gutter) - 20px);
 }
 
 .hr-felt-side .hr-felt-cards {
@@ -18155,22 +18146,28 @@ html.table-phone .game-bar .top-bar-side.right {
 
 .hr-side {
   --side: min(calc((100vw - 2 * var(--gutter) - 40px) / 1.4), calc((100dvh - 220px) / 3.5), 190px);
-  display: grid;
-  place-items: center;
+  position: relative;
   width: calc(var(--side) * 1.4);
   height: var(--side);
 }
 
+/* Turned on its side right in the middle of its place (not aligned to an edge first: an upright
+   card is taller than its place, and iPhones align what overflows to the top). */
 .hr-side .pcard-xl {
   --cw: var(--side);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: calc(var(--side) * -0.7) 0 0 calc(var(--side) * -0.5);
   transform: rotate(90deg);
 }
 
 .hr-table-turn {
-  position: fixed;
-  right: var(--gutter);
-  bottom: max(18px, env(safe-area-inset-bottom));
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
   z-index: 5;
+  rotate: 90deg;
   font-size: 44px;
   line-height: 0;
   border-radius: 50%;
@@ -18294,4 +18291,879 @@ html.table-phone .game-bar .top-bar-side.right {
     translate: 0 -70px;
     scale: 0.8;
   }
+}
+
+/*
+ * The patience games for one (Beat the Deck, Clock Patience, Accordion): a line on top, the felt
+ * filling the screen, and the pile with the one button at the bottom. Every part keeps its size
+ * whatever happens: nothing moves but the cards. Prefixes: sol- (all), btd-, clk-, acc-.
+ */
+.sol {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sol > * {
+  flex-shrink: 0;
+}
+
+.sol-status {
+  height: 28px;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sol-felt {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  border-radius: var(--radius-lg);
+  background: radial-gradient(ellipse at 50% 35%, #2a7a4f, #17553a 75%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25), inset 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.sol-card {
+  position: relative;
+  display: block;
+  width: var(--cw);
+  height: calc(var(--cw) * 1.4);
+}
+
+.sol-card .pcard-face {
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+  box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.45);
+}
+
+.sol-card .pcard-front {
+  box-shadow: inset 0 0 0 1px #dcdfe4, 0 2px 6px -2px rgba(0, 0, 0, 0.45);
+}
+
+.sol-card .pcard-back {
+  transform: none;
+}
+
+/* An empty place: just its outline. */
+.sol-card.gone .pcard-face {
+  background: none;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.25);
+}
+
+/* A card just put down: it settles in. */
+.sol-land {
+  animation: sol-land 0.32s var(--spring) both;
+}
+
+@keyframes sol-land {
+  from {
+    opacity: 0;
+    scale: 1.12;
+    translate: 0 -10px;
+  }
+}
+
+.sol-foot {
+  --cw: 56px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: calc(56px * 1.4);
+}
+
+.sol-foot .big-btn {
+  flex: 1;
+}
+
+.sol-pile,
+.sol-hand {
+  position: relative;
+  flex: none;
+}
+
+.sol-pile-n {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Beat the Deck: three by three, as big as the felt allows; the picked one lifted and ringed. */
+.btd-grid {
+  --cw: min(calc((100vw - 2 * var(--gutter) - 64px) / 3), 18dvh / 1.4 * 1.2, 112px);
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  place-content: center;
+  gap: 14px 16px;
+}
+
+.btd-place {
+  position: relative;
+  border-radius: calc(var(--cw) * 0.12);
+  transition: transform 0.2s var(--spring);
+  /* A taller stack, the more cards lie there (a hair per card). */
+  box-shadow: calc(var(--depth) * 1px) calc(var(--depth) * 1.5px) 0 -1px rgba(255, 255, 255, 0.55);
+}
+
+.btd-place.picked {
+  transform: translateY(-6px);
+}
+
+.btd-place.picked .pcard-front {
+  box-shadow: 0 0 0 3px var(--accent), 0 12px 22px -8px rgba(0, 0, 0, 0.55);
+}
+
+.btd-place.dead {
+  box-shadow: none;
+}
+
+.btd-guess {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* Clock Patience: twelve places round the clock, the Kings in the middle. */
+.clk-face {
+  --cw: min(calc((100vw - 2 * var(--gutter)) * 0.15), 9dvh, 64px);
+  container-type: size;
+}
+
+.clk-place {
+  position: absolute;
+  translate: -50% -50%;
+  display: grid;
+  justify-items: center;
+}
+
+.clk-place.next .sol-card {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: calc(var(--cw) * 0.12);
+}
+
+.clk-hour {
+  position: absolute;
+  bottom: calc(-1.1em - 2px);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.clk-down,
+.clk-laid,
+.acc-n {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.clk-laid {
+  right: auto;
+  left: -7px;
+  background: var(--ink);
+  color: var(--bg);
+}
+
+/* Accordion: the line of piles, wrapped in rows, as many as there are. */
+.acc-line {
+  --cw: min(calc((100vw - 2 * var(--gutter) - 24px - 6 * 6px) / 7), 60px);
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 10px 6px;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.acc-pile {
+  position: relative;
+  border-radius: calc(var(--cw) * 0.12);
+  transition: transform 0.2s var(--spring);
+}
+
+.acc-pile.picked {
+  transform: translateY(-4px);
+}
+
+.acc-pile.picked .pcard-front {
+  box-shadow: 0 0 0 3px var(--accent);
+}
+
+.acc-pile.target .pcard-front {
+  box-shadow: 0 0 0 3px #fff;
+  animation: nudge 1.2s ease-in-out infinite;
+}
+
+/*
+ * 4er: the four scores on top, the round and whose turn under them, the table (the trick in a
+ * cross, the rounds to pick from, or the Jacks round's four lines), your hand and one line or
+ * button at the bottom. Every part keeps its size from deal to end. Prefix vr-.
+ */
+.vr {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.vr > * {
+  flex-shrink: 0;
+}
+
+.vr-scores {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.vr-seat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 4px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.vr-seat.on {
+  box-shadow: inset 0 0 0 2px var(--accent-ink);
+}
+
+.vr-seat-avatar {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  overflow: hidden;
+  font-size: 0.85rem;
+}
+
+.vr-seat-avatar > * {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vr-seat-name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.vr-seat-score {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.vr-status {
+  margin: 0;
+  height: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.vr-round {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.vr-status-text {
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.vr-board {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-lg);
+  background: radial-gradient(ellipse at 50% 35%, #2a7a4f, #17553a 75%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25), inset 0 2px 12px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.vr-calls {
+  display: grid;
+  gap: 10px;
+  width: min(100%, 320px);
+  padding: 12px;
+}
+
+.vr-call {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.95);
+  color: #151612;
+  text-align: left;
+  transition: transform 0.15s var(--ease-out);
+}
+
+.vr-call:active {
+  transform: scale(0.97);
+}
+
+.vr-call strong {
+  font-size: 1.1rem;
+}
+
+.vr-call span {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.vr-wait {
+  padding: 0 20px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* The trick: a cross, every card in front of whoever played it. */
+.vr-trick {
+  --cw: min(76px, 20vw);
+  position: relative;
+  width: calc(var(--cw) * 3);
+  height: calc(var(--cw) * 3.2);
+}
+
+.vr-trick-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--cw);
+  height: calc(var(--cw) * 1.4);
+  margin: calc(var(--cw) * -0.7) 0 0 calc(var(--cw) * -0.5);
+  animation: sol-land 0.28s var(--spring) both;
+  transition: translate 0.5s var(--ease-out), opacity 0.5s ease 0.2s;
+}
+
+.vr-trick-card.bottom { translate: 0 calc(var(--cw) * 0.55); }
+.vr-trick-card.top { translate: 0 calc(var(--cw) * -0.55); }
+.vr-trick-card.left { translate: calc(var(--cw) * -0.75) 0; rotate: -8deg; }
+.vr-trick-card.right { translate: calc(var(--cw) * 0.75) 0; rotate: 8deg; }
+
+/* Taken: all four slide off to whoever took them. */
+.vr-trick.taken.to-bottom .vr-trick-card { translate: 0 calc(var(--cw) * 3); opacity: 0; }
+.vr-trick.taken.to-top .vr-trick-card { translate: 0 calc(var(--cw) * -3); opacity: 0; }
+.vr-trick.taken.to-left .vr-trick-card { translate: calc(var(--cw) * -3) 0; opacity: 0; }
+.vr-trick.taken.to-right .vr-trick-card { translate: calc(var(--cw) * 3) 0; opacity: 0; }
+
+/* The Jacks round: four lines of thirteen places, 2 to Ace, the Jack's in the middle. */
+.vr-lines {
+  --cw: min(calc((100vw - 2 * var(--gutter) - 16px - 12 * 2px) / 13), 30px);
+  display: grid;
+  gap: 10px;
+  padding: 8px;
+}
+
+.vr-line {
+  display: flex;
+  gap: 2px;
+}
+
+.vr-slot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--cw);
+  height: calc(var(--cw) * 1.4);
+  border-radius: calc(var(--cw) * 0.14);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.vr-slot .pcard-face {
+  font-size: calc(var(--cw) * 0.5);
+}
+
+.vr-slot .pcard-center,
+.vr-slot .pcard-corner.bottom {
+  display: none;
+}
+
+.vr-slot-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.vr-slot.jack:not(.down) {
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.45);
+}
+
+.vr-slot.next:not(.down) {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.vr-slot.next:not(.down) .vr-slot-label {
+  color: var(--accent);
+}
+
+/* Your hand: one overlapping row, the picked card lifted. */
+.vr-hand {
+  position: relative;
+  height: calc(var(--cw) * 1.4 + 22px);
+  padding-top: 18px;
+}
+
+.vr-card {
+  position: absolute;
+  left: 0;
+  top: 18px;
+  width: var(--cw);
+  height: calc(var(--cw) * 1.4);
+  border-radius: calc(var(--cw) * 0.12);
+  touch-action: none;
+  transition: transform 0.2s var(--spring), filter 0.2s;
+}
+
+.vr-card .pcard-front {
+  box-shadow: inset 0 0 0 1px #dcdfe4, -2px 2px 6px -3px rgba(0, 0, 0, 0.5);
+}
+
+.vr-card.selected .pcard-front {
+  box-shadow: 0 0 0 3px var(--accent), 0 10px 20px -8px rgba(0, 0, 0, 0.5);
+}
+
+.vr-card.dim {
+  filter: brightness(0.6);
+}
+
+.vr-actions {
+  height: 54px;
+  display: grid;
+  align-items: center;
+}
+
+.vr-hint {
+  margin: 0;
+  text-align: center;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.vr-results {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vr-results li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.vr-results li.won {
+  box-shadow: inset 0 0 0 2px var(--accent-ink);
+}
+
+.vr-results-name {
+  flex: 1;
+  font-weight: 700;
+}
+
+.vr-results-n {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Pub Quiz: the scores in a slim row on top of every phone. The quizmaster's phone: the question
+ * big on a card, the answer under it, and at the bottom who buzzed with Right/Wrong (or moving
+ * on). A buzzer phone: one big round red button in the middle, nothing else to read. Prefix pq-.
+ */
+.pq {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pq > * {
+  flex-shrink: 0;
+}
+
+.pq-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pq-board {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 2px var(--gutter);
+}
+
+.pq-board::-webkit-scrollbar {
+  display: none;
+}
+
+.pq-score {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px 0 10px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: inset 3px 0 0 var(--chip), inset 0 0 0 1px var(--line);
+  transition: box-shadow 0.2s, transform 0.2s var(--spring);
+}
+
+.pq-score.mine {
+  box-shadow: inset 3px 0 0 var(--chip), inset 0 0 0 2px var(--chip);
+}
+
+.pq-score.buzzed {
+  transform: scale(1.06);
+  box-shadow: inset 0 0 0 2px var(--chip);
+}
+
+.pq-score-name {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.pq-score-n {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.pq-card {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  padding: 22px 20px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+  overflow-y: auto;
+  animation: pop-in 0.3s var(--spring) both;
+}
+
+.pq-meta {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.pq-question {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.25rem, 6vw, 1.7rem);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.pq-answer {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  font-weight: 700;
+}
+
+.pq-answer span {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* The bottom: always this tall, whoever buzzed or not. */
+.pq-master-foot {
+  height: 124px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.pq-waiting {
+  margin: 0;
+  text-align: center;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.pq-buzzed {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--chip);
+  animation: pq-pop 0.45s var(--spring) both;
+}
+
+@keyframes pq-pop {
+  0% {
+    scale: 0.6;
+    opacity: 0;
+  }
+  60% {
+    scale: 1.12;
+    opacity: 1;
+  }
+}
+
+.pq-judge {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.pq-buzz-status {
+  margin: 0;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.pq-buzz-room {
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+}
+
+/* The buzzer: a big red dome on a dark ring; pressed, it sinks; somebody else's buzz, it greys. */
+.pq-buzzer {
+  --size: min(72vw, 46dvh, 300px);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  padding: calc(var(--size) * 0.06);
+  background: #1b1c19;
+  box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.6), inset 0 0 0 2px rgba(255, 255, 255, 0.06);
+  touch-action: manipulation;
+}
+
+.pq-buzzer-cap {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff8a80, #e53935 45%, #a51d18 100%);
+  box-shadow: 0 calc(var(--size) * 0.04) 0 #7d1410, inset 0 -6px 14px rgba(0, 0, 0, 0.25);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: calc(var(--size) * 0.13);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, filter 0.2s;
+  overflow: hidden;
+  padding: 0 10px;
+}
+
+.pq-buzzer:not(:disabled):active .pq-buzzer-cap {
+  transform: translateY(calc(var(--size) * 0.03));
+  box-shadow: 0 calc(var(--size) * 0.01) 0 #7d1410, inset 0 -3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.pq-buzzer.off .pq-buzzer-cap {
+  filter: grayscale(0.85) brightness(0.7);
+}
+
+/* Somebody buzzed: the cap takes their colour and their name, and pulses once. */
+.pq-buzzer.locked .pq-buzzer-cap {
+  filter: none;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--chip) 60%, #fff), var(--chip) 55%, color-mix(in srgb, var(--chip) 70%, #000));
+  color: #151612;
+  text-shadow: none;
+  font-size: calc(var(--size) * 0.1);
+  animation: pq-pop 0.45s var(--spring) both;
+}
+
+.pq-buzzer.mine .pq-buzzer-cap {
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--chip) 40%, transparent), 0 calc(var(--size) * 0.04) 0 rgba(0, 0, 0, 0.3);
+}
+
+.pq-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+/* Settings → Friends: your code big, adding one by theirs, the list. */
+.friends {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.friends-code {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.friends-code strong {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+}
+
+.friends-add {
+  display: grid;
+  gap: 8px;
+}
+
+.friends-input {
+  height: 46px;
+  padding: 0 14px;
+  border-radius: var(--radius);
+  border: 0;
+  background: var(--surface-2);
+  color: var(--ink);
+  font: 600 1rem var(--font-body);
+}
+
+.friends-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.friends-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.friends-face {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.friends-face > *,
+.friends-face .avatar-initial {
+  width: 100%;
+  height: 100%;
+}
+
+.friends-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+/* "More options": one quiet line, what it's set to on the right; open, the settings under it. */
+.more-opts-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 4px;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.more-opts-summary {
+  flex: 1;
+  text-align: right;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.more-opts-toggle svg {
+  width: 16px;
+  height: 16px;
+  transition: rotate 0.2s var(--ease-out);
+}
+
+.more-opts.open .more-opts-toggle svg {
+  rotate: 90deg;
+}
+
+.more-opts-body {
+  animation: rise 0.25s var(--ease-out) both;
 }

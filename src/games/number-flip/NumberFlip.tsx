@@ -52,6 +52,7 @@ function canDraw3D() {
 import { woodVars } from './wood';
 import { useCrewButton } from '../../lib/turn';
 import Glyph from '../../components/Glyph';
+import MoreOptions from '../../components/MoreOptions';
 import type { GlyphName } from '../../lib/glyphs';
 
 interface Setup {
@@ -188,7 +189,9 @@ function SetupScreen({ setup, onChange, solo, onStart }: { setup: Setup; onChang
         </div>
       </section>
 
-      {/* Rounds only for a tournament: last, with its room kept when it's not there. */}
+      {/* The box and the level: most never change them, so they're folded away. Rounds only for a
+          tournament: last, with its room kept when it's not there. */}
+      <MoreOptions summary={`1–${setup.size} · ${setup.level === 'hard' ? t('Hard') : t('Normal')}${mode === 'tournament' ? ` · ${setup.rounds}` : ''}`}>
       <section className={`panel nf-opts${mode === 'tournament' ? '' : ' no-rounds'}`}>
         <Choice label={t('Box')} options={[9, 12] as const} value={setup.size} name={(n) => `1–${n}`} onPick={(n) => set({ size: n })} />
         <Choice label={t('Level')} options={['normal', 'hard'] as const} value={setup.level} name={(l) => (l === 'hard' ? t('Hard') : t('Normal'))} onPick={(l) => set({ level: l })} />
@@ -202,6 +205,7 @@ function SetupScreen({ setup, onChange, solo, onStart }: { setup: Setup; onChang
         </div>
         {mode === 'tournament' && <Choice label={t('Rounds')} options={[5, 10] as const} value={setup.rounds} name={(n) => String(n)} onPick={(n) => set({ rounds: n })} />}
       </section>
+      </MoreOptions>
 
       <div className="sticky-action">
         <BigButton size="xl" onClick={() => onStart({ ...setup, mode })}>

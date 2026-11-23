@@ -300,12 +300,13 @@ function HostTable({ view }: { view: PlayerView }) {
             </span>
           ))}
         </div>
+        {/* Who's on, on the felt and turned like the cards. */}
+        {who && (
+          <span key={who.id} className="hr-table-turn" style={{ '--chip': who.color } as CSSProperties} aria-label={t('{name}’s turn', { name: who.name })}>
+            <Avatar name={who.name} color={who.color} photo={photoOf(who.id)} />
+          </span>
+        )}
       </section>
-      {who && (
-        <span key={who.id} className="hr-table-turn" style={{ '--chip': who.color } as CSSProperties} aria-label={t('{name}’s turn', { name: who.name })}>
-          <Avatar name={who.name} color={who.color} photo={photoOf(who.id)} />
-        </span>
-      )}
     </div>
   );
 }
@@ -392,9 +393,11 @@ function Table({ view, myId, act, connected }: { view: PlayerView; myId: string;
               />
             ))}
           </div>
-          <LastMove log={view.log} seats={view.seats} myId={myId} />
         </section>
       )}
+
+      {/* What the last player did: a line of its own under the middle, never over its cards. */}
+      {!deciding && <LastMove log={view.log} seats={view.seats} myId={myId} />}
 
       {deciding && (
         <section className="hr-decide" aria-live="polite">
@@ -462,7 +465,7 @@ function Table({ view, myId, act, connected }: { view: PlayerView; myId: string;
           ) : (
             // The buttons' room stays when it isn't your turn: the middle above keeps its size.
             <div className={`hr-actions hr-turn-actions${view.allowPass ? ' with-pass' : ''}${known ? '' : ' teach'}`}>
-              {!myTurn ? null : !connected ? (
+              {!connected ? (
                 <BigButton variant="glass" disabled>
                   {t('Reconnecting…')}
                 </BigButton>
@@ -472,27 +475,27 @@ function Table({ view, myId, act, connected }: { view: PlayerView; myId: string;
                 </BigButton>
               ) : (
                 <>
-                  {!known && (
+                  {!known && myTurn && (
                     <p className="hr-hint">{fanOpen ? t('Tap one of your cards and one in the middle to swap.') : t('Tap your cards to pick them up.')}</p>
                   )}
                   <div className="hr-action-row">
-                    <BigButton variant="light" onClick={() => send({ type: 'swapAll' })}>
+                    <BigButton variant="light" disabled={!myTurn} onClick={() => send({ type: 'swapAll' })}>
                       {t('Swap all 3')}
                     </BigButton>
                     {view.stopperId ? (
                       // Someone said Stop: your last turn. Happy with your cards? Stay.
-                      <BigButton variant="glass" disabled={!view.canPass} onClick={() => send({ type: 'pass' })}>
+                      <BigButton variant="glass" disabled={!myTurn || !view.canPass} onClick={() => send({ type: 'pass' })}>
                         {t('Stay')}
                       </BigButton>
                     ) : (
-                      <BigButton variant="danger" disabled={!view.canStop} onClick={() => send({ type: 'stop' })}>
-                        {view.firstLap ? t('Stop after round 1') : t('Stop')}
+                      <BigButton variant="danger" disabled={!myTurn || !view.canStop} onClick={() => send({ type: 'stop' })}>
+                        {t('Stop')}
                       </BigButton>
                     )}
                   </div>
                   {/* Under Swap and Stop, so nothing above moves; not in the first round. */}
                   {view.allowPass && !view.stopperId && (
-                    <BigButton variant="glass" disabled={!view.canPass} onClick={() => send({ type: 'pass' })}>
+                    <BigButton variant="glass" disabled={!myTurn || !view.canPass} onClick={() => send({ type: 'pass' })}>
                       {t('Pass')}
                     </BigButton>
                   )}

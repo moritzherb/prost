@@ -20,7 +20,7 @@ const president: GameDefinition = {
     tx('Everyone joins the same room on their own phone. 32 cards (7 to Ace, Ace highest), 3 to 6 players, all dealt out.'),
     tx('The first round, whoever holds the 7 of clubs starts. After that the Asshole starts.'),
     tx('Lead one card or several of the same value. Then, in turn, play as many cards of a higher value, or pass.'),
-    tx('You may pass. You can still play on your next turn.'),
+    tx('Once you pass, you sit out the rest of the trick.'),
     tx('Once everyone else has passed, the trick is closed: whoever played last leads. An Ace closes the trick right away.'),
     tx('Out of cards: you’re out, the earlier the better. The last one with cards is the Asshole.'),
     tx('Ranks: President, Vice President, citizens, Vice Asshole, Asshole. With 3 players there are no vices.'),
