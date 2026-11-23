@@ -2207,10 +2207,6 @@ li {
  * counters and explanations (below, game by game: `.play-screen.clean …`). The tables fill
  * whatever room that frees.
  */
-.play-screen.clean {
-  gap: 10px;
-}
-
 /* Who's on, in a game that names them: their face beside the quit button, clear of the name. */
 .game-bar .top-bar-side:first-child {
   display: flex;
@@ -9167,10 +9163,10 @@ li {
 .hr-dealer,
 .hr-stopper {
   position: absolute;
-  top: -6px;
-  right: -8px;
-  min-width: 22px;
-  height: 22px;
+  top: -3px;
+  right: -9px;
+  min-width: 18px;
+  height: 18px;
   padding: 0 5px;
   border-radius: 999px;
   display: grid;
@@ -12344,7 +12340,6 @@ li {
 .play-screen.clean .pl-hint,
 .play-screen.clean .hr-zone-label,
 .play-screen.clean .hr-hint,
-.play-screen.clean .hr-last,
 .play-screen.clean .ftd-tablephone > .kc-status,
 .play-screen.clean .ftd-misses {
   display: none;
@@ -12375,6 +12370,7 @@ li {
 
 /* Hose runter: the clean table only takes the words away, keeping their room: nothing moves. */
 .play-screen.clean .hr-status-round,
+.play-screen.clean .hr-last,
 .play-screen.clean .hr-hand-label {
   visibility: hidden;
 }
@@ -18076,19 +18072,12 @@ html[data-look='pop'] .kc-slot {
   left: 14px;
 }
 
-.hr-felt .hr-last {
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 8px;
+.hr-player .hr-last {
   display: block;
-  height: auto;
-  margin: 0;
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 0.8rem;
-  text-align: center;
+  height: 1.35em;
+  margin: -6px 0;
+  font-size: 0.85rem;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 
@@ -18113,10 +18102,12 @@ html.table-phone .game-bar .top-bar-side.right {
 }
 
 .hr-host .hr-felt-side {
+  position: relative;
   flex: 1 1 auto;
   justify-content: center;
   margin-top: 4px;
-  margin-bottom: max(12px, env(safe-area-inset-bottom));
+  /* Down to the bottom: the same gap there as at the sides (the screen keeps 20px under it). */
+  margin-bottom: calc(var(--gutter) - 20px);
 }
 
 .hr-felt-side .hr-felt-cards {
@@ -18128,22 +18119,28 @@ html.table-phone .game-bar .top-bar-side.right {
 
 .hr-side {
   --side: min(calc((100vw - 2 * var(--gutter) - 40px) / 1.4), calc((100dvh - 220px) / 3.5), 190px);
-  display: grid;
-  place-items: center;
+  position: relative;
   width: calc(var(--side) * 1.4);
   height: var(--side);
 }
 
+/* Turned on its side right in the middle of its place (not aligned to an edge first: an upright
+   card is taller than its place, and iPhones align what overflows to the top). */
 .hr-side .pcard-xl {
   --cw: var(--side);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: calc(var(--side) * -0.7) 0 0 calc(var(--side) * -0.5);
   transform: rotate(90deg);
 }
 
 .hr-table-turn {
-  position: fixed;
-  right: var(--gutter);
-  bottom: max(18px, env(safe-area-inset-bottom));
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
   z-index: 5;
+  rotate: 90deg;
   font-size: 44px;
   line-height: 0;
   border-radius: 50%;
