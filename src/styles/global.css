@@ -19133,3 +19133,37 @@ html.table-phone .game-bar .top-bar-side.right {
   flex: 1;
   font-weight: 600;
 }
+
+/* "More options": one quiet line, what it's set to on the right; open, the settings under it. */
+.more-opts-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 4px;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.more-opts-summary {
+  flex: 1;
+  text-align: right;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.more-opts-toggle svg {
+  width: 16px;
+  height: 16px;
+  transition: rotate 0.2s var(--ease-out);
+}
+
+.more-opts.open .more-opts-toggle svg {
+  rotate: 90deg;
+}
+
+.more-opts-body {
+  animation: rise 0.25s var(--ease-out) both;
+}

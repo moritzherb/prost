@@ -371,6 +371,7 @@ const app: Record<string, string> = {
   'Playing {game} right now': 'Spielt gerade {game}',
   Friends: 'Freunde',
   'Your code, and the friends you’ve added': 'Dein Code und deine Freunde',
+  'More options': 'Mehr Optionen',
 };
 
 export default app;
