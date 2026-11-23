@@ -17983,7 +17983,6 @@ html[data-look='pop'] .kc-slot {
   background: var(--bg);
   opacity: 0;
   pointer-events: none;
-  will-change: opacity;
   contain: strict;
 }
 
