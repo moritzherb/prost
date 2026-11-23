@@ -47,8 +47,12 @@ export interface Game {
   hands: Card[][];
   turn: number;
   trick: Play[];
-  /** The trick just taken, and by whom (shown a moment on every phone). */
-  lastTrick: { by: number; plays: Play[] } | null;
+  /** The trick just taken, by whom, in which round (shown a moment on every phone). */
+  lastTrick: { by: number; plays: Play[]; kind: RoundKind | null } | null;
+  /** The round just over and what each seat got in it (for the look back between rounds). */
+  lastRound: { kind: RoundKind; points: number[] } | null;
+  /** Counts the deals, so every phone deals its hand in once per deal. */
+  deal: number;
   /** Tricks taken this round, by seat. */
   tricks: number[];
   /** Queens taken this round. */
@@ -99,12 +103,13 @@ function dealRound(g: Omit<Game, 'hands'> & { hands?: Card[][] }, dealer: number
     lines: emptyLines(),
     out: [],
     again: false,
+    deal: (g.deal ?? 0) + 1,
     seq: g.seq + 1,
   };
 }
 
 export function newGame(dealer = 0, deck: Card[] = shuffle(newDeck())): Game {
-  const base = { played: [] as RoundKind[], scores: zeros(), seq: -1 } as unknown as Game;
+  const base = { played: [] as RoundKind[], scores: zeros(), seq: -1, deal: 0, lastRound: null } as unknown as Game;
   return dealRound(base, dealer, deck);
 }
 
@@ -155,7 +160,7 @@ function playTrick(g: Game, seat: number, card: Card): Game {
   const gain = g.round === 'queens' ? queens * POINTS.queen : g.round === 'king' ? (king ? POINTS.king : 0) : POINTS.trick;
   const roundPoints = g.roundPoints.map((p, s) => (s === by ? p + gain : p));
   const tricks = g.tricks.map((n, s) => (s === by ? n + 1 : n));
-  const after: Game = { ...g, trick: [], lastTrick: { by, plays: trick }, tricks, roundPoints, queens: g.queens + queens, kingTaken: g.kingTaken || king, turn: by };
+  const after: Game = { ...g, trick: [], lastTrick: { by, plays: trick, kind: g.round }, tricks, roundPoints, queens: g.queens + queens, kingTaken: g.kingTaken || king, turn: by };
   const done =
     after.hands.every((h) => !h.length) || (g.round === 'queens' && after.queens === 4) || (g.round === 'king' && after.kingTaken);
   return done ? endRound(after) : after;
@@ -165,7 +170,8 @@ function playTrick(g: Game, seat: number, card: Card): Game {
 function endRound(g: Game, deck: Card[] = shuffle(newDeck())): Game {
   const scores = g.scores.map((s, i) => s + g.roundPoints[i]);
   const played = g.round ? [...g.played, g.round] : g.played;
-  return { ...dealRound({ ...g, scores, played }, g.caller, deck), lastTrick: g.lastTrick };
+  const lastRound = g.round ? { kind: g.round, points: g.roundPoints } : g.lastRound;
+  return { ...dealRound({ ...g, scores, played, lastRound }, g.caller, deck), lastTrick: g.lastTrick };
 }
 
 function playJack(g: Game, seat: number, card: Card): Game {

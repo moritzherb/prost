@@ -34,6 +34,15 @@ const vierer: Record<string, string> = {
   '20 points for every Queen in your tricks': '20 Punkte für jede Dame in deinen Stichen',
   '50 points for whoever takes the King of clubs': '50 Punkte für den, der den Kreuz-König bekommt',
   '5 points for every trick you take': '5 Punkte für jeden Stich, den du machst',
+  // Tricks taken and the look back at a round
+  'A Queen!': 'Eine Dame!',
+  '{n} Queens!': '{n} Damen!',
+  'The King of clubs!': 'Der Kreuz-König!',
+  '+{n} for {name}': '+{n} für {name}',
+  Nothing: 'Nichts',
+  '1 Queen': '1 Dame',
+  '{n} Queens': '{n} Damen',
+  '1 trick': '1 Stich',
 };
 
 export default vierer;

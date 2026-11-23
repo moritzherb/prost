@@ -47,8 +47,13 @@ describe('4er', () => {
   });
 
   it('the King round: 50 for the King of clubs, nobody else scores', () => {
-    const g = autoplay(call(newGame(3), 0, 'king'), (x) => x.played.length === 1);
+    const first = newGame(3);
+    const g = autoplay(call(first, 0, 'king'), (x) => x.played.length === 1);
     expect([...g.scores].sort((a, b) => a - b)).toEqual([0, 0, 0, 50]);
+    // The look back at the round, the last trick's round, a new deal.
+    expect(g.lastRound).toEqual({ kind: 'king', points: g.scores });
+    expect(g.lastTrick?.kind).toBe('king');
+    expect(g.deal).toBe(first.deal + 1);
   });
 
   it('the Tricks round: 5 a trick, all 13', () => {
