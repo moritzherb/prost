@@ -313,9 +313,9 @@ function Table({
   // With many, the arc comes down beside the middle too (but stays above the deck in the corner).
   const spots = seatArc(n, { cx, cy, rx: Math.max(0, cx - 46), ry: Math.max(0, cy - 30), from: n <= 2 ? 150 : n === 3 ? 166 : 186, maxY: size.h - (n >= 4 ? 124 : 30) });
   // The trick's cards as big as the table has room for.
-  const tw = Math.round(Math.max(60, Math.min(100, size.w * 0.24, size.h * 0.26)));
-  // The trick right in the middle of the table.
-  const py = Math.min(size.h * 0.5 + tw * 0.25, size.h - tw * 1.15);
+  const tw = Math.round(Math.max(56, Math.min(88, size.w * 0.22, size.h * 0.23)));
+  // The trick right in the middle of the round table (global.css .fz-table-area::before).
+  const py = Math.min(size.h * 0.52, size.h - tw * 1.15);
   const spotOf = (seat: number) => {
     const k = order.indexOf(seat);
     return k >= 0 ? spots[k] : { x: cx, y: size.h + 60 };
@@ -323,7 +323,7 @@ function Table({
   const winnerId = g.taking != null ? g.trick.find((p) => p.seat === g.taking)?.card.id : undefined;
 
   return (
-    <div className="fz fill" style={g.trump ? ({ '--trump': `var(--${g.trump})` } as CSSProperties) : undefined}>
+    <div className="fz fill" style={sky ? ({ '--trump': `var(--${sky})` } as CSSProperties) : undefined}>
       <div className="fz-top">
         <span className="fz-round">{t('Round {n} of {m}', { n: g.round, m: g.rounds })}</span>
         <span className="fz-trump">
@@ -385,7 +385,7 @@ function Table({
             const dx = spot.x - cx;
             const dy = spot.y - py;
             const len = Math.hypot(dx, dy) || 1;
-            const reach = tw * 0.34;
+            const reach = tw * 0.22;
             return (
               <div
                 key={p.card.id}
@@ -405,7 +405,7 @@ function Table({
         <div className="fz-mine">
           <Tricks n={g.won[me]} />
           {g.bids[me] != null && <span className="fz-mine-bid">{t('{won} of {bid} tricks', { won: g.won[me], bid: g.bids[me]! })}</span>}
-          <span className="fz-seat-score">{t('{n} pts', { n: g.scores[me] })}</span>
+          {g.bids[me] != null && <span className="fz-seat-score">{t('{n} pts', { n: g.scores[me] })}</span>}
         </div>
       )}
 

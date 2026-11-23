@@ -15481,7 +15481,8 @@ button.profile-avatar:not(:disabled):active {
 .fz-table-area::before {
   content: '';
   position: absolute;
-  inset: 14% 2% 4%;
+  /* Wide as the table, down to its foot: room for the trick between the players. */
+  inset: 4% -2% 0;
   z-index: -1;
   border-radius: 50%;
   background:
@@ -15876,7 +15877,8 @@ button.profile-avatar:not(:disabled):active {
 .fz-status {
   align-self: center;
   max-width: 100%;
-  margin: 0;
+  /* Midway between the line above and the round table. */
+  margin: 18px 0 0;
   padding: 6px 16px;
   border-radius: 18px;
   text-align: center;
