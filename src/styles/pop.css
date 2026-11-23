@@ -2226,3 +2226,204 @@ html[data-look='pop'] .look-seg button.active {
   -webkit-user-select: none;
   user-select: none;
 }
+
+/* Stories (components/Stories.tsx): a line in the App Library's sunk style, one ring per friend,
+   lime while new and grey once seen; it scrolls sideways on its own. */
+.stories {
+  flex: none;
+  display: flex;
+  gap: 14px;
+  height: 84px;
+  padding: 8px 14px;
+  margin-bottom: 14px;
+  border-radius: 18px;
+  background: var(--pop-sunk);
+  box-shadow: var(--pop-sink);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  touch-action: pan-x;
+}
+
+.stories::-webkit-scrollbar {
+  display: none;
+}
+
+.story {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 54px;
+}
+
+.story-ring {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  padding: 2.5px;
+  background: var(--accent);
+  transition: background 0.3s;
+}
+
+.story.seen .story-ring {
+  background: color-mix(in srgb, var(--muted) 45%, transparent);
+}
+
+.story-face {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--f);
+  box-shadow: 0 0 0 2.5px var(--pop-sunk);
+  font-size: 1.15rem;
+}
+
+.story-face > *,
+.story-face .avatar-initial {
+  width: 100%;
+  height: 100%;
+}
+
+.story-name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 600 11px/1.1 var(--font-body);
+  color: var(--ink);
+}
+
+.story:active .story-ring {
+  transform: scale(0.94);
+}
+
+/* A story full screen: its colour all over, the bars on top, tap left for back and right for on. */
+.story-view {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  padding: max(10px, env(safe-area-inset-top)) 12px max(16px, env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--f) 70%, #000), color-mix(in srgb, var(--f) 35%, #000));
+  color: #fff;
+  animation: story-in 0.25s var(--ease-out) both;
+}
+
+@keyframes story-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+.story-bars {
+  display: flex;
+  gap: 4px;
+}
+
+.story-bar {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+
+.story-bar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: #fff;
+}
+
+.story-bar.done i {
+  width: 100%;
+}
+
+.story-bar.now i {
+  animation: story-run 4s linear forwards;
+}
+
+@keyframes story-run {
+  to {
+    width: 100%;
+  }
+}
+
+.story-head {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.story-face.small {
+  width: 34px;
+  height: 34px;
+  font-size: 0.9rem;
+}
+
+.story-who {
+  flex: 1;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.story-close {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+}
+
+.story-tap {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.story-tap.back {
+  left: 0;
+  width: 35%;
+}
+
+.story-tap.on {
+  right: 0;
+  width: 65%;
+}
+
+.story-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  text-align: center;
+  animation: story-in 0.3s var(--ease-out) both;
+}
+
+.story-emoji {
+  font-size: 96px;
+  line-height: 1;
+}
+
+.story-text {
+  max-width: 280px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.6rem;
+  line-height: 1.15;
+}

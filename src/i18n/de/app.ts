@@ -360,6 +360,17 @@ const app: Record<string, string> = {
   'prost! speaks your phone’s language: {lang}.': 'prost! spricht die Sprache deines Handys: {lang}.',
   'To change it, set the language in your phone’s settings. German or English: anything else shows in English.': 'Ändern kannst du sie in den Einstellungen deines Handys. Deutsch oder Englisch: alles andere zeigt prost! auf Englisch.',
   'Open settings': 'Einstellungen öffnen',
+  // Friends and stories (placeholders until there are accounts).
+  'Your friend code': 'Dein Freundescode',
+  'Their code': 'Ihr Code',
+  'Their name': 'Ihr Name',
+  'Add friend': 'Freund hinzufügen',
+  'No friends added yet. Swap codes with your crew.': 'Noch keine Freunde. Tauscht eure Codes aus.',
+  '{name}’s story': 'Story von {name}',
+  '{n} min': '{n} Min.',
+  'Playing {game} right now': 'Spielt gerade {game}',
+  Friends: 'Freunde',
+  'Your code, and the friends you’ve added': 'Dein Code und deine Freunde',
 };
 
 export default app;

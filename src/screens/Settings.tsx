@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Alert from '../components/Alert';
+import Friends from '../components/Friends';
 import CloudBackup from '../components/CloudBackup';
 import BigButton from '../components/BigButton';
 import Sheet from '../components/Sheet';
@@ -230,6 +231,7 @@ export default function Settings() {
   const { settings, updateSettings } = useApp();
   const adChoices = useAdChoices();
   const [lookOpen, setLookOpen] = useState(false);
+  const [friendsOpen, setFriendsOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [iconsOpen, setIconsOpen] = useState(false);
   const icons = useAppIcon();
@@ -319,6 +321,13 @@ export default function Settings() {
       {/* prost! itself: friends, a rating, its icon (the last two only in the store app). */}
       <section className="section">
         <div className="settings-list">
+          <button type="button" className="setting-row" onClick={() => setFriendsOpen(true)}>
+            <span className="setting-emoji" aria-hidden="true"><RowIcon name="invite" /></span>
+            <span className="setting-text">
+              <span className="setting-label">{t('Friends')}</span>
+              <span className="setting-hint">{t('Your code, and the friends you’ve added')}</span>
+            </span>
+          </button>
           <button type="button" className="setting-row" onClick={invite}>
             <span className="setting-emoji" aria-hidden="true"><RowIcon name="invite" /></span>
             <span className="setting-text">
@@ -371,6 +380,9 @@ export default function Settings() {
         </div>
       </section>
 
+      <Sheet open={friendsOpen} onClose={() => setFriendsOpen(false)} title={t('Friends')} closeLabel={t('Done')}>
+        <Friends />
+      </Sheet>
       <Sheet open={langOpen} onClose={() => setLangOpen(false)} title={t('Language')} closeLabel={t('Done')}>
         <p className="lead">{t('prost! speaks your phone’s language: {lang}.', { lang: LANGS.find((l) => l.id === getLang())?.label ?? '' })}</p>
         <p className="fine-print">{t('To change it, set the language in your phone’s settings. German or English: anything else shows in English.')}</p>
