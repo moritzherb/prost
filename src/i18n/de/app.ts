@@ -357,8 +357,8 @@ const app: Record<string, string> = {
   'Rate prost!': 'prost! bewerten',
   'A few stars help a lot': 'Ein paar Sterne helfen viel',
   'App icon': 'App-Symbol',
-  'prost! speaks your phone’s language: {lang}.': 'prost! spricht die Sprache deines Handys: {lang}.',
-  'To change it, set the language in your phone’s settings. German or English: anything else shows in English.': 'Ändern kannst du sie in den Einstellungen deines Handys. Deutsch oder Englisch: alles andere zeigt prost! auf Englisch.',
+  'Prost uses your system´s language: {lang}.': 'Prost verwendet die Systemsprache: {lang}.',
+  'To change it, set the language in your settings.': 'Ändern kannst du sie in den Einstellungen.',
   'Open settings': 'Einstellungen öffnen',
   // Friends and stories (placeholders until there are accounts).
   'Your friend code': 'Dein Freundescode',

@@ -19,11 +19,11 @@ import { useApp } from '../state/AppState';
 
 type Toggle = 'sound' | 'haptics' | 'clean' | 'knowAll';
 
-const OPTIONS: { key: Toggle; icon: RowGlyph; label: string; hint: string }[] = [
-  { key: 'sound', icon: 'sound', label: tx('Sounds'), hint: tx('Boops, ticks and fanfares') },
-  { key: 'haptics', icon: 'vibrate', label: tx('Vibration'), hint: tx('Phone buzzes when you tap') },
-  { key: 'clean', icon: 'clean', label: tx('Clean table'), hint: tx('In games just the cards and the buttons you need') },
-  { key: 'knowAll', icon: 'know', label: tx('We know the games'), hint: tx('No explanations in the games. The rules stay behind the ? button.') },
+const OPTIONS: { key: Toggle; icon: RowGlyph; label: string; hint?: string }[] = [
+  { key: 'sound', icon: 'sound', label: tx('Sounds') },
+  { key: 'haptics', icon: 'vibrate', label: tx('Vibration') },
+  { key: 'clean', icon: 'clean', label: tx('Clean table'), hint: tx('Just the cards and buttons you need') },
+  { key: 'knowAll', icon: 'know', label: tx('We know the games'), hint: tx('Explanations stay behind the ? button') },
 ];
 
 /** In the new look: whose home screen. */
@@ -74,7 +74,6 @@ function WallpaperRow() {
       <span className="setting-emoji" aria-hidden="true"><RowIcon name="wallpaper" /></span>
       <span className="setting-text">
         <span className="setting-label">{t('Wallpaper')}</span>
-        <span className="setting-hint">{t('Behind the games on the home screen')}</span>
       </span>
       <span className="wall-options" role="radiogroup" aria-label={t('Wallpaper')}>
         {WALLPAPERS.map((w) => (
@@ -140,7 +139,7 @@ function ResetHomeRow() {
         <span className="setting-emoji" aria-hidden="true"><RowIcon name="reset" /></span>
         <span className="setting-text">
           <span className="setting-label">{t('Reset home screen')}</span>
-          <span className="setting-hint">{done ? '✓' : t('Every game back, in the first order')}</span>
+          <span className="setting-hint">{done && '✓'}</span>
         </span>
       </button>
       {/* It can't be undone (your own order and the games you took off go), so it asks first. */}
@@ -278,7 +277,7 @@ export default function Settings() {
               <span className="setting-emoji" aria-hidden="true"><RowIcon name={o.icon} /></span>
               <span className="setting-text">
                 <span className="setting-label">{t(o.label)}</span>
-                <span className="setting-hint">{t(o.hint)}</span>
+                {o.hint && <span className="setting-hint">{t(o.hint)}</span>}
               </span>
               <span className="switch">
                 <span className="switch-knob" />
@@ -295,7 +294,7 @@ export default function Settings() {
             <span className="setting-emoji" aria-hidden="true"><RowIcon name="look" /></span>
             <span className="setting-text">
               <span className="setting-label">{t('Home screen')}</span>
-              <span className="setting-hint">{t('Phone, wallpaper, order')}</span>
+              <span className="setting-hint">{t('Phone, Wallpaper, Order')}</span>
             </span>
             <span className="look-chevron" aria-hidden="true">
               <ChevronIcon />
@@ -307,7 +306,6 @@ export default function Settings() {
                   <span className="setting-emoji" aria-hidden="true"><RowIcon name="phone" /></span>
                   <span className="setting-text">
                     <span className="setting-label">{t('Home screen')}</span>
-                    <span className="setting-hint">{t('Like your phone’s own')}</span>
                   </span>
                   <Choice label={t('Home screen')} value={settings.phone ?? 'auto'} options={PHONES} onPick={(phone) => updateSettings({ phone })} />
               </div>
@@ -365,7 +363,7 @@ export default function Settings() {
             <span className="setting-emoji" aria-hidden="true"><RowIcon name="lock" /></span>
             <span className="setting-text">
               <span className="setting-label">{t('Privacy policy')}</span>
-              <span className="setting-hint">{t('Privacy, terms of use, imprint')}</span>
+              <span className="setting-hint">{t('Privacy, Terms of use, Imprint')}</span>
             </span>
           </button>
           {adChoices && (
@@ -384,8 +382,8 @@ export default function Settings() {
         <Friends />
       </Sheet>
       <Sheet open={langOpen} onClose={() => setLangOpen(false)} title={t('Language')} closeLabel={t('Done')}>
-        <p className="lead">{t('prost! speaks your phone’s language: {lang}.', { lang: LANGS.find((l) => l.id === getLang())?.label ?? '' })}</p>
-        <p className="fine-print">{t('To change it, set the language in your phone’s settings. German or English: anything else shows in English.')}</p>
+        <p className="lead">{t('Prost uses your system´s language: {lang}.', { lang: LANGS.find((l) => l.id === getLang())?.label ?? '' })}</p>
+        <p className="fine-print">{t('To change it, set the language in your settings.')}</p>
         {isNative && (
           <BigButton onClick={() => toNative({ type: 'settings' })}>{t('Open settings')}</BigButton>
         )}
@@ -416,9 +414,9 @@ export default function Settings() {
       <section className="panel">
         <h2 className="section-title">{t('Play nice')}</h2>
         <ul className="plain-list">
-          <li>{t('Every sip can be water or a soft drink. No pressure, ever.')}</li>
+          <li>{t('Every sip can be water or an anti-alcoholic drink. No pressure, ever.')}</li>
           <li>{t('Eat something before you start.')}</li>
-          <li>{t('Never drink and drive – plan your ride home.')}</li>
+          <li>{t('Never drink and drive! Plan your ride home.')}</li>
           <li>{t('Look out for your mates.')}</li>
         </ul>
       </section>
