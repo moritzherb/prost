@@ -17102,6 +17102,112 @@ html[data-look] .play-screen > .top-bar .round-btn {
   }
 }
 
+/* The square box (2 to 4 players): each row on a side of its own, set like a pinwheel (each from
+   one corner to the next row), the felt in the middle. It turns to whoever's on; the felt turns back
+   so its writing stays upright. */
+.nf-square-stage {
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  container-type: size;
+}
+
+.nf-square {
+  --sq: min(100cqw, 100cqh);
+  position: relative;
+  width: var(--sq);
+  height: var(--sq);
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg, rgba(255, 236, 205, 0.16), rgba(0, 0, 0, 0.22)),
+    var(--nf-frame) center / max(100%, 440px) auto;
+  background-color: #7d4b26;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 232, 196, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.45),
+    0 22px 34px -18px rgba(0, 0, 0, 0.75);
+  rotate: var(--turn);
+  transition: rotate 0.9s cubic-bezier(0.65, 0, 0.25, 1);
+}
+
+.nf-side-row {
+  position: absolute;
+  /* Over the felt (each row turned is a layer of its own): its name shows on the felt's edge. */
+  z-index: 2;
+  inset: 0;
+  rotate: var(--side);
+  pointer-events: none;
+}
+
+.nf-side-row .nf-flaps {
+  position: absolute;
+  left: 3%;
+  width: 73%;
+  bottom: 3%;
+  height: 19%;
+  gap: 2px;
+  padding: 8px 4px 5px;
+  pointer-events: auto;
+}
+
+.nf-side-row .nf-flap {
+  height: 100%;
+}
+
+.nf-side-row .nf-flap-face {
+  font-size: calc(var(--sq) * 0.042);
+}
+
+/* Whose row: their name by it, the one on now ringed in their colour. */
+.nf-side-name {
+  position: absolute;
+  z-index: 2;
+  left: 26%;
+  right: 26%;
+  bottom: 25%;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--p);
+  font-size: calc(var(--sq) * 0.036);
+  font-weight: 800;
+  opacity: 0.75;
+}
+
+.nf-side-row.on .nf-flaps {
+  box-shadow:
+    inset 0 4px 8px rgba(0, 0, 0, 0.75),
+    0 0 0 2px var(--p),
+    0 0 14px 2px color-mix(in srgb, var(--p) 55%, transparent);
+}
+
+.nf-side-row.on .nf-side-name {
+  opacity: 1;
+}
+
+/* Another player's flaps lie as they left them: no fall again. */
+.nf-flap.down.still .nf-block,
+.nf-flap.down.still .nf-side::after {
+  animation: none;
+}
+
+.nf-felt.nf-square-felt {
+  position: absolute;
+  inset: 24%;
+  min-height: 0;
+  padding: 8px;
+  rotate: calc(-1 * var(--turn));
+  transition: rotate 0.9s cubic-bezier(0.65, 0, 0.25, 1);
+}
+
+.nf-felt.nf-square-felt .nf-dice {
+  gap: 12px;
+  min-height: 0;
+  scale: 0.8;
+}
+
 .nf-felt {
   position: relative;
   display: flex;

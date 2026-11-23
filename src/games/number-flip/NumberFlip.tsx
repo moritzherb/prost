@@ -60,7 +60,12 @@ interface Setup {
   size: BoardSize;
   level: Level;
   rounds: 5 | 10;
+  /** 2 to 4 players: a square box, each player's row of flaps on a side of their own. */
+  square?: boolean;
 }
+
+/** The square box is for 2 to 4 players. */
+const squareFor = (setup: Setup, players: number) => !!setup.square && players >= 2 && players <= 4;
 
 const MODE_INFO: Record<Mode, { name: string; text: string; icon: GlyphName }> = {
   classic: { name: tx('Classic'), text: tx('Everyone plays one box a round. Lowest score wins the round.'), icon: 'dice' },
@@ -96,6 +101,8 @@ interface Match {
   /** Each round's scores, per player. */
   scores: Record<string, number>[];
   lives: Record<string, number>;
+  /** The square box: each player's flaps as they left them this round. */
+  rows: Record<string, number[]>;
   /** Between turns, after the round, after the game. */
   phase: 'turn' | 'handover' | 'round' | 'over';
 }
@@ -115,8 +122,10 @@ export default function NumberFlip({ players }: GameProps) {
   const byId = (id: string) => players.find((p) => p.id === id)!;
   const solo = players.length < 2;
 
-  const start = (s: Setup) => {
-    save('number-flip-setup', s);
+  const start = (s0: Setup) => {
+    save('number-flip-setup', s0);
+    // The square box has nine flaps a side.
+    const s = squareFor(s0, players.length) ? { ...s0, size: 9 as const } : s0;
     setM({
       setup: s,
       round: 1,
@@ -125,18 +134,19 @@ export default function NumberFlip({ players }: GameProps) {
       box: freshBox(s.size),
       scores: [{}],
       lives: Object.fromEntries(players.map((p) => [p.id, LIVES])),
+      rows: {},
       phase: 'turn',
     });
   };
 
   useCrewButton(m ? null : 'crew');
-  if (!m) return <SetupScreen setup={setup} onChange={setSetup} solo={solo} onStart={start} />;
+  if (!m) return <SetupScreen setup={setup} onChange={setSetup} solo={solo} count={players.length} onStart={start} />;
   return <Play m={m} setM={setM} players={players} byId={byId} known={known} onSetup={() => setM(null)} />;
 }
 
 /* ---------- Before the game ---------- */
 
-function SetupScreen({ setup, onChange, solo, onStart }: { setup: Setup; onChange: (s: Setup) => void; solo: boolean; onStart: (s: Setup) => void }) {
+function SetupScreen({ setup, onChange, solo, count, onStart }: { setup: Setup; onChange: (s: Setup) => void; solo: boolean; count: number; onStart: (s: Setup) => void }) {
   const set = (patch: Partial<Setup>) => {
     sfx.tick();
     buzz(8);
@@ -188,6 +198,13 @@ function SetupScreen({ setup, onChange, solo, onStart }: { setup: Setup; onChang
           })}
         </div>
       </section>
+
+      {/* 2 to 4 players: one box passed round, or the square one with a side each that turns. */}
+      {count >= 2 && count <= 4 && (
+        <section className="panel nf-opts no-rounds">
+          <Choice label={t('Box')} options={['one', 'square'] as const} value={setup.square ? 'square' : 'one'} name={(v) => (v === 'square' ? t('Square, a side each') : t('One box'))} onPick={(v) => set({ square: v === 'square' })} />
+        </section>
+      )}
 
       {/* The box and the level: most never change them, so they're folded away. Rounds only for a
           tournament: last, with its room kept when it's not there. */}
@@ -265,7 +282,7 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
     const scores = [...x.scores];
     scores[x.round - 1] = { ...scores[x.round - 1], [id]: score(x.box.open) };
     const last = x.turn === x.order.length - 1;
-    return { ...x, scores, box: { ...x.box, over: true }, phase: last ? 'round' : 'handover' };
+    return { ...x, scores, rows: { ...x.rows, [id]: x.box.open }, box: { ...x.box, over: true }, phase: last ? 'round' : 'handover' };
   };
 
   // Time attack: the clock runs from the first roll; at 0 the box closes as it is.
@@ -422,38 +439,64 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
   );
   const stuck = box.over && box.open.length > 0;
   const flapState = { open: box.open, picked: box.picked, falling, interactive: !!dice && !box.rolling && !box.over && !falling.length && m.phase === 'turn', stuck };
+  /** One flap: `open` the ones standing in its row; `live` for the row being played now. */
+  const flap = (n: number, open: number[], live: boolean) => {
+    const down = !open.includes(n);
+    const picked = live && box.picked.includes(n);
+    return (
+      <button
+        key={n}
+        type="button"
+        className={`nf-flap${down ? ' down' : ''}${picked ? ' picked' : ''}${live && nope === n ? ' nope' : ''}${!live && down ? ' still' : ''}`}
+        style={{ '--gx': `${-((n * 67) % 300)}px`, '--d': `${Math.max(0, live ? falling.indexOf(n) : 0) * STAGGER}ms` } as CSSProperties}
+        aria-label={down ? t('{n}, flipped', { n }) : String(n)}
+        aria-pressed={picked}
+        disabled={!live || down || !dice || box.rolling || box.over || falling.length > 0}
+        onClick={() => tap(n)}
+      >
+        {/* A block of wood: its face with the number, its back, its top and its sides. */}
+        <span className="nf-block" aria-hidden>
+          <span className="nf-side front">
+            <span className="nf-flap-face">{n}</span>
+          </span>
+          <span className="nf-side back" />
+          <span className="nf-side top" />
+          <span className="nf-side bottom" />
+          <span className="nf-side left" />
+          <span className="nf-side right" />
+        </span>
+      </button>
+    );
+  };
+  // The square box: every player's row on a side of their own (two players face each other), the
+  // felt in the middle. It turns so the side of whoever's on faces them: always on the same way
+  // round, a lap more each round; the felt turns back so its writing stays upright.
+  const square = squareFor(setup, players.length);
+  const sideOf = (i: number) => (players.length === 2 ? i * 2 : i);
+  const seat = players.findIndex((p) => p.id === m.order[m.turn]);
+  const turnAngle = -(90 * sideOf(seat) + 360 * (m.round - 1));
+  const squareBox = () => (
+    <div className="nf-square-stage">
+      <div className={`nf-square${stuck ? ' stuck' : ''}`} style={{ ...(woodVars() as CSSProperties), '--turn': `${turnAngle}deg` } as CSSProperties}>
+        {players.map((p, i) => {
+          const live = i === seat && m.phase === 'turn';
+          const open = i === seat ? box.open : (m.rows[p.id] ?? flaps(9));
+          return (
+            <div key={p.id} className={`nf-side-row${i === seat ? ' on' : ''}`} style={{ '--side': `${sideOf(i) * 90}deg`, '--p': p.color } as CSSProperties}>
+              <span className="nf-side-name">{p.name}</span>
+              <div className="nf-flaps">{flaps(9).map((n) => flap(n, open, live))}</div>
+            </div>
+          );
+        })}
+        <div className="nf-felt nf-square-felt">{feltWriting(true)}</div>
+      </div>
+    </div>
+  );
   const flatBox = () => (
         <div className={`nf-box size-${setup.size}${stuck ? ' stuck' : ''}`} style={woodVars() as CSSProperties}>
           {(setup.size === 12 ? [flaps(12).slice(0, 6), flaps(12).slice(6)] : [flaps(9)]).map((row) => (
             <div key={row[0]} className="nf-flaps">
-              {row.map((n) => {
-                const down = !box.open.includes(n);
-                const picked = box.picked.includes(n);
-                return (
-                  <button
-                    key={n}
-                    type="button"
-                    className={`nf-flap${down ? ' down' : ''}${picked ? ' picked' : ''}${nope === n ? ' nope' : ''}`}
-                    style={{ '--gx': `${-((n * 67) % 300)}px`, '--d': `${Math.max(0, falling.indexOf(n)) * STAGGER}ms` } as CSSProperties}
-                    aria-label={down ? t('{n}, flipped', { n }) : String(n)}
-                    aria-pressed={picked}
-                    disabled={down || !dice || box.rolling || box.over || falling.length > 0}
-                    onClick={() => tap(n)}
-                  >
-                    {/* A block of wood: its face with the number, its back, its top and its sides. */}
-                    <span className="nf-block" aria-hidden>
-                      <span className="nf-side front">
-                        <span className="nf-flap-face">{n}</span>
-                      </span>
-                      <span className="nf-side back" />
-                      <span className="nf-side top" />
-                      <span className="nf-side bottom" />
-                      <span className="nf-side left" />
-                      <span className="nf-side right" />
-                    </span>
-                  </button>
-                );
-              })}
+              {row.map((n) => flap(n, box.open, true))}
             </div>
           ))}
           <div className="nf-felt">
@@ -487,7 +530,9 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
         </div>
       )}
 
-      {three ? (
+      {square ? (
+        squareBox()
+      ) : three ? (
         <Suspense fallback={<div className={`nf-stage size-${setup.size}`}><div className="nf-canvas-host" /></div>}>
           <Box3DView
             size={setup.size}
@@ -616,6 +661,7 @@ function RoundEnd({
             turn: 0,
             box: freshBox(setup.size),
             scores: [...x.scores, {}],
+            rows: {},
             phase: 'turn',
           }
         : x,
@@ -629,6 +675,7 @@ function RoundEnd({
       box: freshBox(setup.size),
       scores: [{}],
       lives: Object.fromEntries(players.map((p) => [p.id, LIVES])),
+      rows: {},
       phase: 'turn',
     });
 
