@@ -543,7 +543,9 @@ function ghostFly(el: HTMLElement, [from, to]: [string, string], timing: Keyfram
   ghost.style.setProperty('--cw', getComputedStyle(el).getPropertyValue('--cw'));
   (el.closest('.tr') ?? document.body).appendChild(ghost);
   el.style.visibility = 'hidden';
-  const a = ghost.animate([{ transform: `${from} rotate(180deg)` }, { transform: `${to} rotate(180deg)` }], timing);
+  // Turned like the middle it stands for ('none' can't be combined with a turn: just the turn then).
+  const turned = (tf: string) => (tf === 'none' ? 'rotate(180deg)' : `${tf} rotate(180deg)`);
+  const a = ghost.animate([{ transform: turned(from) }, { transform: turned(to) }], timing);
   a.onfinish = a.oncancel = () => {
     ghost.remove();
     el.style.visibility = '';
