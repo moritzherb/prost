@@ -372,6 +372,15 @@ const app: Record<string, string> = {
   Friends: 'Freunde',
   'Your code, and the friends you’ve added': 'Dein Code und deine Freunde',
   'More options': 'Mehr Optionen',
+
+  
+  // Settings translations
+  'Just the cards and buttons you need': 'Nur die Karten und Buttons, die du brauchst',
+  'Explanations stay behind the ? button': 'Die Erklärungen findest du hinter dem ?-Button',
+  'Phone, Wallpaper, Order': 'Handy, Hintergrund, Reihenfolge',
+  'Privacy, Terms of use, Imprint': 'Datenschutz, Nutzungsbedingungen, Impressum',
+  'Every sip can be water or an anti-alcoholic drink. No pressure, ever.': 'Jeder Schluck kann auch Wasser oder ein alkoholfreies Getränk sein. Ganz ohne Druck.',
+  'Never drink and drive! Plan your ride home.': 'Nie alkoholisiert fahren! Plane deinen Heimweg.',
 };
 
 export default app;
