@@ -7562,9 +7562,29 @@ li {
 }
 
 .sp-ready {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* Too many cards: the warning floats over the hand's top edge, so the hand never moves. */
+.sp-mine {
+  position: relative;
+}
+
+.sp-warn {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -30px;
+  z-index: 2;
+  margin: 0;
+  text-align: center;
 }
 
 .sp-ready-hint {

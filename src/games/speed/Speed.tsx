@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import BigButton from '../../components/BigButton';
 import { SortButton } from '../../components/HandFan';
 import { CardFace } from '../../components/PlayingCard';
@@ -322,6 +322,34 @@ export default function Speed() {
     act({ t: 'draw' });
   };
 
+  // Over: a plain end screen, as in the other games (not a box over the table).
+  if (g.phase === 'over') {
+    const won = g.winner === me;
+    return (
+      <div className="bd">
+        <Finished game="speed" />
+        <div className="bd-head center">
+          <span className="kicker">{t('Game over')}</span>
+          <h2 className="bd-title big">{won ? t('You win!') : t('{name} wins!', { name: match.seats[g.winner ?? 0].name })}</h2>
+        </div>
+        <div className="sticky-action stack">
+          {isHost ? (
+            <>
+              <BigButton size="xl" onClick={() => setHostMatch({ game: newGame(), seats: match.seats, count: 0 })}>
+                {t('Rematch')}
+              </BigButton>
+              <BigButton variant="glass" onClick={() => setHostMatch(null)}>
+                {t('Pick other players')}
+              </BigButton>
+            </>
+          ) : (
+            <p className="lead center">{t('Waiting for the host…')}</p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`sp fill${playing ? '' : ' watching'}`}>
       {playing ? (
@@ -333,41 +361,37 @@ export default function Speed() {
         </>
       )}
 
-      <Middle g={g} count={g.phase === 'count' ? match.count : null} />
+      <Middle g={g} count={g.phase === 'count' ? match.count : null}>
+        {/* Ready? Over the table, not under your cards: nothing moves once the game starts. */}
+        {playing && g.phase === 'ready' && (
+          <div className="sp-ready">
+            {!known && <p className="sp-ready-hint">{t('Tap a card to put it on a middle pile that’s one higher or lower. Ace goes on King or 2.')}</p>}
+            {g.ready[mine] ? (
+              <BigButton variant="glass" disabled>
+                {t('Waiting for {name}…', { name: match.seats[them].name })}
+              </BigButton>
+            ) : (
+              <BigButton size="xl" onClick={() => act({ t: 'ready' })}>
+                {t('Ready')}
+              </BigButton>
+            )}
+          </div>
+        )}
+      </Middle>
 
       {playing && (
         <MyHalf
           g={g}
           who={mine}
-          other={match.seats[them].name}
           known={known}
           shake={shake}
           locked={lockedUntil > 0}
           onCard={tapCard}
           onPile={tapPile}
           onSort={() => act({ t: 'sort' })}
-          onReady={() => act({ t: 'ready' })}
         />
       )}
 
-      {g.phase === 'over' && (
-        <div className="sp-over">
-          <Finished game="speed" />
-          <p className="sp-result">
-            {g.winner === me ? t('You win!') : t('{name} wins!', { name: match.seats[g.winner ?? 0].name })}
-          </p>
-          {isHost ? (
-            <>
-              <BigButton onClick={() => setHostMatch({ game: newGame(), seats: match.seats, count: 0 })}>{t('Rematch')}</BigButton>
-              <BigButton variant="glass" onClick={() => setHostMatch(null)}>
-                {t('Pick other players')}
-              </BigButton>
-            </>
-          ) : (
-            <p className="lead center">{t('Waiting for the host…')}</p>
-          )}
-        </div>
-      )}
     </div>
   );
 }
@@ -402,25 +426,21 @@ function Opponent({ g, who, seat }: { g: Game; who: Who; seat: Seat }) {
 function MyHalf({
   g,
   who,
-  other,
   known,
   shake,
   locked,
   onCard,
   onPile,
   onSort,
-  onReady,
 }: {
   g: Game;
   who: Who;
-  other: string;
   known: boolean;
   shake: string | null;
   locked: boolean;
   onCard: (i: number) => void;
   onPile: () => void;
   onSort: () => void;
-  onReady: () => void;
 }) {
   const side = g.sides[who];
   const left = side.hand.length + side.pile.length;
@@ -473,26 +493,12 @@ function MyHalf({
         )}
       </div>
 
-      {g.phase === 'ready' && (
-        <div className="sticky-action sp-ready">
-          {!known && <p className="sp-ready-hint">{t('Tap a card to put it on a middle pile that’s one higher or lower. Ace goes on King or 2.')}</p>}
-          {g.ready[who] ? (
-            <BigButton variant="glass" disabled>
-              {t('Waiting for {name}…', { name: other })}
-            </BigButton>
-          ) : (
-            <BigButton size="xl" onClick={onReady}>
-              {t('Ready')}
-            </BigButton>
-          )}
-        </div>
-      )}
     </section>
   );
 }
 
 /** The middle of the table: the two side stacks and the two piles everyone plays on. */
-function Middle({ g, count }: { g: Game; count: number | null }) {
+function Middle({ g, count, children }: { g: Game; count: number | null; children?: ReactNode }) {
   // Every phone works this out from the same state, so everyone sees it at once.
   const nobody = stuck(g);
   const restart = g.middle[0].length > 0 || g.middle[1].length > 0;
@@ -532,6 +538,7 @@ function Middle({ g, count }: { g: Game; count: number | null }) {
           </span>
         </span>
       )}
+      {children}
     </div>
   );
 }
