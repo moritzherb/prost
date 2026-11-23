@@ -18292,3 +18292,234 @@ html.table-phone .game-bar .top-bar-side.right {
     scale: 0.8;
   }
 }
+
+/*
+ * The patience games for one (Beat the Deck, Clock Patience, Accordion): a line on top, the felt
+ * filling the screen, and the pile with the one button at the bottom. Every part keeps its size
+ * whatever happens: nothing moves but the cards. Prefixes: sol- (all), btd-, clk-, acc-.
+ */
+.sol {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sol > * {
+  flex-shrink: 0;
+}
+
+.sol-status {
+  height: 28px;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sol-felt {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  border-radius: var(--radius-lg);
+  background: radial-gradient(ellipse at 50% 35%, #2a7a4f, #17553a 75%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25), inset 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.sol-card {
+  position: relative;
+  display: block;
+  width: var(--cw);
+  height: calc(var(--cw) * 1.4);
+}
+
+.sol-card .pcard-face {
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+  box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.45);
+}
+
+.sol-card .pcard-front {
+  box-shadow: inset 0 0 0 1px #dcdfe4, 0 2px 6px -2px rgba(0, 0, 0, 0.45);
+}
+
+.sol-card .pcard-back {
+  transform: none;
+}
+
+/* An empty place: just its outline. */
+.sol-card.gone .pcard-face {
+  background: none;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.25);
+}
+
+/* A card just put down: it settles in. */
+.sol-land {
+  animation: sol-land 0.32s var(--spring) both;
+}
+
+@keyframes sol-land {
+  from {
+    opacity: 0;
+    scale: 1.12;
+    translate: 0 -10px;
+  }
+}
+
+.sol-foot {
+  --cw: 56px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: calc(56px * 1.4);
+}
+
+.sol-foot .big-btn {
+  flex: 1;
+}
+
+.sol-pile,
+.sol-hand {
+  position: relative;
+  flex: none;
+}
+
+.sol-pile-n {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Beat the Deck: three by three, as big as the felt allows; the picked one lifted and ringed. */
+.btd-grid {
+  --cw: min(calc((100vw - 2 * var(--gutter) - 64px) / 3), 18dvh / 1.4 * 1.2, 112px);
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  place-content: center;
+  gap: 14px 16px;
+}
+
+.btd-place {
+  position: relative;
+  border-radius: calc(var(--cw) * 0.12);
+  transition: transform 0.2s var(--spring);
+  /* A taller stack, the more cards lie there (a hair per card). */
+  box-shadow: calc(var(--depth) * 1px) calc(var(--depth) * 1.5px) 0 -1px rgba(255, 255, 255, 0.55);
+}
+
+.btd-place.picked {
+  transform: translateY(-6px);
+}
+
+.btd-place.picked .pcard-front {
+  box-shadow: 0 0 0 3px var(--accent), 0 12px 22px -8px rgba(0, 0, 0, 0.55);
+}
+
+.btd-place.dead {
+  box-shadow: none;
+}
+
+.btd-guess {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* Clock Patience: twelve places round the clock, the Kings in the middle. */
+.clk-face {
+  --cw: min(calc((100vw - 2 * var(--gutter)) * 0.15), 9dvh, 64px);
+  container-type: size;
+}
+
+.clk-place {
+  position: absolute;
+  translate: -50% -50%;
+  display: grid;
+  justify-items: center;
+}
+
+.clk-place.next .sol-card {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: calc(var(--cw) * 0.12);
+}
+
+.clk-hour {
+  position: absolute;
+  bottom: calc(-1.1em - 2px);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.clk-down,
+.clk-laid,
+.acc-n {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.clk-laid {
+  right: auto;
+  left: -7px;
+  background: var(--ink);
+  color: var(--bg);
+}
+
+/* Accordion: the line of piles, wrapped in rows, as many as there are. */
+.acc-line {
+  --cw: min(calc((100vw - 2 * var(--gutter) - 24px - 6 * 6px) / 7), 60px);
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 10px 6px;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.acc-pile {
+  position: relative;
+  border-radius: calc(var(--cw) * 0.12);
+  transition: transform 0.2s var(--spring);
+}
+
+.acc-pile.picked {
+  transform: translateY(-4px);
+}
+
+.acc-pile.picked .pcard-front {
+  box-shadow: 0 0 0 3px var(--accent);
+}
+
+.acc-pile.target .pcard-front {
+  box-shadow: 0 0 0 3px #fff;
+  animation: nudge 1.2s ease-in-out infinite;
+}
