@@ -18,7 +18,7 @@ import {
   rowSips,
   SIP_MODES,
   type SipMode,
-} from './pyramidLogic';
+} from './pyramid';
 import { VERDICT_DELAY_MS } from './Answers';
 import { fitCards, useBox } from '../../lib/useBox';
 import Avatar from '../../components/Avatar';
