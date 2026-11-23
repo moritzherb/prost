@@ -18822,3 +18822,241 @@ html.table-phone .game-bar .top-bar-side.right {
   font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
+
+/*
+ * Pub Quiz: the scores in a slim row on top of every phone. The quizmaster's phone: the question
+ * big on a card, the answer under it, and at the bottom who buzzed with Right/Wrong (or moving
+ * on). A buzzer phone: one big round red button in the middle, nothing else to read. Prefix pq-.
+ */
+.pq {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pq > * {
+  flex-shrink: 0;
+}
+
+.pq-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pq-board {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 2px var(--gutter);
+}
+
+.pq-board::-webkit-scrollbar {
+  display: none;
+}
+
+.pq-score {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px 0 10px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: inset 3px 0 0 var(--chip), inset 0 0 0 1px var(--line);
+  transition: box-shadow 0.2s, transform 0.2s var(--spring);
+}
+
+.pq-score.mine {
+  box-shadow: inset 3px 0 0 var(--chip), inset 0 0 0 2px var(--chip);
+}
+
+.pq-score.buzzed {
+  transform: scale(1.06);
+  box-shadow: inset 0 0 0 2px var(--chip);
+}
+
+.pq-score-name {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.pq-score-n {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.pq-card {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  padding: 22px 20px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+  overflow-y: auto;
+  animation: pop-in 0.3s var(--spring) both;
+}
+
+.pq-meta {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.pq-question {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.25rem, 6vw, 1.7rem);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.pq-answer {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  font-weight: 700;
+}
+
+.pq-answer span {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* The bottom: always this tall, whoever buzzed or not. */
+.pq-master-foot {
+  height: 124px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.pq-waiting {
+  margin: 0;
+  text-align: center;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.pq-buzzed {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--chip);
+  animation: pq-pop 0.45s var(--spring) both;
+}
+
+@keyframes pq-pop {
+  0% {
+    scale: 0.6;
+    opacity: 0;
+  }
+  60% {
+    scale: 1.12;
+    opacity: 1;
+  }
+}
+
+.pq-judge {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.pq-buzz-status {
+  margin: 0;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.pq-buzz-room {
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+}
+
+/* The buzzer: a big red dome on a dark ring; pressed, it sinks; somebody else's buzz, it greys. */
+.pq-buzzer {
+  --size: min(72vw, 46dvh, 300px);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  padding: calc(var(--size) * 0.06);
+  background: #1b1c19;
+  box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.6), inset 0 0 0 2px rgba(255, 255, 255, 0.06);
+  touch-action: manipulation;
+}
+
+.pq-buzzer-cap {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff8a80, #e53935 45%, #a51d18 100%);
+  box-shadow: 0 calc(var(--size) * 0.04) 0 #7d1410, inset 0 -6px 14px rgba(0, 0, 0, 0.25);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: calc(var(--size) * 0.13);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+  transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, filter 0.2s;
+  overflow: hidden;
+  padding: 0 10px;
+}
+
+.pq-buzzer:not(:disabled):active .pq-buzzer-cap {
+  transform: translateY(calc(var(--size) * 0.03));
+  box-shadow: 0 calc(var(--size) * 0.01) 0 #7d1410, inset 0 -3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.pq-buzzer.off .pq-buzzer-cap {
+  filter: grayscale(0.85) brightness(0.7);
+}
+
+/* Somebody buzzed: the cap takes their colour and their name, and pulses once. */
+.pq-buzzer.locked .pq-buzzer-cap {
+  filter: none;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--chip) 60%, #fff), var(--chip) 55%, color-mix(in srgb, var(--chip) 70%, #000));
+  color: #151612;
+  text-shadow: none;
+  font-size: calc(var(--size) * 0.1);
+  animation: pq-pop 0.45s var(--spring) both;
+}
+
+.pq-buzzer.mine .pq-buzzer-cap {
+  box-shadow: 0 0 0 8px color-mix(in srgb, var(--chip) 40%, transparent), 0 calc(var(--size) * 0.04) 0 rgba(0, 0, 0, 0.3);
+}
+
+.pq-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
