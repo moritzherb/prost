@@ -15,6 +15,8 @@ export interface Place {
   top: Card;
   /** Cards in this place (for the stack's height). */
   count: number;
+  /** The cards under the top one, the first laid first (they peek out of the pile). */
+  below: Card[];
   dead: boolean;
 }
 
@@ -27,7 +29,7 @@ export interface Game {
 
 export function newGame(deck: Card[] = shuffle(newDeck())): Game {
   const rest = [...deck];
-  const places = Array.from({ length: PLACES }, () => ({ top: rest.pop()!, count: 1, dead: false }));
+  const places = Array.from({ length: PLACES }, () => ({ top: rest.pop()!, count: 1, below: [], dead: false }));
   return { places, deck: rest, last: null };
 }
 
@@ -39,7 +41,7 @@ export function guess(g: Game, place: number, how: Guess): Game {
   const deck = g.deck.slice(0, -1);
   const card = g.deck[g.deck.length - 1];
   const right = how === 'higher' ? card.value > p.top.value : card.value < p.top.value;
-  const places = g.places.map((x, i) => (i === place ? { top: card, count: x.count + 1, dead: !right } : x));
+  const places = g.places.map((x, i) => (i === place ? { top: card, count: x.count + 1, below: [...x.below, x.top], dead: !right } : x));
   return { places, deck, last: { place, card, right } };
 }
 

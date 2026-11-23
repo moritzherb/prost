@@ -1,10 +1,11 @@
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import BigButton from '../../components/BigButton';
 import { t } from '../../i18n';
 import { rankLabel } from '../../lib/cards';
 import { buzz, celebrate, sfx } from '../../lib/fx';
 import type { GameProps } from '../types';
-import SoloCard from '../solo/SoloCard';
+import { flyIn } from '../../lib/cardFly';
+import SoloCard, { PileUnder } from '../solo/SoloCard';
 import SoloEnd from '../solo/SoloEnd';
 import { alive, guess, newGame, over, won, type Guess } from './logic';
 
@@ -12,14 +13,24 @@ import { alive, guess, newGame, over, won, type Guess } from './logic';
 export default function BeatTheDeck({ exit }: GameProps) {
   const [g, setG] = useState(newGame);
   const [pick, setPick] = useState<number | null>(null);
-  // A wrong guess: the card shows a moment before its place turns over.
+  // A wrong guess: the card lands, shows red a moment, then its place turns over.
   const [showing, setShowing] = useState<number | null>(null);
   useEffect(() => {
     if (!g.last || g.last.right) return setShowing(null);
     setShowing(g.last.place);
-    const id = window.setTimeout(() => setShowing(null), 900);
+    const id = window.setTimeout(() => setShowing(null), 1300);
     return () => window.clearTimeout(id);
   }, [g.last]);
+  // The card drawn flies from the pile onto the place it was guessed for.
+  const felt = useRef<HTMLDivElement>(null);
+  const pile = useRef<HTMLSpanElement>(null);
+  const flight = useRef<{ place: number; from: DOMRect } | null>(null);
+  useLayoutEffect(() => {
+    const f = flight.current;
+    flight.current = null;
+    const el = f && felt.current?.children[f.place]?.querySelector<HTMLElement>('.btd-top');
+    if (el) flyIn(el, f.from, 420);
+  }, [g]);
   const done = over(g) && showing == null;
   useEffect(() => {
     if (done && won(g)) celebrate();
@@ -51,6 +62,8 @@ export default function BeatTheDeck({ exit }: GameProps) {
       sfx.boo();
       buzz([30, 30, 30]);
     }
+    const from = pile.current?.getBoundingClientRect();
+    if (from) flight.current = { place: pick, from };
     setG(next);
     if (next.places[pick].dead) setPick(null);
   };
@@ -61,9 +74,11 @@ export default function BeatTheDeck({ exit }: GameProps) {
       <p className="sol-status">
         {sel ? t('Higher or lower than {rank}?', { rank: rankLabel(sel.top.value) }) : t('Pick a card')}
       </p>
-      <div className="sol-felt btd-grid">
+      <div ref={felt} className="sol-felt btd-grid">
         {g.places.map((p, i) => {
           const face = !p.dead || showing === i;
+          // The last guess: a green rim if it was right, red if not.
+          const mark = g.last?.place === i ? (g.last.right ? ' right' : ' wrong') : '';
           return (
             <button
               key={i}
@@ -71,15 +86,15 @@ export default function BeatTheDeck({ exit }: GameProps) {
               className={`btd-place${pick === i ? ' picked' : ''}${p.dead ? ' dead' : ''}`}
               disabled={p.dead}
               onClick={() => setPick(pick === i ? null : i)}
-              style={{ '--depth': Math.min(6, p.count - 1) } as CSSProperties}
             >
-              <SoloCard key={`${p.count}`} card={p.top} up={face} className={g.last?.place === i ? 'sol-land' : ''} />
+              <PileUnder cards={p.below} up={face} />
+              <SoloCard key={`${p.count}`} card={p.top} up={face} className={`btd-top${mark}`} />
             </button>
           );
         })}
       </div>
       <div className="sol-foot">
-        <span className="sol-pile">
+        <span ref={pile} className="sol-pile">
           <SoloCard up={false} />
           <span className="sol-pile-n">{g.deck.length}</span>
         </span>

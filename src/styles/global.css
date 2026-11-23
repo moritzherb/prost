@@ -18467,21 +18467,68 @@ html.table-phone .game-bar .top-bar-side.right {
 .btd-place {
   position: relative;
   border-radius: calc(var(--cw) * 0.12);
-  transition: transform 0.2s var(--spring);
-  /* A taller stack, the more cards lie there (a hair per card). */
-  box-shadow: calc(var(--depth) * 1px) calc(var(--depth) * 1.5px) 0 -1px rgba(255, 255, 255, 0.55);
 }
 
-.btd-place.picked {
-  transform: translateY(-6px);
+/* A pile as it lies: the cards under the top one peek out a little askew (solo/SoloCard.tsx). */
+.sol-under {
+  position: absolute;
+  left: 0;
+  top: 0;
+  rotate: var(--r);
+  translate: var(--x) var(--y);
 }
 
-.btd-place.picked .pcard-front {
+.btd-top,
+.acc-top {
+  z-index: 1;
+  transition: translate 0.2s var(--spring);
+}
+
+/* Picked: only the top card comes up, ringed; the pile under it stays where it lies. */
+.btd-place.picked .btd-top {
+  translate: 0 -8px;
+}
+
+.btd-place.picked .btd-top .pcard-front {
   box-shadow: 0 0 0 3px var(--accent), 0 12px 22px -8px rgba(0, 0, 0, 0.55);
 }
 
-.btd-place.dead {
-  box-shadow: none;
+/* The guess, once the card has landed: a green rim that fades if right; red, and a shake, if not. */
+.btd-top.right .pcard-face {
+  animation: btd-right 1.2s ease-out 0.4s both;
+}
+
+.btd-top.wrong .pcard-face {
+  animation: btd-wrong 0.9s ease-out 0.4s both;
+}
+
+.btd-top.wrong {
+  animation: sp-nope 0.32s ease 0.4s;
+}
+
+@keyframes btd-right {
+  0% {
+    box-shadow: 0 0 0 0 var(--good);
+  }
+  25% {
+    box-shadow: 0 0 0 4px var(--good), 0 0 18px 2px color-mix(in srgb, var(--good) 60%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@keyframes btd-wrong {
+  0% {
+    box-shadow: 0 0 0 0 var(--bad);
+  }
+  20%,
+  80% {
+    box-shadow: 0 0 0 4px var(--bad), 0 0 18px 2px color-mix(in srgb, var(--bad) 60%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 4px var(--bad);
+  }
 }
 
 .btd-guess {
@@ -18510,32 +18557,39 @@ html.table-phone .game-bar .top-bar-side.right {
 
 /* Accordion: the line of piles, wrapped in rows, as many as there are. */
 .acc-line {
-  --cw: min(calc((100vw - 2 * var(--gutter) - 24px - 6 * 6px) / 7), 60px);
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 10px 6px;
-  padding: 12px;
+  /* Three to a row, big; the line scrolls down with the newest card and back up as it shrinks.
+     Three back is the pile right above. */
+  --cw: min(calc((100vw - 2 * var(--gutter) - 2 * 20px - 2 * 18px) / 3), 112px);
+  display: grid;
+  grid-template-columns: repeat(3, var(--cw));
+  justify-content: center;
+  align-content: start;
+  gap: 22px 18px;
+  padding: 18px 20px 26px;
   overflow-y: auto;
+  scroll-padding-block: 18px 26px;
 }
 
 .acc-pile {
   position: relative;
   border-radius: calc(var(--cw) * 0.12);
-  transition: transform 0.2s var(--spring);
 }
 
-.acc-pile.picked {
-  transform: translateY(-4px);
+.acc-pile.picked .acc-top {
+  translate: 0 -6px;
 }
 
-.acc-pile.picked .pcard-front {
+.acc-pile.picked .acc-top .pcard-front {
   box-shadow: 0 0 0 3px var(--accent);
 }
 
-.acc-pile.target .pcard-front {
+.acc-pile.target .acc-top .pcard-front {
   box-shadow: 0 0 0 3px #fff;
   animation: nudge 1.2s ease-in-out infinite;
+}
+
+.acc-pile .acc-n {
+  z-index: 2;
 }
 
 /*
