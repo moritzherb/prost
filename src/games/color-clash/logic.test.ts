@@ -166,4 +166,38 @@ describe('Color Clash', () => {
     expect(play(g, 0, red.id).seq).toBe(1);
     expect(draw(g, 0).seq).toBe(1);
   });
+
+  it('a coloured action card plays on its colour, with no number of that colour in hand', () => {
+    const g = game([[a('crimson', 'turnaround'), a('crimson', 'block'), n('azure', 3)], [n('jade', 2)]], n('crimson', 5));
+    const [reverse, block] = g.hands[0];
+    expect(playable(g, 0, reverse)).toBe(true);
+    expect(playable(g, 0, block)).toBe(true);
+    // On a coloured action too.
+    const g2 = game([[a('jade', 'turnaround'), n('azure', 3)], [n('jade', 2)]], a('jade', 'block'));
+    expect(playable(g2, 0, g2.hands[0][0])).toBe(true);
+  });
+
+  it('a +2 as your last card that comes back round: you take it and play on', () => {
+    const plus = a('crimson', 'burden');
+    let g = game([[plus], [a('crimson', 'burden'), n('jade', 4)]], n('crimson', 5), [n('amber', 1), n('amber', 2), n('amber', 3), n('amber', 6), n('amber', 7)]);
+    g = play(g, 0, plus.id);
+    // Not won yet: the +2 is still going round.
+    expect(g.winner).toBeNull();
+    g = play(g, 1, g.hands[1][0].id); // passed back on: +4 for seat 0
+    expect(g.turn).toBe(0);
+    g = take(g, 0);
+    expect(g.hands[0]).toHaveLength(4);
+    expect(g.winner).toBeNull();
+    expect(g.turn).toBe(0);
+  });
+
+  it('a +2 as your last card that the next one takes: you win', () => {
+    const plus = a('crimson', 'burden');
+    let g = game([[plus], [n('jade', 4)]], n('crimson', 5), [n('amber', 1), n('amber', 2)]);
+    g = play(g, 0, plus.id);
+    expect(g.winner).toBeNull();
+    g = take(g, 1);
+    expect(g.winner).toBe(0);
+  });
 });
+
