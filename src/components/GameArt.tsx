@@ -110,11 +110,13 @@ const ART: Record<string, Art> = {
       <path d="M19 23.6C23 26.4 41 26.4 45 23.6c-1.6 2.2-6.5 3.4-13 3.4s-11.4-1.2-13-3.4z" fill="#ffe58a" opacity="0.55" />
       <ellipse cx="27" cy="20.6" rx="5.5" ry="0.9" fill="#fff" opacity="0.25" />
       <Gloss d="M19 25c1 6 3.5 10 7 12.5-5-1-8-6-8.6-12.5z" o={0.55} />
-      {/* The crown hovers over the cup. */}
-      <path d="M21 16l2-10 5 5 4-8 4 8 5-5 2 10z" fill="url(#ga-gold)" />
-      <circle cx="32" cy="11.5" r="1.8" fill="#e5484d" />
-      <circle cx="25.5" cy="13.5" r="1.4" fill="#3b82f6" />
-      <circle cx="38.5" cy="13.5" r="1.4" fill="#22a06b" />
+      {/* The crown hovers over the cup: pointed gold body, a darker band with jewels, as the King's in the Princess/King icon. */}
+      <path d="M19.5 14l1.5-12.5 6.5 6L32 0.5l4.5 7 6.5-6 1.5 12.5z" fill="url(#ga-gold)" />
+      <rect x="19.5" y="12" width="25" height="4.6" rx="2" fill="#d99a00" />
+      <circle cx="32" cy="14.3" r="1.5" fill="#e5484d" />
+      <circle cx="25.5" cy="14.3" r="1.1" fill="#3b82f6" />
+      <circle cx="38.5" cy="14.3" r="1.1" fill="#22a06b" />
+      <Gloss d="M22 11.5l-.8-8 2.6 2.4z" o={0.55} />
     </>
   ),
   klatschen: () => {
