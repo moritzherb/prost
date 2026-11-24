@@ -171,13 +171,17 @@ const sprites = new Map<string, HTMLCanvasElement>();
  *  one is asked for; until then (and where there's no WebGL) they show as the flat token. */
 let figure: ((def: PawnDef, ratio: number) => HTMLCanvasElement | null) | null = null;
 let loading = false;
+let failed = false;
 const ready = new Set<() => void>();
 /** Call `cb` once the 3D figures are there (to draw again); returns the way to stop listening. */
 export function onFiguresReady(cb: () => void) {
   ready.add(cb);
   return () => void ready.delete(cb);
 }
-function loadFigures() {
+/** A figure whose 3D picture is still on its way: callers that would draw the flat token wait instead. */
+export const figurePending = (def: PawnDef) => def.look === 'figure' && !figure && !failed;
+/** Start loading the 3D figures (as the Party setup opens), so they are there before the picker shows. */
+export function loadFigures() {
   if (loading) return;
   loading = true;
   import('./figures3d')
@@ -185,7 +189,10 @@ function loadFigures() {
       figure = m.figureSprite;
       ready.forEach((cb) => cb());
     })
-    .catch(() => {});
+    .catch(() => {
+      failed = true;
+      ready.forEach((cb) => cb());
+    });
 }
 /** Pawn pictures are drawn once at this height and scaled from there. */
 export const SPRITE_H = 180;
