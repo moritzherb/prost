@@ -326,9 +326,8 @@ const ART: Record<string, Art> = {
       </defs>
       {/* The shirt, whole, with sloping shoulders. */}
       <path d="M6 15L20 6h24l14 9v45H6z" fill="url(#ga-shirt)" />
-      {/* The collar's back band, standing up behind the neck, and the neck opening in its shade. */}
-      <path d="M19 5Q32 17 45 5v9Q32 26 19 14z" fill="#8fa9dc" />
-      <path d="M21 8Q32 19 43 8l-11 17z" fill="#6f8bc4" />
+      {/* The neck opening: one plain V in a darker blue. */}
+      <path d="M19 6l13 21 13-21z" fill="#8fa9dc" />
       {/* The tie: knot tucked under the collar, then hanging down the front of the shirt. */}
       <path d="M28.5 26h7l-1 8h-5z" fill="#a9121b" />
       <path d="M29 33h6l6 21-9 6-9-6z" fill="url(#ga-tie)" />
@@ -338,7 +337,6 @@ const ART: Record<string, Art> = {
       <Gloss d="M31 35h2l-4 16-2.5-2.5z" o={0.35} />
       {/* The collar wings over it, meeting just above the knot. */}
       <path d="M31 25L17 7 7 16l14 21zM33 25L47 7l10 9-14 21z" fill="#e6eeff" />
-      <path d="M31 25L17 7M33 25L47 7" fill="none" stroke="#9db4e3" strokeWidth="1" />
     </>
   ),
   arschloch: () => (
