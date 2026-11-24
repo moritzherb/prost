@@ -253,11 +253,11 @@ const ART: Record<string, Art> = {
         {rad('ga-snout', '#ffb3c6', '#e66a8a')}
         {lin('ga-ear', '#f7a1b6', '#d85c7c')}
       </defs>
-      {/* Ears, folded forward a little, pink inside. */}
-      <path d="M11 24C8 15 10 8 14 6c5 2 11 7 13 12z" fill="url(#ga-ear)" />
-      <path d="M53 24c3-9 1-16-3-18-5 2-11 7-13 12z" fill="url(#ga-ear)" />
-      <path d="M14 20c-1-5 0-9 2-10 3 1.5 6 4 7.5 7z" fill="#ffc4d3" />
-      <path d="M50 20c1-5 0-9-2-10-3 1.5-6 4-7.5 7z" fill="#ffc4d3" />
+      {/* Ears, rooted in the head (their feet lie under it), folded forward a little, pink inside. */}
+      <path d="M14.5 28C10 19 10.5 10 15 6.5c5.5 2.5 10.5 7 13 12z" fill="url(#ga-ear)" />
+      <path d="M49.5 28C54 19 53.5 10 49 6.5c-5.5 2.5-10.5 7-13 12z" fill="url(#ga-ear)" />
+      <path d="M16.5 23c-1.5-5-.5-9 2-10.5 3 1.5 6 4 7.5 7z" fill="#ffc4d3" />
+      <path d="M47.5 23c1.5-5 .5-9-2-10.5-3 1.5-6 4-7.5 7z" fill="#ffc4d3" />
       <ellipse cx="32" cy="35" rx="22" ry="20" fill="url(#ga-pig)" />
       <ellipse cx="18.5" cy="40" rx="4.5" ry="3" fill="#ff8fab" opacity="0.6" />
       <ellipse cx="45.5" cy="40" rx="4.5" ry="3" fill="#ff8fab" opacity="0.6" />
