@@ -252,6 +252,9 @@ const ART: Record<string, Art> = {
         {rad('ga-pig', '#ffd6e0', '#f0849f')}
         {rad('ga-snout', '#ffb3c6', '#e66a8a')}
         {lin('ga-ear', '#f7a1b6', '#d85c7c')}
+        <clipPath id="ga-pig-clip">
+          <ellipse cx="32" cy="35" rx="22" ry="20" />
+        </clipPath>
       </defs>
       {/* Ears, rooted in the head (their feet lie under it), folded forward a little, pink inside. */}
       <path d="M14.5 28C10 19 10.5 10 15 6.5c5.5 2.5 10.5 7 13 12z" fill="url(#ga-ear)" />
@@ -269,7 +272,10 @@ const ART: Record<string, Art> = {
       <circle cx="41" cy="30" r="3.2" fill="#2b1d22" />
       <circle cx="24.1" cy="28.9" r="1.1" fill="#fff" />
       <circle cx="42.1" cy="28.9" r="1.1" fill="#fff" />
-      <Gloss d="M15 27c2-7 8-11.5 15-12.5-6 3-10 7-11.5 13.5z" o={0.5} />
+      {/* Clipped to the head: the highlight may not reach past its edge. */}
+      <g clipPath="url(#ga-pig-clip)">
+        <Gloss d="M15 27c2-7 8-11.5 15-12.5-6 3-10 7-11.5 13.5z" o={0.5} />
+      </g>
     </>
   ),
   speed: () => (
