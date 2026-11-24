@@ -39,6 +39,24 @@ const rad = (id: string, from: string, to: string) => (
 /** Where the light falls: a soft white sheen. */
 const Gloss = ({ d, o = 0.38 }: { d: string; o?: number }) => <path d={d} fill="#fff" opacity={o} />;
 
+/**
+ * The King's crown as he wears it in Princess/King (princess-treatment/Heads.tsx), in that drawing's
+ * own units (120 wide; the crown spans x 31 to 89, y 8 to 52): four ball-tipped points, a band, three jewels.
+ */
+const KingCrown = () => (
+  <>
+    <path d="M31 50 L31 20 L44 34 L52 12 L60 30 L68 12 L76 34 L89 20 L89 50 Z" fill="#ffd34d" stroke="#d99a00" strokeWidth="2.4" strokeLinejoin="round" />
+    <rect x="31" y="42" width="58" height="9" rx="2.5" fill="#f2b705" stroke="#d99a00" strokeWidth="1.6" />
+    <circle cx="45" cy="46.5" r="3" fill="#e63946" />
+    <circle cx="60" cy="46.5" r="3.6" fill="#3a86ff" />
+    <circle cx="75" cy="46.5" r="3" fill="#2ec27e" />
+    <circle cx="31" cy="20" r="3" fill="#ffd34d" stroke="#d99a00" strokeWidth="1.4" />
+    <circle cx="52" cy="12" r="3" fill="#ffd34d" stroke="#d99a00" strokeWidth="1.4" />
+    <circle cx="68" cy="12" r="3" fill="#ffd34d" stroke="#d99a00" strokeWidth="1.4" />
+    <circle cx="89" cy="20" r="3" fill="#ffd34d" stroke="#d99a00" strokeWidth="1.4" />
+  </>
+);
+
 /** A playing card's white face. */
 const Card = ({ x, y, w = 24, h = 34, r = 4, turn = 0, cx = 32, cy = 58, children }: { x: number; y: number; w?: number; h?: number; r?: number; turn?: number; cx?: number; cy?: number; children?: ReactNode }) => (
   <g transform={`rotate(${turn} ${cx} ${cy})`}>
@@ -111,16 +129,9 @@ const ART: Record<string, Art> = {
       <ellipse cx="27" cy="20.6" rx="5.5" ry="0.9" fill="#fff" opacity="0.25" />
       <Gloss d="M19 25c1 6 3.5 10 7 12.5-5-1-8-6-8.6-12.5z" o={0.55} />
       {/* The crown hovers over the cup, a little higher and smaller: hollow, so the inside of its back wall shows between the front points. */}
-      <g transform="translate(32 7.5) scale(0.88) translate(-32 -8)">
-        {/* The crown of the photo: three slim points with a ball each over scooped curves, then a thick band with a lip and studs. */}
-        <path d="M18.8 16L16.6 5.6 19 5.8Q20.4 11.6 24.6 12.4Q29.2 12.8 30.4 5.4L32 3.6 33.6 5.4Q34.8 12.8 39.4 12.4Q43.6 11.6 45 5.8L47.4 5.6 45.2 16z" fill="url(#ga-gold)" />
-        <circle cx="17.7" cy="4.4" r="2.3" fill="#f3c63a" />
-        <circle cx="32" cy="2.6" r="2.5" fill="#f3c63a" />
-        <circle cx="46.3" cy="4.4" r="2.3" fill="#f3c63a" />
-        <rect x="18" y="12.2" width="28" height="1.5" rx=".75" fill="#f7d460" />
-        <path d="M18 13.7h28l-.5 3.6c-4 1.2-23 1.2-27 0z" fill="#d99a00" />
-        <path d="M24 14.2l1.1 1.2-1.1 1.2-1.1-1.2zM32 14.2l1.1 1.2-1.1 1.2-1.1-1.2zM40 14.2l1.1 1.2-1.1 1.2-1.1-1.2z" fill="#a86f00" />
-        <Gloss d="M19.2 12l-.7-6.5 1.8 4.8z" o={0.55} />
+      {/* The King's crown from Princess/King, hovering over the cup. */}
+      <g transform="translate(32 0.8) scale(0.36) translate(-60 -8.3)">
+        <KingCrown />
       </g>
     </>
   ),
@@ -324,27 +335,29 @@ const ART: Record<string, Art> = {
   president: () => (
     <>
       <defs>
-        {lin('ga-shirt', '#e4ecfb', '#a9c0ee')}
-        {lin('ga-tie', '#ff4a4a', '#a00f18')}
-        {/* The tie's stripes stay on the tie. */}
-        <clipPath id="ga-tie-clip">
-          <path d="M28.5 25h7l-1 8.5 6.5 20-9 6.5-9-6.5 6.5-20z" />
-        </clipPath>
+        <linearGradient id="ga-shirt" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#ffffff" />
+          <stop offset="1" stopColor="#e4e8ef" />
+        </linearGradient>
+        <linearGradient id="ga-tie" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#3d3d42" />
+          <stop offset="0.55" stopColor="#202024" />
+          <stop offset="1" stopColor="#141416" />
+        </linearGradient>
       </defs>
-      {/* The shirt, whole, with sloping shoulders. */}
-      <path d="M6 15L20 6h24l14 9v45H6z" fill="url(#ga-shirt)" />
-      <path d="M20 6L6 15v45h52V15L44 6" fill="none" stroke="#8fa9dc" strokeWidth="1" strokeLinejoin="round" />
-      {/* The neck opening between the collar wings: one plain V in a darker blue. */}
-      <path d="M20 6h24L32 27z" fill="#8fa9dc" />
-      {/* The tie, knot and body in one piece. */}
-      <path d="M28.5 25h7l-1 8.5 6.5 20-9 6.5-9-6.5 6.5-20z" fill="url(#ga-tie)" />
-      <g clipPath="url(#ga-tie-clip)" stroke="#7d0f15" strokeWidth="2" opacity="0.4">
-        <path d="M20 42l24-14M20 50l24-14M20 58l24-14" />
-      </g>
-      <Gloss d="M31 35h2l-4 16-2.5-2.5z" o={0.35} />
-      {/* The collar lies on the shirt: each wing starts at the neck, its upper edge along the shoulder, its point down by the knot. */}
-      <path d="M20 6L31 26 21 34 10 12.4z" fill="#e6eeff" stroke="#8fa9dc" strokeWidth="1" strokeLinejoin="round" />
-      <path d="M44 6L33 26 43 34 54 12.4z" fill="#e6eeff" stroke="#8fa9dc" strokeWidth="1" strokeLinejoin="round" />
+      {/* A folded white shirt, as the 👔 emoji draws it: rounded shoulders, the shoulder folds, a standing collar round the neck, its two points over the tie's knot. */}
+      <path d="M9 18Q9 10 17 9.5h30Q55 10 55 18v40q0 2-2 2H11q-2 0-2-2z" fill="url(#ga-shirt)" stroke="#c3cad6" strokeWidth="0.9" />
+      <path d="M11 22.5Q16 20.5 21.5 21M53 22.5Q48 20.5 42.5 21" fill="none" stroke="#d3d8e1" strokeWidth="0.9" strokeLinecap="round" />
+      {/* Inside the collar, then its back standing up behind the neck. */}
+      <path d="M21 10.5h22L32 22.5z" fill="#d6dbe4" />
+      <path d="M19.5 10Q32 2.5 44.5 10l-.6 2.4Q32 6.4 20.1 12.4z" fill="#f4f6f9" stroke="#c3cad6" strokeWidth="0.9" strokeLinejoin="round" />
+      {/* The tie: a slim knot under the collar, the blade straight down to the hem. */}
+      <path d="M29.2 20.5h5.6l-1 7h-3.6z" fill="#2a2a2e" />
+      <path d="M30.3 27h3.4l2.6 33h-8.6z" fill="url(#ga-tie)" />
+      <path d="M31.2 27l-1.3 31" stroke="#fff" strokeWidth="0.8" opacity="0.12" />
+      {/* The collar points, lying over the knot's top. */}
+      <path d="M19.5 10L30.2 22.6 26.6 27.8 18 15Q17.6 12 19.5 10z" fill="#ffffff" stroke="#c3cad6" strokeWidth="0.9" strokeLinejoin="round" />
+      <path d="M44.5 10L33.8 22.6 37.4 27.8 46 15Q46.4 12 44.5 10z" fill="#ffffff" stroke="#c3cad6" strokeWidth="0.9" strokeLinejoin="round" />
     </>
   ),
   arschloch: () => (
@@ -429,14 +442,11 @@ const ART: Record<string, Art> = {
         {lin('ga-gold', '#ffe58a', '#d99a00')}
         {lin('ga-tiara', '#ffe680', '#ffcc33')}
       </defs>
-      {/* The King's crown, gold, behind on the left. */}
+      {/* The King's crown as in the game, behind on the left. */}
       <g transform="translate(0 -3) rotate(-10 22 36)">
-        <path d="M5 44l3-22 8 9 6-15 6 15 8-9 3 22z" fill="url(#ga-gold)" />
-        <rect x="5" y="41" width="34" height="8" rx="2.5" fill="#d99a00" />
-        <circle cx="22" cy="45" r="2.3" fill="#e5484d" />
-        <circle cx="12.5" cy="45" r="1.6" fill="#3b82f6" />
-        <circle cx="31.5" cy="45" r="1.6" fill="#22a06b" />
-        <Gloss d="M8.5 25l2 14.5h-3.2z" o={0.5} />
+        <g transform="translate(22 19) scale(0.586) translate(-60 -8.3)">
+          <KingCrown />
+        </g>
       </g>
       {/* The Princess's tiara, as she wears it in the game (princess-treatment/Heads.tsx), in front on the right. */}
       <g transform="translate(43 38) rotate(8) scale(0.84) translate(-60 -25)">
