@@ -454,7 +454,6 @@ const ART: Record<string, Art> = {
           <stop offset="1" stopColor="#bdb4a5" />
         </radialGradient>
       </defs>
-      <ellipse cx="32" cy="60" rx="19" ry="3.6" fill="#000" opacity="0.2" />
       <g transform="translate(32 59)">
         <ellipse cx="0" cy="-3" rx="18" ry="4.8" fill="#b4ab9b" />
         <rect x="-18" y="-7.8" width="36" height="4.8" fill="url(#ga-pawn)" />
