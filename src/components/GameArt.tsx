@@ -101,11 +101,6 @@ const ART: Record<string, Art> = {
         {/* The cup's inside: dark under the near rim, lit on the far wall, so it reads as hollow. */}
         {lin('ga-cup-in', '#6e4300', '#e3ad2a')}
       </defs>
-      {/* The crown stands in the cup: drawn first, the cup's front then hides its foot. */}
-      <path d="M21 21V16l2-10 5 5 4-8 4 8 5-5 2 10V21z" fill="url(#ga-gold)" />
-      <circle cx="32" cy="11.5" r="1.8" fill="#e5484d" />
-      <circle cx="25.5" cy="13.5" r="1.4" fill="#3b82f6" />
-      <circle cx="38.5" cy="13.5" r="1.4" fill="#22a06b" />
       <ellipse cx="32" cy="54" rx="13" ry="4.5" fill="url(#ga-gold-d)" />
       <rect x="29" y="38" width="6" height="15" rx="2" fill="url(#ga-gold-d)" />
       <path d="M16 22h32c0 12-6.5 19-16 19s-16-7-16-19z" fill="url(#ga-gold)" />
@@ -115,6 +110,11 @@ const ART: Record<string, Art> = {
       <path d="M19 23.6C23 26.4 41 26.4 45 23.6c-1.6 2.2-6.5 3.4-13 3.4s-11.4-1.2-13-3.4z" fill="#ffe58a" opacity="0.55" />
       <ellipse cx="27" cy="20.6" rx="5.5" ry="0.9" fill="#fff" opacity="0.25" />
       <Gloss d="M19 25c1 6 3.5 10 7 12.5-5-1-8-6-8.6-12.5z" o={0.55} />
+      {/* The crown hovers over the cup. */}
+      <path d="M21 16l2-10 5 5 4-8 4 8 5-5 2 10z" fill="url(#ga-gold)" />
+      <circle cx="32" cy="11.5" r="1.8" fill="#e5484d" />
+      <circle cx="25.5" cy="13.5" r="1.4" fill="#3b82f6" />
+      <circle cx="38.5" cy="13.5" r="1.4" fill="#22a06b" />
     </>
   ),
   klatschen: () => {
