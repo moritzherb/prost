@@ -288,7 +288,7 @@ html[data-look='pop'] .setting-row {
 }
 
 html[data-look='pop'] .setting-row + .setting-row::before {
-  left: 59px;
+  left: 0;
   border-top: 0.5px solid var(--line);
 }
 

@@ -2107,7 +2107,7 @@ li {
 }
 
 .settings-page .setting-row + .setting-row::before {
-  left: 12px;
+  left: 0;
 }
 
 .settings-page .setting-emoji {
