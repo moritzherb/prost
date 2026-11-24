@@ -232,6 +232,8 @@ function slide(from: string, to: string, show: () => void): boolean {
     held ||
     isGame(from) ||
     isGame(to) ||
+    // Home zooms in on its own, as an iPhone's does (lib/intro.ts): no veil over it.
+    pathOf(to) === '#/' ||
     pathOf(from) === pathOf(to) ||
     matchMedia('(prefers-reduced-motion: reduce)').matches
   )
