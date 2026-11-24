@@ -306,16 +306,19 @@ const ART: Record<string, Art> = {
         {lin('ga-tie', '#ff6b6b', '#b4161e')}
         {/* The tie's stripes stay on the tie. */}
         <clipPath id="ga-tie-clip">
-          <path d="M29.5 30h5l6 22-8.5 8-8.5-8z" />
+          <path d="M29.5 27h5l6 25-8.5 8-8.5-8z" />
         </clipPath>
       </defs>
       <path d="M8 10l24 14 24-14v48H8z" fill="url(#ga-shirt)" />
-      <path d="M32 24L14 6l-6 10 14 16zM32 24L50 6l6 10-14 16z" fill="#f4f5f7" />
-      <path d="M28 23h8l-1.5 7h-5z" fill="#c81e28" />
-      <path d="M29.5 30h5l6 22-8.5 8-8.5-8z" fill="url(#ga-tie)" />
+      {/* The neckband behind the tie, the tie running up under the collar, the collar wings over its knot. */}
+      <path d="M21 7l11 20 11-20z" fill="#cfd3db" />
+      <path d="M28 12h8l-1.5 17h-5z" fill="#a9121b" />
+      <path d="M29.5 27h5l6 25-8.5 8-8.5-8z" fill="url(#ga-tie)" />
       <g clipPath="url(#ga-tie-clip)" stroke="#7d0f15" strokeWidth="2" opacity="0.4">
         <path d="M20 42l24-14M20 50l24-14M20 58l24-14" />
       </g>
+      <path d="M32 27L19 4 8 14l14 20zM32 27L45 4l11 10-14 20z" fill="#f4f5f7" />
+      <path d="M32 27L19 4M32 27L45 4" fill="none" stroke="#d3d6dd" strokeWidth="1" />
       <Gloss d="M30.5 31h2l-4 19-2.5-2.5z" o={0.35} />
     </>
   ),
@@ -450,7 +453,11 @@ const ART: Record<string, Art> = {
           strokeLinejoin="round"
           transform={`rotate(${rot} ${x} ${y})`}
         >
-          -1
+          {/* The minus a little lower, so its outline stays clear of the 1's. */}
+          <tspan dy={size * 0.07}>-</tspan>
+          <tspan dy={-size * 0.07} dx={size * 0.04}>
+            1
+          </tspan>
         </text>
       ))}
     </>
@@ -472,7 +479,7 @@ const ART: Record<string, Art> = {
         </radialGradient>
       </defs>
       <g transform="translate(32 59)">
-        <ellipse cx="0" cy="-3" rx="18" ry="4.8" fill="#b4ab9b" />
+        <ellipse cx="0" cy="-3" rx="18" ry="4.8" fill="url(#ga-pawn)" />
         <rect x="-18" y="-7.8" width="36" height="4.8" fill="url(#ga-pawn)" />
         <ellipse cx="0" cy="-7.8" rx="18" ry="4.8" fill="#f6f2eb" />
         <path d="M-16.2 -7.8C-15 -20.4 -6 -26.4 -5.1 -37.2L5.1 -37.2C6 -26.4 15 -20.4 16.2 -7.8A16.2 4.2 0 0 1 -16.2 -7.8z" fill="url(#ga-pawn)" />
