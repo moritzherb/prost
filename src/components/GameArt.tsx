@@ -453,7 +453,11 @@ const ART: Record<string, Art> = {
           strokeLinejoin="round"
           transform={`rotate(${rot} ${x} ${y})`}
         >
-          -1
+          {/* The minus a little lower, so its outline stays clear of the 1's. */}
+          <tspan dy={size * 0.14}>-</tspan>
+          <tspan dy={-size * 0.14} dx={size * 0.06}>
+            1
+          </tspan>
         </text>
       ))}
     </>
