@@ -450,8 +450,7 @@ const ART: Record<string, Art> = {
         </g>
       </g>
       {/* The Princess's tiara, as she wears it in the game (princess-treatment/Heads.tsx), in front on the right. */}
-      <g transform="translate(43 38) rotate(8) scale(0.84) translate(-60 -25)">
-        <path d="M37 38.5L45 24.5l7 9 8-19 8 19 7-9 8 14z" fill="#000" opacity="0.18" />
+      <g transform="translate(44.94 36.2) rotate(8) scale(0.84) translate(-60 -25)">
         <path d="M37 36L45 22l7 9 8-19 8 19 7-9 8 14z" fill="url(#ga-tiara)" stroke="#d99a00" strokeWidth="1.9" strokeLinejoin="round" />
         <circle cx="60" cy="25" r="4.4" fill="#ff5fa2" stroke="#d6337f" strokeWidth="1.3" />
         <circle cx="45.5" cy="29" r="2.5" fill="#7fd6ff" />
@@ -722,6 +721,7 @@ const NUDGE: Record<string, string> = {
   'hose-runter': 'translate(1.6 0)',
   party: 'translate(32 32) scale(0.94) translate(-32 -30.9)',
   vierer: 'translate(0 1.3)',
+  'princess-treatment': 'translate(-0.6 -0.5)',
 };
 
 /** Whether a game has a picture of its own here. */
