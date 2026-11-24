@@ -2,7 +2,7 @@ import { appFont, fontsReady } from '../../lib/fonts';
 import { cellKey, jumps, THEMES, type Board, type Cell, type Theme } from './boards';
 import { FIELDS, type FieldPic } from './fields';
 import { ACE, paintAce } from './ace';
-import { pawnSprite, shade, SPRITE_H, type PawnDef } from './pawns';
+import { onFiguresReady, pawnSprite, shade, SPRITE_H, type PawnDef } from './pawns';
 import { paintIcon3d } from './token';
 import { drawGlyph } from '../../lib/glyphs';
 
@@ -208,7 +208,11 @@ export class Scene {
   private waveTimer = 0;
   private gesture: { x: number; y: number; d: number; n: number; moved: number } | null = null;
 
+  /** Stops drawing again once the 3D figures are loaded. */
+  private offFigures: () => void;
+
   constructor(private canvas: HTMLCanvasElement) {
+    this.offFigures = onFiguresReady(() => this.invalidate());
     this.ctx = canvas.getContext('2d')!;
     canvas.addEventListener('pointerdown', this.down);
     canvas.addEventListener('pointermove', this.move);
@@ -219,6 +223,7 @@ export class Scene {
   }
 
   destroy() {
+    this.offFigures();
     cancelAnimationFrame(this.raf);
     window.clearTimeout(this.waveTimer);
     this.canvas.removeEventListener('pointerdown', this.down);

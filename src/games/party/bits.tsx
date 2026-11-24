@@ -5,7 +5,7 @@ import { buzz, sfx } from '../../lib/fx';
 import type { Player } from '../../state/AppState';
 import { drawDie } from './die3d';
 import { drawThrown, spinFor, type Thrown } from './solid3d';
-import { pawnSprite, SPRITE_H, type PawnDef } from './pawns';
+import { onFiguresReady, pawnSprite, SPRITE_H, type PawnDef } from './pawns';
 
 const PIPS: Record<number, number[]> = {
   1: [4],
@@ -303,6 +303,9 @@ export function TossStage({ what, flip }: { what: Thrown | null; flip: number })
 /** A pawn's picture. */
 export function PawnIcon({ pawn, size = 40 }: { pawn: PawnDef; size?: number }) {
   const ref = useRef<HTMLCanvasElement>(null);
+  // Drawn again once the 3D figures have loaded.
+  const [figures, setFigures] = useState(0);
+  useEffect(() => onFiguresReady(() => setFigures((n) => n + 1)), []);
   useLayoutEffect(() => {
     const c = ref.current;
     if (!c) return;
@@ -318,7 +321,7 @@ export function PawnIcon({ pawn, size = 40 }: { pawn: PawnDef; size?: number }) 
     ctx.scale(ratio, ratio);
     ctx.clearRect(0, 0, size, size);
     ctx.drawImage(sprite, (size * 0.8 - sw) / 2, size - sh + 4 * m, sw, sh);
-  }, [pawn, size]);
+  }, [pawn, size, figures]);
   return <canvas ref={ref} className="pt-pawn-icon" style={{ width: size * 0.8, height: size }} aria-hidden />;
 }
 
