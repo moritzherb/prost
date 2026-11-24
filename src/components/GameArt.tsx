@@ -436,7 +436,7 @@ const ART: Record<string, Art> = {
     <>
       <defs>
         {/* The game's own pawn (party/pawns.ts): lit across, from the left. */}
-        <linearGradient id="ga-pawn" gradientUnits="userSpaceOnUse" x1="17" y1="0" x2="47" y2="0">
+        <linearGradient id="ga-pawn" gradientUnits="userSpaceOnUse" x1="9" y1="0" x2="55" y2="0">
           <stop offset="0" stopColor="#1b4aae" />
           <stop offset="0.3" stopColor="#6d98f0" />
           <stop offset="0.55" stopColor="#2463e8" />
@@ -448,12 +448,13 @@ const ART: Record<string, Art> = {
           <stop offset="1" stopColor="#163f9c" />
         </radialGradient>
       </defs>
-      <ellipse cx="32" cy="56.5" rx="15.5" ry="4.2" fill="#163f9c" />
-      <rect x="16.5" y="52.3" width="31" height="4.2" fill="url(#ga-pawn)" />
-      <ellipse cx="32" cy="52.3" rx="15.5" ry="4.2" fill="#4a7fee" />
-      <path d="M18 52.3c.5-11 8.3-16.2 9.6-25.5h8.8c1.3 9.3 9.1 14.5 9.6 25.5a14 3.6 0 0 1-28 0z" fill="url(#ga-pawn)" />
-      <ellipse cx="32" cy="26.8" rx="8.3" ry="2.6" fill="url(#ga-pawn)" />
-      <circle cx="32" cy="17.5" r="8.6" fill="url(#ga-pawn-head)" />
+      {/* A stocky, solid pawn: wide base, full body, a big round head. */}
+      <ellipse cx="32" cy="55" rx="23" ry="5.6" fill="#163f9c" />
+      <rect x="9" y="49" width="46" height="6" fill="url(#ga-pawn)" />
+      <ellipse cx="32" cy="49" rx="23" ry="5.6" fill="#4a7fee" />
+      <path d="M13 49c.6-12.5 10-17.5 11.4-26.5h15.2C41 31.5 50.4 36.5 51 49a19 4.6 0 0 1-38 0z" fill="url(#ga-pawn)" />
+      <ellipse cx="32" cy="22.5" rx="12.5" ry="3.6" fill="url(#ga-pawn)" />
+      <circle cx="32" cy="15" r="11.5" fill="url(#ga-pawn-head)" />
     </>
   ),
   'rat-screw': () => (
