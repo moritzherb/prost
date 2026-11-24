@@ -353,10 +353,13 @@ const ART: Record<string, Art> = {
           outlines on top: no other line inside the collar. */}
       <path d="M30.2 22.6L26.6 27.8 18 15Q17.6 12 19.5 10Q32 2.5 44.5 10Q46.4 12 46 15L37.4 27.8 33.8 22.6z" fill="#ffffff" />
       <path d="M21.4 12Q32 6.3 42.6 12L33.8 22.6h-3.6z" fill="#d6dbe4" />
-      {/* The tie: the knot coming out from under the collar, the blade down to a point above the hem. */}
-      <path d="M30.2 22.6h3.6l-.5 5h-2.6z" fill="#2a2a2e" />
-      <path d="M30.6 27.2h2.8l2.8 25.3-4.2 4.6-4.2-4.6z" fill="url(#ga-tie)" />
+      {/* The tie as worn: its knot sits in the bottom of the neck opening, the collar points lie over
+          its sides (drawn again on top), the blade hangs from it down to a point above the hem. */}
+      <path d="M30.6 27h2.8l2.8 25.5-4.2 4.6-4.2-4.6z" fill="url(#ga-tie)" />
       <path d="M31.2 29l-1.2 23" stroke="#fff" strokeWidth="0.8" opacity="0.12" />
+      <path d="M27.8 18.6h8.4l-2.6 9h-3.2z" fill="#26262a" />
+      <path d="M27.8 18.6h4.2v9h-1.6z" fill="#fff" opacity="0.07" />
+      <path d="M21.4 12L30.2 22.6 26.6 27.8 18 15Q17.6 12 19.5 10zM42.6 12L33.8 22.6 37.4 27.8 46 15Q46.4 12 44.5 10z" fill="#ffffff" />
       <path d="M30.2 22.6L26.6 27.8 18 15Q17.6 12 19.5 10Q32 2.5 44.5 10Q46.4 12 46 15L37.4 27.8 33.8 22.6" fill="none" stroke="#c3cad6" strokeWidth="0.9" strokeLinejoin="round" strokeLinecap="round" />
       <path d="M30.2 22.6L21.4 12Q32 6.3 42.6 12L33.8 22.6" fill="none" stroke="#c3cad6" strokeWidth="0.9" strokeLinejoin="round" strokeLinecap="round" />
     </>
