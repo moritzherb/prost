@@ -9,6 +9,9 @@ import { buzz, judge, newQuiz, skip, type Quiz } from './logic';
 import { Board, COUNTS, LEVELS, TOPIC_NAME, VerdictFlash } from './PubQuiz';
 import { QUESTIONS, type Level } from './questions';
 
+/** How long a verdict shows (.pq-verdict in global.css): the buttons stay locked until it is gone. */
+const VERDICT_MS = 1700;
+
 /** Pub Quiz alone, on one phone: it asks, you think of the answer, look, and say honestly if you knew it. */
 export default function PubQuizSolo({ exit }: GameProps) {
   const known = useApp().knows('pub-quiz');
@@ -16,6 +19,12 @@ export default function PubQuizSolo({ exit }: GameProps) {
   const [count, setCount] = useState(20);
   const [q, setQ] = useState<Quiz | null>(null);
   const [shown, setShown] = useState(false);
+  const [locked, setLocked] = useState(false);
+  useEffect(() => {
+    if (!locked) return;
+    const id = window.setTimeout(() => setLocked(false), VERDICT_MS);
+    return () => window.clearTimeout(id);
+  }, [locked]);
   const over = q?.phase === 'over';
   const score = q?.scores.me ?? 0;
   const won = !!q && score * 2 >= q.deck.length;
@@ -27,6 +36,7 @@ export default function PubQuizSolo({ exit }: GameProps) {
     const pool = QUESTIONS.filter((x) => levels.includes(x.level)).length;
     setQ(newQuiz([{ id: 'me', name: t('You'), color: 'var(--accent)', members: ['me'] }], levels, Math.min(count, pool)));
     setShown(false);
+    setLocked(false);
   };
 
   if (!q) {
@@ -84,6 +94,7 @@ export default function PubQuizSolo({ exit }: GameProps) {
       return knew ? judged : { ...skip(judged), verdict: judged.verdict };
     });
     setShown(false);
+    setLocked(true);
   };
   return (
     <div className="pq fill">
@@ -110,6 +121,7 @@ export default function PubQuizSolo({ exit }: GameProps) {
         ) : (
           <BigButton
             className="pq-show"
+            disabled={locked}
             onClick={() => {
               sfx.tick();
               setShown(true);
