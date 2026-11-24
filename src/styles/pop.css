@@ -448,6 +448,24 @@ html[data-os='android'] .app-icon.sm {
   border-radius: 50%;
 }
 
+/* The small tiles' art sized from the tile itself (with --ic at 100%, a percentage of the art's
+   own box sized and pushed it off the middle). */
+.app-icon.sm {
+  container-type: size;
+}
+
+.app-icon.sm svg {
+  width: 46cqmin;
+  height: 46cqmin;
+  margin-top: 5cqmin;
+}
+
+.app-icon.sm svg.game-art {
+  width: 68cqmin;
+  height: 68cqmin;
+  margin-top: 3cqmin;
+}
+
 .app-icon.lg {
   --ic: 96px;
 }
