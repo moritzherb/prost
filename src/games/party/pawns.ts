@@ -94,7 +94,8 @@ export function drawPawnAt(ctx: CanvasRenderingContext2D, def: PawnDef, h: numbe
     return;
   }
   const color = def.color;
-  const gloss = def.look === 'disco' ? 0.7 : def.look === 'gold' ? 0.55 : 0.4;
+  // Matte, as painted wood: only the disco ball shines; the gold one a little.
+  const gloss = def.look === 'disco' ? 0.7 : def.look === 'gold' ? 0.3 : 0.12;
   // Base: a flat cylinder.
   ctx.fillStyle = shade(color, -0.4);
   ctx.beginPath();
@@ -120,7 +121,7 @@ export function drawPawnAt(ctx: CanvasRenderingContext2D, def: PawnDef, h: numbe
   ctx.stroke();
   // Head: a shiny ball.
   const head = ctx.createRadialGradient(-0.06 * h, -0.86 * h, 0.01 * h, 0, -0.8 * h, 0.18 * h);
-  head.addColorStop(0, shade(color, gloss + 0.2));
+  head.addColorStop(0, shade(color, gloss + 0.08));
   head.addColorStop(0.45, color);
   head.addColorStop(1, shade(color, -0.4));
   ctx.beginPath();
@@ -164,11 +165,37 @@ export function drawPawnAt(ctx: CanvasRenderingContext2D, def: PawnDef, h: numbe
 }
 
 const sprites = new Map<string, HTMLCanvasElement>();
+
+/** The special pawns as real 3D figures (figures3d.ts, three.js), loaded on its own the first time
+ *  one is asked for; until then (and where there's no WebGL) they show as the flat token. */
+let figure: ((def: PawnDef, ratio: number) => HTMLCanvasElement | null) | null = null;
+let loading = false;
+const ready = new Set<() => void>();
+/** Call `cb` once the 3D figures are there (to draw again); returns the way to stop listening. */
+export function onFiguresReady(cb: () => void) {
+  ready.add(cb);
+  return () => void ready.delete(cb);
+}
+function loadFigures() {
+  if (loading) return;
+  loading = true;
+  import('./figures3d')
+    .then((m) => {
+      figure = m.figureSprite;
+      ready.forEach((cb) => cb());
+    })
+    .catch(() => {});
+}
 /** Pawn pictures are drawn once at this height and scaled from there. */
 export const SPRITE_H = 180;
 
 /** A pawn's picture (with room around it), drawn once: base centre at (w/2, h - pad). */
 export function pawnSprite(def: PawnDef, ratio: number): HTMLCanvasElement {
+  if (def.look === 'figure') {
+    const solid = figure?.(def, ratio);
+    if (solid) return solid;
+    if (!figure) loadFigures();
+  }
   const key = `${def.id}@${ratio}`;
   let c = sprites.get(key);
   if (c) return c;
