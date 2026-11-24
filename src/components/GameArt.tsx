@@ -359,12 +359,13 @@ const ART: Record<string, Art> = {
       <defs>{lin('ga-bin', '#e8ebf0', '#8d95a3')}</defs>
       <path d="M14 22h36l-4 36H18z" fill="url(#ga-bin)" />
       <path d="M22 28l1.5 24M32 28v24M42 28l-1.5 24" stroke="#6f7785" strokeWidth="2.4" strokeLinecap="round" opacity="0.6" />
+      {/* The light on the bin's left, under the lid (which is drawn over it). */}
+      <Gloss d="M16.4 27h4l2.3 29h-3z" o={0.45} />
       {/* The lid, tipped up a little. */}
       <g transform="rotate(-10 32 18)">
         <rect x="11" y="15" width="42" height="7" rx="3.5" fill="#a8afbb" />
         <rect x="26" y="10.5" width="12" height="5.5" rx="2.75" fill="#7d8594" />
       </g>
-      <Gloss d="M16 24h4l2.5 32h-3z" o={0.45} />
     </>
   ),
   'who-drinks': () => (
