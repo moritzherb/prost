@@ -454,8 +454,8 @@ const ART: Record<string, Art> = {
           transform={`rotate(${rot} ${x} ${y})`}
         >
           {/* The minus a little lower, so its outline stays clear of the 1's. */}
-          <tspan dy={size * 0.14}>-</tspan>
-          <tspan dy={-size * 0.14} dx={size * 0.06}>
+          <tspan dy={size * 0.07}>-</tspan>
+          <tspan dy={-size * 0.07} dx={size * 0.04}>
             1
           </tspan>
         </text>
