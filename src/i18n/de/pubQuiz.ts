@@ -1,5 +1,12 @@
 // Pub Quiz.
 const pubQuiz: Record<string, string> = {
+  'Alone against the quiz': 'Allein gegen das Quiz',
+  'Think of the answer, then look, and say honestly if you knew it.': 'Überleg dir die Antwort, schau dann nach und sag ehrlich, ob du sie wusstest.',
+  '{n} of {m} right': '{n} von {m} richtig',
+  'Didn’t know': 'Wusste ich nicht',
+  'Knew it': 'Wusste ich',
+  'Show answer': 'Antwort zeigen',
+  'Alone? Start it on one phone: it asks, you look at the answer and say honestly if you knew it.': 'Allein? Auf einem Handy starten: Es fragt, du schaust dir die Antwort an und sagst ehrlich, ob du sie wusstest.',
   Easy: 'Leicht',
   Medium: 'Mittel',
   Impossible: 'Unmöglich',

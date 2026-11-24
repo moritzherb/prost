@@ -19471,6 +19471,11 @@ html.table-phone .game-bar .top-bar-side.right {
   gap: 10px;
 }
 
+/* Alone: one button to look, where the two to judge then are. */
+.pq-judge > .pq-show {
+  grid-column: 1 / -1;
+}
+
 .pq-buzz-status {
   margin: 0;
   height: 48px;
