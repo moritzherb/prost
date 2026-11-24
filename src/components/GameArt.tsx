@@ -332,22 +332,22 @@ const ART: Record<string, Art> = {
       <defs>
         {lin('ga-shirt', '#ffffff', '#e6eaf1')}
         {lin('ga-tie', '#3b3b3f', '#111113')}
-        {/* The tie's stripes stay on the tie. */}
         <clipPath id="ga-tie-clip">
           <path d="M29 33h6l6 21-9 6-9-6z" />
         </clipPath>
       </defs>
-      {/* The shirt, whole, with sloping shoulders. */}
-      <path d="M6 15L20 6h24l14 9v45H6z" fill="url(#ga-shirt)" stroke="#aab3c4" strokeWidth="1.2" strokeLinejoin="round" />
-      {/* The neck opening, seen between the collar wings. */}
-      <path d="M21 6.6h22L32 27z" fill="#d9dee8" />
-      {/* The tie: knot under the collar wings, then hanging down the front of the shirt. */}
+      {/* The shirt: soft shoulders, open at the neck; its outline is one line round the sides and bottom, none across the neck. */}
+      <path d="M8 14Q8 8 14 7L21 5h22l7 2Q56 8 56 14v46H8z" fill="url(#ga-shirt)" />
+      <path d="M21 5L14 7Q8 8 8 14v46h48V14Q56 8 50 7L43 5" fill="none" stroke="#b4bccb" strokeWidth="1.2" strokeLinejoin="round" strokeLinecap="round" />
+      {/* The neck opening between the collar wings. */}
+      <path d="M21 5h22L32 26z" fill="#d9dee8" />
+      {/* The tie: knot under the collar wings, then hanging down the front. */}
       <path d="M28.5 26h7l-1 8h-5z" fill="#232326" />
       <path d="M29 33h6l6 21-9 6-9-6z" fill="url(#ga-tie)" />
       <Gloss d="M31 35h2l-4 16-2.5-2.5z" o={0.18} />
-      {/* The collar lies on the shirt: each wing starts at the neck and points down and out, inside the shirt's own edge. */}
-      <path d="M21 6.6L31 26 22 32 14.5 15z" fill="#ffffff" stroke="#aab3c4" strokeWidth="1.2" strokeLinejoin="round" />
-      <path d="M43 6.6L33 26 42 32 49.5 15z" fill="#ffffff" stroke="#aab3c4" strokeWidth="1.2" strokeLinejoin="round" />
+      {/* The collar wings lie on the shirt from the neck, pointing down and out. */}
+      <path d="M21 5L31 26 22 32 13.5 14 14.5 8.2z" fill="#ffffff" stroke="#b4bccb" strokeWidth="1.2" strokeLinejoin="round" />
+      <path d="M43 5L33 26 42 32 50.5 14 49.5 8.2z" fill="#ffffff" stroke="#b4bccb" strokeWidth="1.2" strokeLinejoin="round" />
     </>
   ),
   arschloch: () => (
