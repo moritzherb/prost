@@ -90,8 +90,8 @@ export default function PopHome() {
   );
 
   const [returning] = useState(() => lastLaunched());
-  // Every time home shows again (back from a game, a screen, the back swipe), the apps swoosh in and
-  // settle as they do on opening the app. Not at start-up: the start-up screen's fade does that itself.
+  // Every time home shows again (back from a game, a screen, the back swipe), it zooms in as the
+  // iPhone's does after closing an app, as on opening the app. Not at start-up: the start-up screen's fade does that itself.
   useLayoutEffect(() => {
     if (!document.getElementById('boot')) playIntro();
   }, []);

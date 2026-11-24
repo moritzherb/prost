@@ -2007,8 +2007,6 @@ html[data-look='pop'] .look-seg button.active {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-look='pop'] .os-home.back,
-  .app.returning .app-icon,
   .la-drawer,
   .os-home.editing .os-grid.movable .app .app-icon,
   .app-x,
