@@ -423,20 +423,36 @@ const ART: Record<string, Art> = {
   'ten-but': () => (
     <>
       <defs>
-        {lin('ga-tail', '#ff6b6b', '#b71c1c')}
-        {rad('ga-medal', '#ffe27a', '#e0a100')}
-        {rad('ga-face', '#fffdf3', '#f3e3b0')}
+        {lin('ga-plate', '#ffffff', '#e8e2d3')}
       </defs>
-      {/* An award rosette: two ribbon tails, a gold disc, the top score on it. */}
-      <path d="M17 36l-6 24 10-5 5 7 6-22z" fill="url(#ga-tail)" />
-      <path d="M47 36l6 24-10-5-5 7-6-22z" fill="url(#ga-tail)" />
-      <circle cx="32" cy="28" r="23" fill="url(#ga-medal)" />
-      <circle cx="32" cy="28" r="23" fill="none" stroke="#c98a00" strokeWidth="1.5" />
-      <circle cx="32" cy="28" r="17.5" fill="url(#ga-face)" stroke="#d9a41a" strokeWidth="1.4" />
-      <text x="32" y="36" textAnchor="middle" fontFamily={FONT} fontWeight="900" fontSize="23" fill="#c81e28" letterSpacing="-1.5">
-        10
+      {/* A perfect score, and the -1 points it loses flying off it. */}
+      <rect x="4" y="26" width="56" height="30" rx="9" fill="url(#ga-plate)" />
+      <text x="32" y="48" textAnchor="middle" fontFamily={FONT} fontWeight="900" fontSize="19" fill="#1d1d1b" letterSpacing="-1.2">
+        10/10
       </text>
-      <Gloss d="M15 20c2.5-7 8-11.5 15-12.5-6 3-10.5 7-12.5 14z" o={0.55} />
+      {[
+        [13, 20, 12, -14],
+        [31, 14, 15, 4],
+        [48, 19, 12, 14],
+      ].map(([x, y, size, rot]) => (
+        <text
+          key={x}
+          x={x}
+          y={y}
+          textAnchor="middle"
+          fontFamily={FONT}
+          fontWeight="900"
+          fontSize={size}
+          fill="#e5252f"
+          stroke="#fff"
+          strokeWidth="2.6"
+          paintOrder="stroke"
+          strokeLinejoin="round"
+          transform={`rotate(${rot} ${x} ${y})`}
+        >
+          -1
+        </text>
+      ))}
     </>
   ),
   party: () => (
