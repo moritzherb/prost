@@ -26,7 +26,7 @@ export default function RideFinish({ driver, stats, onPlayAgain, onExit }: { dri
       </div>
       <div className="bd-head center">
         <span className="kicker">{t('Ride complete')}</span>
-        <h2 className="bd-title big">{t('{name} made it!', { name: driver.name })}</h2>
+        <h2 className="bd-title big">{t('{name} made it', { name: driver.name })}</h2>
         <p className="lead">
           {fails === 0
             ? t('First try. Legend.')

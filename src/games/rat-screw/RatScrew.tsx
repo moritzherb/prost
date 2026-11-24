@@ -154,7 +154,7 @@ function Table({
     return (
       <div className="bd rs-over">
         <div className="bd-head center">
-          <h2 className="bd-title big">{g.winner === me ? t('You have every card!') : t('{name} has every card!', { name: name(g.winner) })}</h2>
+          <h2 className="bd-title big">{g.winner === me ? t('You have every card') : t('{name} has every card', { name: name(g.winner) })}</h2>
         </div>
         {isHost && (
           <div className="sticky-action">

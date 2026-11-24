@@ -288,11 +288,11 @@ function entryText(e: Entry, view: PhoneView) {
   const cards = group(e.cards);
   let text =
     e.from === 'risk'
-      ? t('{name} risked it: {card} fits!', { name, card: cards })
+      ? t('{name} risked it: {card} fits', { name, card: cards })
       : e.from === 'down'
-        ? t('{name} turned over {card}: it fits!', { name, card: cards })
+        ? t('{name} turned over {card}: it fits', { name, card: cards })
         : t('{name} plays {cards}.', { name, cards });
-  if (e.burn) text += ` ${t('The pile is cleared!')}`;
+  if (e.burn) text += ` ${t('The pile is cleared')}`;
   return text;
 }
 
@@ -324,7 +324,7 @@ function TableView({ view }: { view: PhoneView }) {
         </div>
         {ghost?.kind === 'burn' && (
           <span key={ghost.id} className="pl-flash">
-            <Glyph name="fire" /> {t('Cleared!')}
+            <Glyph name="fire" /> {t('Cleared')}
           </span>
         )}
       </section>
@@ -562,10 +562,10 @@ function PlayerView({ view, act, connected }: { view: PhoneView; act: (a: Act) =
   let headline: string;
   if (view.phase === 'over') headline = t('Game over');
   else if (!myTurn) headline = turnText(view);
-  else if (view.again) headline = t('Go again!');
+  else if (view.again) headline = t('Go again');
   else if (!can) headline = t('You can’t play');
   else if (zone === 'down') headline = t('Turn over a face-down card');
-  else headline = t('Your turn!');
+  else headline = t('Your turn');
 
   const last = view.log.at(-1);
 
@@ -679,7 +679,7 @@ function useReveal(view: PhoneView): RevealInfo | null {
       return;
     }
     const flip = e.from === 'down' || e.from === 'risk';
-    const text = e.burn ? t('The pile is cleared! Go again.') : e.again ? t('Go again!') : flip ? t('It fits!') : '';
+    const text = e.burn ? t('The pile is cleared. Go again.') : e.again ? t('Go again') : flip ? t('It fits') : '';
     if (flip || text) setInfo({ id, card: e.cards[0], flip, good: true, text });
   }, [view.log, view.me]);
   useEffect(() => {
@@ -745,7 +745,7 @@ function MiniTable({ view }: { view: PhoneView }) {
       </div>
       {ghost?.kind === 'burn' && (
         <span key={ghost.id} className="pl-flash">
-          <Glyph name="fire" /> {t('Cleared!')}
+          <Glyph name="fire" /> {t('Cleared')}
         </span>
       )}
     </section>
@@ -916,7 +916,7 @@ function Over({ view, isHost, onNewGame }: { view: PhoneView; isHost: boolean; o
       <div className="pl-over-card">
         <span className="kicker">{t('Game over')}</span>
       <Finished game="palace" />
-        <h2 className="bd-title big">{w === view.me ? t('You win!') : t('{name} wins!', { name: nameOf(view, w) })}</h2>
+        <h2 className="bd-title big">{w === view.me ? t('You win') : t('{name} wins', { name: nameOf(view, w) })}</h2>
         <ul className="pl-over-list">
           {order.map(({ s, i, left }) => (
             <li key={s.id}>

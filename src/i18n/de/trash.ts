@@ -28,15 +28,15 @@ const trash: Record<string, string> = {
 
   // Round over
   'Round {n}': 'Runde {n}',
-  '{name} wins the game!': '{name} gewinnt das Spiel!',
-  '{name} wins the round!': '{name} gewinnt die Runde!',
+  '{name} wins the game': '{name} gewinnt das Spiel',
+  '{name} wins the round': '{name} gewinnt die Runde',
   'Next round: {a} plays {x} cards, {b} plays {y}.': 'Nächste Runde: {a} spielt mit {x} Karten, {b} mit {y}.',
   'Got the real card for a slot where a Jack lies? Swap them: the card goes in, and you play the Jack again.':
     'Du hast die echte Karte für einen Platz, auf dem ein Bube liegt? Tausch sie aus: Die Karte kommt auf den Platz, und du spielst den Buben nochmal.',
   'Drag a card face up into its own slot if that slot is still face down. The card that lay there turns over: play it the same way, and so on.':
     'Schieb eine Karte aufgedeckt auf ihren Platz, wenn er noch verdeckt ist. Die Karte, die dort lag, wird umgedreht: Spiel sie genauso, und so weiter.',
   'Drag the card onto its slot': 'Schieb die Karte auf ihren Platz',
-  'Jack! Drag it onto any face-down slot': 'Bube! Schieb ihn auf einen beliebigen verdeckten Platz',
+  'Jack. Drag it onto any face-down slot': 'Bube. Schieb ihn auf einen beliebigen verdeckten Platz',
   'Fits nowhere: drag it onto the discard pile': 'Passt nirgends: Schieb sie auf den Ablagestapel',
   'Swap it for your Jack, or drag it onto the discard pile': 'Gegen deinen Buben tauschen oder ablegen',
   'Not there: this card goes into slot {slot}': 'Nicht dort: Die Karte gehört auf Platz {slot}',

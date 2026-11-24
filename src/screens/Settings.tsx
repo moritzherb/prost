@@ -216,7 +216,7 @@ function useAppIcon() {
 /** Friends get a link to prost!: the share sheet, or the link copied where there's none. */
 async function invite() {
   const url = `${window.location.origin}${window.location.pathname}`;
-  const text = t('Let’s play prost! together:');
+  const text = t('Let’s play prost. together:');
   try {
     if (isNative) return toNative({ type: 'share', title: 'prost!', text, url });
     if (navigator.share) return await navigator.share({ title: 'prost!', text, url });
@@ -330,14 +330,14 @@ export default function Settings() {
             <span className="setting-emoji" aria-hidden="true"><RowIcon name="invite" /></span>
             <span className="setting-text">
               <span className="setting-label">{t('Invite friends')}</span>
-              <span className="setting-hint">{t('Send them prost!')}</span>
+              <span className="setting-hint">{t('Send them prost')}</span>
             </span>
           </button>
           {isNative && (
             <button type="button" className="setting-row" onClick={() => toNative({ type: 'review' })}>
               <span className="setting-emoji" aria-hidden="true"><RowIcon name="star" /></span>
               <span className="setting-text">
-                <span className="setting-label">{t('Rate prost!')}</span>
+                <span className="setting-label">{t('Rate prost')}</span>
                 <span className="setting-hint">{t('A few stars help a lot')}</span>
               </span>
             </button>
@@ -416,7 +416,7 @@ export default function Settings() {
         <ul className="plain-list">
           <li>{t('Every sip can be water or an anti-alcoholic drink. No pressure, ever.')}</li>
           <li>{t('Eat something before you start.')}</li>
-          <li>{t('Never drink and drive! Plan your ride home.')}</li>
+          <li>{t('Never drink and drive. Plan your ride home.')}</li>
           <li>{t('Look out for your mates.')}</li>
         </ul>
       </section>

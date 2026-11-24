@@ -23,7 +23,7 @@ export default function CheersToast() {
 
   if (!visible) return null;
   // The name is bold, so split the sentence around it.
-  const [before, after] = t('{name} says cheers!').split('{name}');
+  const [before, after] = t('{name} says cheers').split('{name}');
   return (
     <div className={`toast${open ? ' open' : ''}`} role="status" aria-hidden={!open}>
       <span className="toast-emoji">

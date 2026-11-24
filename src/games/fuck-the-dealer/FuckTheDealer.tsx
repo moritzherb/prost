@@ -259,7 +259,7 @@ function Handover({ session, children }: { session: Session; children?: React.Re
   return (
     <div className="bd ftd-handover">
       <div className="bd-head center">
-        <span className="kicker">{g.over ? t('Deck’s empty!') : t('Dealer change')}</span>
+        <span className="kicker">{g.over ? t('Deck’s empty') : t('Dealer change')}</span>
         <span className="bd-avatar xl" style={{ background: from.color }}>
           <Avatar name={from.name} color={from.color} photo={photoOf(from.id)} />
         </span>
@@ -384,7 +384,7 @@ function TableView({ session, onAgain }: { session: Session; onAgain?: () => voi
             </h2>
             <p className="ftd-ask-sub">
               {g.firstGuess != null
-                ? t('First guess: {rank}. Last try!', { rank: rankLabel(g.firstGuess) })
+                ? t('First guess: {rank}. Last try', { rank: rankLabel(g.firstGuess) })
                 : !known
                   ? t('{name} has the deck and types in the guess.', { name: dealer.name })
                   : null}
@@ -500,7 +500,7 @@ function DeckView({ session, act, onAgain }: { session: Session; act: (a: Act) =
         <>
           <p className="ftd-ask-sub center">
             {g.firstGuess != null
-              ? t('First guess: {rank}. Last try!', { rank: rankLabel(g.firstGuess) })
+              ? t('First guess: {rank}. Last try', { rank: rankLabel(g.firstGuess) })
               : !known
                 ? t('Tap the value {name} says.', { name: guesser.name })
                 : null}
@@ -551,10 +551,10 @@ function Verdict({ result, dealer, lastOfThree }: { result: NonNullable<Game['re
   const card = cardName(result.card);
   const [tone, icon, title, sub]: [string, GlyphName, string, string] =
     result.outcome === 'first'
-      ? ['correct', 'target', t('Bullseye!'), t('{name} gets 6 sips.', { name: dealer })]
+      ? ['correct', 'target', t('Bullseye'), t('{name} gets 6 sips.', { name: dealer })]
       : result.outcome === 'second'
-        ? ['same', 'check', t('Got it!'), t('{name} gets 3 sips.', { name: dealer })]
-        : ['wrong', 'wrong', t('Missed!'), lastOfThree ? t('Third miss in a row: the deck moves on.') : t('Nobody drinks.')];
+        ? ['same', 'check', t('Got it'), t('{name} gets 3 sips.', { name: dealer })]
+        : ['wrong', 'wrong', t('Missed'), lastOfThree ? t('Third miss in a row: the deck moves on.') : t('Nobody drinks.')];
   return (
     <div className={`bd-result ${tone}`}>
       <span className="bd-result-emoji">

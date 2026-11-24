@@ -225,7 +225,7 @@ function Table({
     return (
       <div className="bd">
         <div className="bd-head center">
-          <h2 className="bd-title big">{g.winner === me ? t('You’re out of cards: you win!') : t('{name} is out of cards and wins!', { name: name(g.winner) })}</h2>
+          <h2 className="bd-title big">{g.winner === me ? t('You’re out of cards: you win') : t('{name} is out of cards and wins', { name: name(g.winner) })}</h2>
         </div>
         <div className="cc-results">
           {seats.map((s, i) => (
@@ -396,7 +396,7 @@ function Table({
               act((x) => callLast(x, me));
             }}
           >
-            {t('Last card!')}
+            {t('Last card')}
           </button>
         )}
         {myTurn && g.penalty && (
@@ -621,7 +621,7 @@ function cardName(c: Card) {
 function toastText(e: Entry, name: (i: number) => string, me: number) {
   switch (e.k) {
     case 'called':
-      return e.by === me ? t('Last card!') : t('{name}: last card!', { name: name(e.by) });
+      return e.by === me ? t('Last card') : t('{name}: last card', { name: name(e.by) });
     case 'forgot':
       return e.by === me ? t('You forgot “Last card”: +2') : t('{name} forgot “Last card”: +2', { name: name(e.by) });
     case 'take':

@@ -159,11 +159,11 @@ export function FiveThousandTable({
     return (
       <div className="bd fk-win">
         <div className="bd-head center">
-          <span className="kicker">{t('Exactly 5000!')}</span>
+          <span className="kicker">{t('Exactly 5000')}</span>
           <span className="bd-avatar xl" style={{ background: me.color }}>
             <Avatar name={me.name} color={me.color} photo={me.photo} />
           </span>
-          <h2 className="bd-title big">{t('{name} wins!', { name: me.name })}</h2>
+          <h2 className="bd-title big">{t('{name} wins', { name: me.name })}</h2>
         </div>
         <Standings g={g} players={players} />
         <div className="sticky-action stack">
@@ -338,7 +338,7 @@ export function FiveThousandTable({
       {g.phase === 'choose' && mine && (
         <div className="sticky-action">
           <BigButton size="xl" disabled={gain == null || over || shaking} onClick={() => shake((x) => setAside(x, picked, 'roll'))}>
-            {exact ? t('Exactly 5000!') : gain != null && left === 0 ? t('All 5 back in the cup') : left === 1 ? t('Roll 1 die again') : t('Roll {n} again', { n: Math.max(left, 1) })}
+            {exact ? t('Exactly 5000') : gain != null && left === 0 ? t('All 5 back in the cup') : left === 1 ? t('Roll 1 die again') : t('Roll {n} again', { n: Math.max(left, 1) })}
           </BigButton>
         </div>
       )}
@@ -346,9 +346,9 @@ export function FiveThousandTable({
       {won && (
         <>
           <div className="fk-burst" aria-live="polite">
-            <span className="kicker">{t('Exactly 5000!')}</span>
+            <span className="kicker">{t('Exactly 5000')}</span>
             <span className="fk-burst-num">5000</span>
-            <span className="fk-burst-name">{t('{name} wins!', { name: me.name })}</span>
+            <span className="fk-burst-name">{t('{name} wins', { name: me.name })}</span>
           </div>
           <div className="sticky-action">
             <BigButton size="xl" onClick={() => setPodium(true)}>
@@ -394,7 +394,7 @@ function TurnStamp({ g, name }: { g: Game; name: string }) {
       <span className="fk-stamp-emoji">
         <Glyph name={end.kind === 'too-much' ? 'blank' : 'bomb'} />
       </span>
-      <span className="fk-stamp-title">{end.kind === 'too-much' ? t('Over 5000!') : t('Nothing!')}</span>
+      <span className="fk-stamp-title">{end.kind === 'too-much' ? t('Over 5000') : t('Nothing')}</span>
       <span className="fk-stamp-sub">
         {end.kind === 'too-much'
           ? t('The roll is worth {value}, you needed {need}.', { value: fmt(end.value), need: fmt(end.need) }) +

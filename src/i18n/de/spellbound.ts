@@ -42,7 +42,7 @@ const spellbound: Record<string, string> = {
   'No trump': 'Kein Trumpf',
   Trump: 'Trumpf',
   'Round {n} of {m}': 'Runde {n} von {m}',
-  '{name} wins!': '{name} gewinnt!',
+  '{name} wins': '{name} gewinnt',
   'Round over': 'Runde vorbei',
   '{won} of {bid}': '{won} von {bid}',
   'New game': 'Neues Spiel',

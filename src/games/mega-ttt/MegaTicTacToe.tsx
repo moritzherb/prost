@@ -110,7 +110,7 @@ function Match({ pair, onSwap }: { pair: [Player, Player]; onSwap: () => void })
   const info = g.winner
     ? g.winner === 'draw'
       ? t('A draw: every board is decided, no three in a row')
-      : t('{name} wins!', { name: who(g.winner).name })
+      : t('{name} wins', { name: who(g.winner).name })
     : (note ??
       (known
         ? ''

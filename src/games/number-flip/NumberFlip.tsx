@@ -382,7 +382,7 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
   const stat = (p: Player) => {
     if (setup.mode === 'survival') return m.lives[p.id] ? <Lives n={m.lives[p.id]} /> : '—';
     if (setup.mode === 'tournament') return t('{n} pts', { n: totals[p.id] ?? 0 });
-    return scores[p.id] == null ? '' : scores[p.id] === 0 ? t('Shut!') : t('{n} left', { n: scores[p.id] });
+    return scores[p.id] == null ? '' : scores[p.id] === 0 ? t('Shut') : t('{n} left', { n: scores[p.id] });
   };
 
   const dice = box.dice;
@@ -391,7 +391,7 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
   const ready = !!dice && !box.rolling && !falling.length && isMove(box.open, dice, setup.level, box.picked);
   const hint = box.over
     ? box.open.length === 0
-      ? t('Box shut! Perfect.')
+      ? t('Box shut. Perfect.')
       : t('No move left: {n} stays open', { n: score(box.open) })
     : box.rolling || known
       ? ''
@@ -692,8 +692,8 @@ function RoundEnd({
     ? final && final.best.length === 1
       ? solo
         ? t('{n} left open', { n: scores[final.best[0]] })
-        : t('{name} wins!', { name: byId(final.best[0]).name })
-      : t('A tie!')
+        : t('{name} wins', { name: byId(final.best[0]).name })
+      : t('A tie')
     : t('Round {n}', { n: m.round });
 
   return (
@@ -714,7 +714,7 @@ function RoundEnd({
               </span>
               <span className="nf-row-name">{p.name}</span>
               {setup.mode === 'survival' && <span className="nf-row-lives">{lives[id] ? <Lives n={lives[id]} /> : t('Out')}</span>}
-              <span className="nf-row-score">{scores[id] === 0 ? t('Shut!') : scores[id]}</span>
+              <span className="nf-row-score">{scores[id] === 0 ? t('Shut') : scores[id]}</span>
               {setup.mode === 'tournament' && <span className="nf-row-total">{t('{n} pts', { n: totals[id] })}</span>}
             </div>
           );

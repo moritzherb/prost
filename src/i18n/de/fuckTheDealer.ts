@@ -35,7 +35,7 @@ const fuckTheDealer: Record<string, string> = {
 
   // Table phone
   'Pass the deck phone to {name}.': 'Gib das Deck-Handy an {name}.',
-  'First guess: {rank}. Last try!': 'Erster Tipp: {rank}. Letzter Versuch!',
+  'First guess: {rank}. Last try': 'Erster Tipp: {rank}. Letzter Versuch',
   '{name} has the deck and types in the guess.': '{name} hat das Deck und gibt den Tipp ein.',
 
   // Deck phone
@@ -63,11 +63,10 @@ const fuckTheDealer: Record<string, string> = {
   '{n} of 3 misses in a row': '{n} von 3 Fehlversuchen in Folge',
   'misses in a row': 'daneben in Folge',
   '{n} of 4 out': '{n} von 4 draußen',
-  'Bullseye!': 'Volltreffer!',
+  'Bullseye': 'Volltreffer',
   '{name} gets 6 sips.': '{name} bekommt 6 Schlucke.',
-  'Got it!': 'Erwischt!',
   '{name} gets 3 sips.': '{name} bekommt 3 Schlucke.',
-  'Missed!': 'Daneben!',
+  'Missed': 'Daneben',
   'Nobody drinks.': 'Keiner trinkt.',
   'Third miss in a row: the deck moves on.': 'Dritter Fehlversuch in Folge: Der Stapel wandert weiter.',
   'Pass the deck →': 'Stapel weitergeben →',

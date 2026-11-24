@@ -53,15 +53,15 @@ const fiveThousand: Record<string, string> = {
   '+{n} banked': '+{n} gutgeschrieben',
   '{name} is in with {score}.': '{name} ist drin mit {score}.',
   '{name} now has {score}.': '{name} hat jetzt {score}.',
-  'Over 5000!': 'Über 5000!',
-  'Nothing!': 'Nichts dabei!',
+  'Over 5000': 'Über 5000',
+  'Nothing': 'Nichts dabei',
   'First roll without points: −{n}.': 'Erster Wurf ohne Punkte: −{n}.',
   '{n} points from this turn are gone.': '{n} Punkte aus diesem Zug sind weg.',
   'No King, no Ace, no triple.': 'Kein König, kein Ass, kein Drilling.',
   '{name} stays on {score}.': '{name} bleibt bei {score}.',
 
   // Game over
-  'Exactly 5000!': 'Genau 5000!',
+  'Exactly 5000': 'Genau 5000',
   'Final scores': 'Endstand',
   'A triple is exactly three of a kind: four or five of a kind are none (four Kings are just four Kings). A triple only goes aside as a whole.':
     'Ein Drilling sind genau drei gleiche Würfel – vier oder fünf gleiche zählen nicht als Drilling (vier Könige sind einfach vier Könige). Ein Drilling kommt nur komplett zur Seite.',

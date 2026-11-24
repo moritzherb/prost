@@ -33,9 +33,9 @@ const DOUBLE_NAME: Partial<Record<Pose, string>> = {
 
 /** The name of a throw, e.g. "Double Snouter" or "Mixed double". */
 function throwName(th: Throw): string {
-  if (th.kind === 'pig-out') return t('Pig out!');
-  if (th.kind === 'touch') return t('Makin’ Bacon!');
-  if (th.kind === 'piggyback') return t('Piggyback!');
+  if (th.kind === 'pig-out') return t('Pig out');
+  if (th.kind === 'touch') return t('Makin’ Bacon');
+  if (th.kind === 'piggyback') return t('Piggyback');
   if (th.points === 1) return t('Sider');
   if (th.double) return t(DOUBLE_NAME[th.pigs[0]]!);
   return t('Mixed double');
@@ -481,11 +481,11 @@ function Table({ g, setG, players, known }: { g: Game; setG: (g: Game) => void; 
   const showResult = th && mode === 'rest' && !dropped;
   const hint =
     mode === 'held'
-      ? t('And throw!')
+      ? t('And throw')
       : mode === 'flying' || showResult
         ? null
         : dropped
-          ? t('That wasn’t a throw. Swing up and let go!')
+          ? t('That wasn’t a throw. Swing up and let go')
           : known
             ? t('Pick up the pigs and throw them')
             : t('Pick up the pigs, swing up and let go');
@@ -604,7 +604,7 @@ function Table({ g, setG, players, known }: { g: Game; setG: (g: Game) => void; 
         {showResult && (
           <div className={`sw-result${bad ? ' bad' : g.freeThrow ? ' again' : th.kind === 'score' && th.double ? ' double' : ''}`} key={`${g.scores.join()}-${g.turnPts}-${g.turn}-${g.ended}-${g.freeThrow}`} role="status">
             <span className="sw-result-name">{throwName(th)}</span>
-            {g.bonusNow && <span className="sw-result-bonus">{t('Bonus throw! {what}: +{n}', { what: bonusLabel(g.bonus.target), n: BONUSES[g.bonus.target].points })}</span>}
+            {g.bonusNow && <span className="sw-result-bonus">{t('Bonus throw. {what}: +{n}', { what: bonusLabel(g.bonus.target), n: BONUSES[g.bonus.target].points })}</span>}
             <span className="sw-result-sub">
               {th.kind === 'score'
                 ? t('+{n}', { n: th.points })
@@ -662,7 +662,7 @@ function Finish({ g, players, onAgain, exit }: { g: Game; players: GameProps['pl
           <Pig pose="side-dot" />
           <Pig pose="side" />
         </span>
-        <h2 className="bd-title big">{t('{name} wins!', { name: winner.name })}</h2>
+        <h2 className="bd-title big">{t('{name} wins', { name: winner.name })}</h2>
         <p className="lead">{t('The others, by how close they came.')}</p>
       </div>
       <section className="panel">

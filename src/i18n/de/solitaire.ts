@@ -1,6 +1,6 @@
 // The patience games for one: Beat the Deck, Accordion.
 const solitaire: Record<string, string> = {
-  'Solved!': 'Gelöst!',
+  'Solved': 'Gelöst',
   // Accordion
   Accordion: 'Akkordeon',
   'Squeeze a line of 52 cards down to one pile.': 'Schieb eine Reihe aus 52 Karten zu einem einzigen Stapel zusammen.',
@@ -11,7 +11,7 @@ const solitaire: Record<string, string> = {
     'Nach jedem Zug neu schauen: Die Reihe ist kürzer und neue Paare können entstehen. Die Reihenfolge zählt.',
   'Deal the whole deck. One pile left is a win, and it’s rare: the fewer piles, the better.':
     'Leg das ganze Deck aus. Ein einziger Stapel ist ein Sieg, und der ist selten: Je weniger Stapel, desto besser.',
-  'One pile left: solved!': 'Nur noch ein Stapel: gelöst!',
+  'One pile left: solved': 'Nur noch ein Stapel: gelöst',
   '{n} piles left': '{n} Stapel übrig',
   'Your best: {n} piles': 'Dein Bestes: {n} Stapel',
   'Onto which pile?': 'Auf welchen Stapel?',
@@ -27,7 +27,7 @@ const solitaire: Record<string, string> = {
     'Richtig: Die neue Karte kommt obendrauf. Falsch oder gleicher Wert: Der Platz wird umgedreht und ist raus.',
   'Get through the whole pile with at least one place left and you beat the deck. Aces are high.':
     'Schaffst du den ganzen Stapel mit mindestens einem Platz übrig, hast du das Deck geschlagen. Asse sind hoch.',
-  'You beat the deck!': 'Du hast das Deck geschlagen!',
+  'You beat the deck': 'Du hast das Deck geschlagen',
   'The deck wins': 'Das Deck gewinnt',
   '{n} of 9 places still open.': '{n} von 9 Plätzen noch offen.',
   '{n} cards were left in the pile.': '{n} Karten waren noch im Stapel.',

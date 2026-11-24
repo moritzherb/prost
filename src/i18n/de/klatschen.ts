@@ -28,13 +28,12 @@ const klatschen: Record<string, string> = {
   '3 rules': '3 Regeln',
   'Slap the stack': 'Auf den Stapel hauen',
   '{n} left': 'noch {n}',
-  'Slap it!': 'Hau drauf!',
-  'Slap the stack!': 'Hau auf den Stapel!',
+  'Slap it': 'Hau drauf',
   '{name} is Thumb Master': '{name} ist Daumenmeister',
-  'The 4th clap glass!': 'Das 4. Klatschglas!',
-  'You clap the whole glass in the middle. Down in one!': 'Du klatschst das ganze Glas in der Mitte. Ex!',
-  '{name} claps the glass!': '{name} klatscht das Glas!',
-  'All the way down. Cheers!': 'Bis zum letzten Tropfen. Prost!',
+  'The 4th clap glass': 'Das 4. Klatschglas',
+  'You clap the whole glass in the middle. Down in one': 'Du klatschst das ganze Glas in der Mitte. Ex',
+  '{name} claps the glass': '{name} klatscht das Glas',
+  'All the way down. Cheers': 'Bis zum letzten Tropfen. Prost',
 
   // The cards
   'Clap glass': 'Klatschglas',

@@ -273,7 +273,7 @@ function BridgeCard({ f, pos, lander, canAce, onDone }: Sub & { canAce: boolean 
   const need = param(f) ? [1, 2] : [5, 6];
   return (
     <Card f={f} pos={pos} lander={lander} text={textOf(f)}>
-      {made != null && <Verdict icon={made ? 'bridge' : 'beer'} title={made ? t('Over you go!') : t('Not this time: drink 1 and wait.')} />}
+      {made != null && <Verdict icon={made ? 'bridge' : 'beer'} title={made ? t('Over you go') : t('Not this time: drink 1 and wait.')} />}
       <div className="pt-card-actions">
         {made == null ? (
           <>
@@ -319,7 +319,7 @@ function ChugCard({ f, pos, lander, canAce, chosen, onDone }: Sub & { canAce: bo
     <Card f={f} pos={pos} lander={lander} chosen={chosen} text={textOf(f)}>
       {left != null && (
         <span key={left} className="pt-count pop-in" aria-live="assertive">
-          {left || t('Stop!')}
+          {left || t('Stop')}
         </span>
       )}
       <div className="pt-card-actions">
@@ -388,7 +388,7 @@ function DiceGame({ f, pos, lander, others, chosen, onDone }: Sub & { others: Pl
       over = true;
       verdict =
         rolled[0] === rolled[1] ? (
-          <Verdict icon="twins" title={t('Twins! {a} and {b} give out 10 sips', { a: lander.name, b: rival.name })} />
+          <Verdict icon="twins" title={t('Twins. {a} and {b} give out 10 sips', { a: lander.name, b: rival.name })} />
         ) : (
           <Verdict icon="beer" title={t('{a} and {b}: drink 1 each', { a: lander.name, b: rival.name })} />
         );
@@ -398,7 +398,7 @@ function DiceGame({ f, pos, lander, others, chosen, onDone }: Sub & { others: Pl
       verdict = d ? (
         <Verdict icon="swords" title={t('{name} drinks {n}', { name: (d.loser ? rival : lander).name, n: d.sips })} />
       ) : (
-        <Verdict icon="again" title={t('The same! Roll again.')} />
+        <Verdict icon="again" title={t('The same. Roll again.')} />
       );
     }
   }
@@ -450,7 +450,7 @@ function ChanceCard({ f, pos, lander, others, chosen, onDone }: Sub & { others: 
         />
       )}
       {stage === 'count' && <Countdown onDone={() => setStage('ask')} />}
-      {stage === 'same' && rival && <Verdict icon="target" title={t('The same! {a} and {b} give out 2 each', { a: lander.name, b: rival.name })} />}
+      {stage === 'same' && rival && <Verdict icon="target" title={t('The same. {a} and {b} give out 2 each', { a: lander.name, b: rival.name })} />}
       {stage === 'not' && rival && <Verdict icon="beer" title={t('{a} and {b}: drink 2 each', { a: lander.name, b: rival.name })} />}
       <div className="pt-card-actions">
         {stage === 'ask' && (
@@ -484,7 +484,7 @@ function HandsCard({ f, pos, lander, chosen, onDone }: Sub) {
   return (
     <Card f={f} pos={pos} lander={lander} chosen={chosen} text={textOf(f)}>
       {stage === 'count' && <Countdown onDone={() => setStage('now')} />}
-      {stage === 'now' && <Verdict icon="hand" title={t('Hands out! The fewer drink 2.')} />}
+      {stage === 'now' && <Verdict icon="hand" title={t('Hands out. The fewer drink 2.')} />}
       <div className="pt-card-actions">
         {stage === 'ready' && (
           <BigButton size="xl" onClick={() => setStage('count')}>
@@ -526,8 +526,8 @@ function SnusCard({ f, pos, lander, chosen, canAce, onDone }: Sub & { canAce: bo
           icon={right ? 'party' : 'beer'}
           title={
             right
-              ? t('{side} up: right! {name} gives out 2', { side: lid ? t('Lid') : t('Bottom'), name: lander.name })
-              : t('{side} up: wrong! {name} drinks 2', { side: lid ? t('Lid') : t('Bottom'), name: lander.name })
+              ? t('{side} up: right. {name} gives out 2', { side: lid ? t('Lid') : t('Bottom'), name: lander.name })
+              : t('{side} up: wrong. {name} drinks 2', { side: lid ? t('Lid') : t('Bottom'), name: lander.name })
           }
         />
       )}

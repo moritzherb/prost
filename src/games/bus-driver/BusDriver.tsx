@@ -411,9 +411,9 @@ function ResultBanner({ result }: { result: Result }) {
   const n = result.sips;
   const one = n === 1;
   const copy = {
-    correct: { icon: 'party' as const, title: t('Correct!'), sub: one ? t('Give out {n} sip', { n }) : t('Give out {n} sips', { n }) },
-    wrong: { icon: 'beer' as const, title: t('Wrong!'), sub: one ? t('Drink {n} sip', { n }) : t('Drink {n} sips', { n }) },
-    same: { icon: 'zap' as const, title: t('Same value!'), sub: t('Double trouble: drink {n} sips', { n }) },
+    correct: { icon: 'party' as const, title: t('Correct'), sub: one ? t('Give out {n} sip', { n }) : t('Give out {n} sips', { n }) },
+    wrong: { icon: 'beer' as const, title: t('Wrong'), sub: one ? t('Drink {n} sip', { n }) : t('Drink {n} sips', { n }) },
+    same: { icon: 'zap' as const, title: t('Same value'), sub: t('Double trouble: drink {n} sips', { n }) },
   }[result.outcome];
   return <Verdict tone={result.outcome} {...copy} />;
 }

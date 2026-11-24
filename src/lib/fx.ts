@@ -169,16 +169,62 @@ export const sfx = {
   },
 };
 
-/** Paper in the game's own colour, champagne, cream and a warm coral: no rainbow. */
-const PAPER = ['#f2c94c', '#f6f1e3', '#ff8a65'];
+/** The dice's colours: the app's lime, champagne, cream, coral, and a few more. */
+const PAPER = ['#f2c94c', '#f6f1e3', '#ff8a65', '#5aa9ff', '#ff7eb6', '#3ed6b5', '#9b8cff'];
 
-/** A colour mixed toward black: the back of a piece of paper, turned away from the light. */
+/** A colour mixed toward black: the die's lower edge, turned away from the light. */
 function shade(hex: string, by: number) {
   const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
   if (!m) return hex;
   const n = parseInt(m[1], 16);
   const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => Math.round(v * (1 - by)));
   return `rgb(${c.join(',')})`;
+}
+
+/** Where the pips of each face sit, on a 3 x 3 grid (0 to 2). */
+const PIPS: number[][][] = [
+  [[1, 1]],
+  [[0, 0], [2, 2]],
+  [[0, 0], [1, 1], [2, 2]],
+  [[0, 0], [2, 0], [0, 2], [2, 2]],
+  [[0, 0], [2, 0], [1, 1], [0, 2], [2, 2]],
+  [[0, 0], [2, 0], [0, 1], [2, 1], [0, 2], [2, 2]],
+];
+
+/**
+ * One small die as the app icon's: a rounded square in `color` with a darker lip under it and dark
+ * pips (`face`, 1 to 6 of them), drawn once and stamped for every piece.
+ */
+const dice = new Map<string, HTMLCanvasElement>();
+function dieSprite(color: string, face: number, px: number) {
+  const key = `${color}${face}@${px}`;
+  let c = dice.get(key);
+  if (c) return c;
+  c = document.createElement('canvas');
+  c.width = c.height = px;
+  const g = c.getContext('2d')!;
+  const u = px / 56;
+  const round = (y: number, h: number, fill: string | CanvasGradient) => {
+    g.fillStyle = fill;
+    g.beginPath();
+    // (roundRect is missing before iOS 16: a plain square then.)
+    if (g.roundRect) g.roundRect(4 * u, y * u, 48 * u, h * u, 11 * u);
+    else g.rect(4 * u, y * u, 48 * u, h * u);
+    g.fill();
+  };
+  round(8, 44, shade(color, 0.3));
+  const lit = g.createLinearGradient(8 * u, 4 * u, 48 * u, 48 * u);
+  lit.addColorStop(0, color);
+  lit.addColorStop(1, shade(color, 0.1));
+  round(4, 44, lit);
+  g.fillStyle = 'rgba(20, 21, 15, 0.88)';
+  for (const [x, y] of PIPS[face - 1]) {
+    g.beginPath();
+    g.arc((14 + x * 14) * u, (14 + y * 12) * u, 4.6 * u, 0, Math.PI * 2);
+    g.fill();
+  }
+  dice.set(key, c);
+  return c;
 }
 
 /** The colour the screen in front plays in (its accent), else the app's. */
@@ -189,11 +235,11 @@ function accentNow() {
 }
 
 /**
- * Confetti: two poppers go off at the bottom corners. The paper shoots up, slows in the air, then
- * flutters down, each piece tumbling (narrow, then wide, then its darker back) and swaying, and
- * fades before it lands. One canvas over the screen (a layer per piece made iPhones flicker).
+ * Confetti: two poppers go off at the bottom corners and shoot up small dice, in all the colours,
+ * that slow in the air, then tumble down swaying, and fade before they land. One canvas over the
+ * screen (a layer per piece made iPhones flicker).
  */
-export function confetti(amount = 130) {
+export function confetti(amount = 80) {
   if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
@@ -221,16 +267,12 @@ export function confetti(amount = 130) {
       vy: Math.sin(angle) * speed,
       delay: (left ? 0 : 0.12) + rnd(0, 0.08),
       life: rnd(2.6, 3.6),
-      pw: rnd(7, 12),
-      ph: rnd(4, 6.5),
+      size: rnd(15, 22),
       rot: rnd(0, Math.PI * 2),
       vr: rnd(-5, 5),
-      tilt: rnd(0, Math.PI * 2),
-      vt: rnd(7, 13),
       sway: rnd(0, Math.PI * 2),
       vs: rnd(2, 4),
-      color,
-      back: shade(color, 0.32),
+      sprite: dieSprite(color, 1 + Math.floor(rnd(0, 6)), 48 * dpr),
     };
   });
   document.body.appendChild(canvas);
@@ -258,16 +300,12 @@ export function confetti(amount = 130) {
       b.x += b.vx * dt;
       b.y += b.vy * dt;
       b.rot += b.vr * dt;
-      b.tilt += b.vt * dt;
       b.sway += b.vs * dt;
-      const flip = Math.cos(b.tilt);
       ctx.save();
       ctx.globalAlpha = Math.min(1, (b.life - t) / 0.6);
       ctx.translate(b.x + Math.sin(b.sway) * 10, b.y);
       ctx.rotate(b.rot);
-      ctx.scale(1, Math.max(0.08, Math.abs(flip)));
-      ctx.fillStyle = flip >= 0 ? b.color : b.back;
-      ctx.fillRect(-b.pw / 2, -b.ph / 2, b.pw, b.ph);
+      ctx.drawImage(b.sprite, -b.size / 2, -b.size / 2, b.size, b.size);
       ctx.restore();
     }
     if (alive) requestAnimationFrame(frame);

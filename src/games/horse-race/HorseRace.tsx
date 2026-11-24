@@ -139,7 +139,7 @@ export default function HorseRace({ players, exit }: GameProps) {
 
         <div className="sticky-action">
           <BigButton size="xl" disabled={!allIn} onClick={() => setRace(newRace(rows, undefined, SUITS.filter((s) => players.some((p) => bets[p.id] === s))))}>
-            {allIn ? t('And they’re off!') : t('Everyone needs a horse')}
+            {allIn ? t('And they’re off') : t('Everyone needs a horse')}
           </BigButton>
         </div>
       </div>
@@ -194,11 +194,11 @@ export default function HorseRace({ players, exit }: GameProps) {
           <span className="hs-finish-card">
             <PlayingCard card={{ value: 14, suit: win }} size="xl" />
           </span>
-          <h2 className="bd-title big">{t('{suit} wins!', { suit: t(SUIT_NAME[win]) })}</h2>
+          <h2 className="bd-title big">{t('{suit} wins', { suit: t(SUIT_NAME[win]) })}</h2>
           <p className="lead">
             {winners.length
               ? t('{names} bet right and give out double.', { names: winners.map((p) => p.name).join(' & ') })
-              : t('Nobody bet on it. Everyone drinks!')}
+              : t('Nobody bet on it. Everyone drinks')}
           </p>
         </div>
         {winners.length > 0 && tally(t('Give out'), winners, (p) => winnings(stake(p)))}
@@ -234,9 +234,9 @@ export default function HorseRace({ players, exit }: GameProps) {
             <span className="hs-now-text">
               <span className="hs-now-title">
                 {s.kind === 'side'
-                  ? t('Row {row}: side card!', { row: s.row })
+                  ? t('Row {row}: side card', { row: s.row })
                   : race.note === 'through'
-                    ? t('{suit} is through!', { suit: suitName })
+                    ? t('{suit} is through', { suit: suitName })
                     : race.note === 'done'
                       ? t('{suit} is through already', { suit: suitName })
                       : t('{suit} moves up', { suit: suitName })}

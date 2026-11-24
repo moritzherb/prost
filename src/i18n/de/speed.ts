@@ -30,8 +30,8 @@ const speed: Record<string, string> = {
   '{n} cards in hand': '{n} Karten auf der Hand',
   '1 card left': 'noch 1 Karte',
   '{n} cards left': 'noch {n} Karten',
-  'Too many cards! Put 1 back.': 'Zu viele Karten! Leg 1 zurück.',
-  'Too many cards! Put {n} back.': 'Zu viele Karten! Leg {n} zurück.',
+  'Too many cards. Put 1 back.': 'Zu viele Karten. Leg 1 zurück.',
+  'Too many cards. Put {n} back.': 'Zu viele Karten. Leg {n} zurück.',
   'Put this card back': 'Diese Karte zurücklegen',
   'Play this card': 'Diese Karte ablegen',
   'Draw from your pile': 'Zieh von deinem Stapel',
@@ -41,7 +41,7 @@ const speed: Record<string, string> = {
     'Tipp eine Karte an, um sie auf einen Stapel in der Mitte zu legen, der eins höher oder tiefer ist. Ass passt auf König oder 2.',
   'Waiting for {name}…': 'Warte auf {name}…',
 
-  'Nobody can play!': 'Keiner kann legen!',
+  'Nobody can play': 'Keiner kann legen',
   'Two new cards are coming…': 'Gleich kommen zwei neue Karten…',
   'New cards in': 'Neue Karten in',
 
@@ -51,7 +51,7 @@ const speed: Record<string, string> = {
   Sort: 'Sortieren',
   'Sort your cards from low to high': 'Karten von klein nach groß sortieren',
   '{h} in hand · {p} in the pile': '{h} auf der Hand · {p} im Stapel',
-  'Too fast! Wait a moment': 'Zu schnell! Kurz warten',
+  'Too fast. Wait a moment': 'Zu schnell. Kurz warten',
 };
 
 export default speed;

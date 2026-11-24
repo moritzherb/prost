@@ -189,7 +189,7 @@ export default function CardGame<C>(props: CardGameProps<C>) {
         <Finished game={game} />
         <div className="bd-head center">
           <span className="kicker">{t('Game over')}</span>
-          <h2 className="bd-title big">{t('All cards played!')}</h2>
+          <h2 className="bd-title big">{t('All cards played')}</h2>
         </div>
         {Summary && <Summary picks={s.picks} mode={s.mode} />}
         <div className="sticky-action stack">

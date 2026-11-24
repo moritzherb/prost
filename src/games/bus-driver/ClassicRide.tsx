@@ -77,11 +77,11 @@ export default function ClassicRide({ driver, onFinish }: { driver: Player; onFi
   let nextLabel = '';
   if (reveal) {
     if (ride.done) {
-      verdict = <Verdict tone="correct" icon="finish" title={t('All correct!')} sub={t('The bus has arrived.')} />;
+      verdict = <Verdict tone="correct" icon="finish" title={t('All correct')} sub={t('The bus has arrived.')} />;
       nextLabel = t('Finish the ride');
     } else if (!failed) {
       verdict = (
-        <Verdict tone="correct" icon="check" title={t('Correct!')} sub={t('Next: {question}', { question: t(questions[q + 1].title) })} />
+        <Verdict tone="correct" icon="check" title={t('Correct')} sub={t('Next: {question}', { question: t(questions[q + 1].title) })} />
       );
     } else {
       const { sips, outcome } = reveal.result;
@@ -89,7 +89,7 @@ export default function ClassicRide({ driver, onFinish }: { driver: Player; onFi
         <Verdict
           tone={outcome}
           icon={outcome === 'same' ? 'zap' : 'beer'}
-          title={outcome === 'same' ? t('Same value! Drink {n}', { n: sips }) : t('Wrong! Drink {n}', { n: sips })}
+          title={outcome === 'same' ? t('Same value. Drink {n}', { n: sips }) : t('Wrong. Drink {n}', { n: sips })}
           sub={t('Back to question 1.')}
         />
       );

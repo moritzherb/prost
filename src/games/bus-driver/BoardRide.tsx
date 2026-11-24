@@ -78,18 +78,18 @@ export default function BoardRide({ driver, mode, onFinish }: { driver: Player; 
   let nextLabel = '';
   if (step) {
     if (board.done) {
-      verdict = <Verdict tone="correct" icon="finish" title={t('All correct!')} sub={t('The bus has arrived.')} />;
+      verdict = <Verdict tone="correct" icon="finish" title={t('All correct')} sub={t('The bus has arrived.')} />;
       nextLabel = t('Finish the ride');
     } else if (!failed) {
       verdict = (
-        <Verdict tone="correct" icon="check" title={t('Correct!')} sub={t('Next row: {question}', { question: t(TITLES[questions[row + 1]]) })} />
+        <Verdict tone="correct" icon="check" title={t('Correct')} sub={t('Next row: {question}', { question: t(TITLES[questions[row + 1]]) })} />
       );
     } else {
       verdict = (
         <Verdict
           tone={step.outcome}
           icon={step.outcome === 'same' ? 'zap' : 'beer'}
-          title={step.outcome === 'same' ? t('Same value! Drink {n}', { n: step.sips }) : t('Wrong! Drink {n}', { n: step.sips })}
+          title={step.outcome === 'same' ? t('Same value. Drink {n}', { n: step.sips }) : t('Wrong. Drink {n}', { n: step.sips })}
           sub={t('Turned cards get covered. Back to the bottom.')}
         />
       );

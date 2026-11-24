@@ -260,7 +260,7 @@ function Table({
       <div className="bd">
         <div className="bd-head center">
           <span className="kicker">{t('Round {n} of {m}', { n: g.round, m: g.rounds })}</span>
-          <h2 className="bd-title big">{g.phase === 'over' ? t('{name} wins!', { name: name(order[0].i) }) : t('Round over')}</h2>
+          <h2 className="bd-title big">{g.phase === 'over' ? t('{name} wins', { name: name(order[0].i) }) : t('Round over')}</h2>
         </div>
         <div className="fz-results">
           {order.map(({ s, i }) => (

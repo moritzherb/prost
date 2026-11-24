@@ -128,7 +128,7 @@ function entryText(e: Entry, seats: Seat[]) {
   if (e.k === 'close') return t('Nobody beats {name}: they lead.', { name: name(e.by) });
   if (e.k === 'give') return t('{from} gives {to} {n} cards.', { from: name(e.from), to: name(e.to), n: e.n });
   const text = t('{name} plays {cards}.', { name: name(e.by), cards: group(e.cards) });
-  return e.out ? `${text} ${t('Out of cards!')}` : text;
+  return e.out ? `${text} ${t('Out of cards')}` : text;
 }
 
 /** Who passed since the last play in this trick (they're shown as passed). */
@@ -243,7 +243,7 @@ function Table({
   else if (g.phase === 'exchange') {
     const waiting = g.owed.map((o) => seats[o.from]?.name).filter(Boolean);
     headline = owe ? t('Give {n} back to {name}', { n: owe.n, name: seats[owe.to].name }) : t('Waiting for {names}…', { names: waiting.join(', ') });
-  } else if (myTurn) headline = top ? t('Beat it, or pass') : t('Your lead!');
+  } else if (myTurn) headline = top ? t('Beat it, or pass') : t('Your lead');
   else headline = t('{name}’s turn', { name: seats[g.turn]?.name ?? '' });
 
   return (
@@ -314,7 +314,7 @@ function Table({
               isSelected={(c) => sel.some((y) => same(y, c))}
               isDim={myTurn ? (c) => !beats(c) : undefined}
               onTap={myTurn || owe ? tap : undefined}
-              empty={g.out.includes(me) ? t('Out of cards! Watch the others fight it out.') : undefined}
+              empty={g.out.includes(me) ? t('Out of cards. Watch the others fight it out.') : undefined}
             />
           )}
 
