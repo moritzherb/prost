@@ -1,7 +1,7 @@
 /**
- * Opening the app: the home screen's apps and widgets settle into place as on a phone just unlocked,
- * coming in a little bigger and spread out from the middle, and gathering. Only when home is the
- * first screen, once per start; run on the phone's compositor (transform and opacity only).
+ * The home screen's apps and widgets settle into place as on a phone just unlocked, coming in a
+ * little bigger and spread out from the middle, and gathering. On opening the app, and every time
+ * home shows again after that; run on the phone's compositor (transform and opacity only).
  */
 export function playIntro() {
   const home = document.querySelector<HTMLElement>('.os-home');
