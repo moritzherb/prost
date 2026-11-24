@@ -281,10 +281,13 @@ const ART: Record<string, Art> = {
   speed: () => (
     <>
       <defs>{lin('ga-bolt', '#fff58a', '#ffa200')}</defs>
+      {/* Bolt and speed lines as one group, shifted right: the lines on the left made it sit left of the middle. */}
+      <g transform="translate(3 0)">
       <path d="M36 4L15 36h14l-6 24 26-36H35z" fill="url(#ga-bolt)" />
       <path d="M36 4L15 36h7z" fill="#fff" opacity="0.45" />
       <path d="M49 24L23 60l6-24h6z" fill="#c26a00" opacity="0.35" />
       <path d="M6 22h7M4 30h6M8 46h6" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" opacity="0.8" />
+      </g>
     </>
   ),
   palace: () => (
@@ -312,20 +315,24 @@ const ART: Record<string, Art> = {
         {lin('ga-tie', '#ff6b6b', '#b4161e')}
         {/* The tie's stripes stay on the tie. */}
         <clipPath id="ga-tie-clip">
-          <path d="M28 12h8l-1.5 15 6 25-8.5 8-8.5-8 6-25z" />
+          <path d="M29 33h6l6 21-9 6-9-6z" />
         </clipPath>
       </defs>
-      <path d="M8 10l24 14 24-14v48H8z" fill="url(#ga-shirt)" />
-      {/* The neckband behind the tie, the tie running up under the collar, the collar wings over its knot. */}
-      <path d="M21 7l11 20 11-20z" fill="#cfd3db" />
-      <path d="M28 12h8l-1.5 15 6 25-8.5 8-8.5-8 6-25z" fill="url(#ga-tie)" />
-      <path d="M28 12h8l-1.5 15-2.5 2-2.5-2z" fill="#a9121b" />
+      {/* The shirt, whole, with sloping shoulders. */}
+      <path d="M6 15L20 6h24l14 9v45H6z" fill="url(#ga-shirt)" />
+      {/* The collar's back band, standing up behind the neck, and the neck opening in its shade. */}
+      <path d="M19 5Q32 17 45 5v9Q32 26 19 14z" fill="#d3d7de" />
+      <path d="M21 8Q32 19 43 8l-11 17z" fill="#b9bec8" />
+      {/* The tie: knot tucked under the collar, then hanging down the front of the shirt. */}
+      <path d="M28.5 26h7l-1 8h-5z" fill="#a9121b" />
+      <path d="M29 33h6l6 21-9 6-9-6z" fill="url(#ga-tie)" />
       <g clipPath="url(#ga-tie-clip)" stroke="#7d0f15" strokeWidth="2" opacity="0.4">
         <path d="M20 42l24-14M20 50l24-14M20 58l24-14" />
       </g>
-      <path d="M28.5 25L19 4 8 14l14 20zM35.5 25L45 4l11 10-14 20z" fill="#f4f5f7" />
-      <path d="M28.5 25L19 4M35.5 25L45 4" fill="none" stroke="#d3d6dd" strokeWidth="1" />
-      <Gloss d="M30.5 31h2l-4 19-2.5-2.5z" o={0.35} />
+      <Gloss d="M31 35h2l-4 16-2.5-2.5z" o={0.35} />
+      {/* The collar wings over it, meeting just above the knot. */}
+      <path d="M31 25L17 7 7 16l14 21zM33 25L47 7l10 9-14 21z" fill="#f4f5f7" />
+      <path d="M31 25L17 7M33 25L47 7" fill="none" stroke="#d3d6dd" strokeWidth="1" />
     </>
   ),
   arschloch: () => (
@@ -420,7 +427,7 @@ const ART: Record<string, Art> = {
         <Gloss d="M8.5 25l2 14.5h-3.2z" o={0.5} />
       </g>
       {/* The Princess's tiara, as she wears it in the game (princess-treatment/Heads.tsx), in front on the right. */}
-      <g transform="translate(43 40) rotate(8) scale(0.84) translate(-60 -25)">
+      <g transform="translate(43 38) rotate(8) scale(0.84) translate(-60 -25)">
         <path d="M37 38.5L45 24.5l7 9 8-19 8 19 7-9 8 14z" fill="#000" opacity="0.18" />
         <path d="M37 36L45 22l7 9 8-19 8 19 7-9 8 14z" fill="url(#ga-tiara)" stroke="#d99a00" strokeWidth="1.9" strokeLinejoin="round" />
         <circle cx="60" cy="25" r="4.4" fill="#ff5fa2" stroke="#d6337f" strokeWidth="1.3" />

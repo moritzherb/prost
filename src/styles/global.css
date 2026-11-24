@@ -18684,6 +18684,11 @@ html.table-phone .game-bar .top-bar-side.right {
   animation: btd-turn-down 0.32s cubic-bezier(0, 0, 0.35, 1);
 }
 
+/* The last place: the red moment is cut short (TURN_LAST_MS in BeatTheDeck.tsx). */
+.btd-place.turning.last {
+  animation-delay: 0.5s;
+}
+
 @keyframes btd-turn-away {
   to {
     transform: perspective(600px) translateY(-6px) scale(1.06) rotateY(90deg);
