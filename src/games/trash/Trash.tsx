@@ -5,6 +5,7 @@ import Tap from '../../components/Tap';
 import { t } from '../../i18n';
 import { rankLabel, type Card } from '../../lib/cards';
 import { buzz, celebrate, sfx } from '../../lib/fx';
+import { shake } from '../../lib/cardFly';
 import { pick } from '../../lib/random';
 import { useCrewButton, useYourTurn } from '../../lib/turn';
 import { useApp, type Player } from '../../state/AppState';
@@ -112,7 +113,6 @@ export function TrashTable({
   onAgain?: () => void;
   exit?: () => void;
 }) {
-  const [nope, setNope] = useState(0);
   const local = me === undefined;
   const mine = local || me === g.turn;
   // Each on their own phone: it buzzes when it's yours.
@@ -180,7 +180,7 @@ export function TrashTable({
     const next = takeDiscard(g);
     if (next === g) {
       buzz([30, 30, 30]);
-      setNope((n) => n + 1);
+      shake(el);
       setMsg(t('You can only take it if you can use it'));
       return;
     }
@@ -266,9 +266,8 @@ export function TrashTable({
         </button>
         <button
           type="button"
-          key={nope}
           data-drop="discard"
-          className={`tr-discard${nope ? ' nope' : ''}${mine && (kind === 'toss' || kind === 'swap') ? ' drop-here' : ''}`}
+          className={`tr-discard${mine && (kind === 'toss' || kind === 'swap') ? ' drop-here' : ''}`}
           onClick={(e) => g.phase !== 'draw' && tapDiscard(e.currentTarget)}
           aria-label={g.phase === 'place' ? t('Discard pile') : t('Take the discard')}
         >

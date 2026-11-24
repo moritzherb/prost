@@ -7,6 +7,7 @@ import { t } from '../../i18n';
 import { useCrewButton } from '../../lib/turn';
 import { SUITS, type Card } from '../../lib/cards';
 import { buzz, celebrate, sfx } from '../../lib/fx';
+import { shake } from '../../lib/cardFly';
 import { load, save } from '../../lib/storage';
 import { useRoom } from '../../net/RoomProvider';
 import { useChanged, useQueuedSend, useResync } from '../../net/sync';
@@ -192,7 +193,6 @@ export default function Speed() {
   // Setting up: new players join the room (its code is in the crew sheet).
   useCrewButton(!match && isHost ? 'room' : null);
   const [picked, setPicked] = useState<string[]>([]);
-  const [shake, setShake] = useState<string | null>(null);
   // Tapping away at cards that don't fit (hoping one will the moment it can): three misses in
   // quick succession and your hand locks for a moment.
   const misses = useRef<number[]>([]);
@@ -285,7 +285,7 @@ export default function Speed() {
 
   const nope = (i: number) => {
     buzz([30, 30, 30]);
-    setShake((prev) => `${i}-${(prev ? +prev.split('-')[1] : 0) + 1}`);
+    shake(document.querySelectorAll('.sp-mine .sp-card')[i]);
     const now = Date.now();
     misses.current = [...misses.current.filter((at) => now - at < SPAM_WINDOW), now];
     if (misses.current.length >= SPAM_MISSES) {
@@ -384,7 +384,6 @@ export default function Speed() {
           g={g}
           who={mine}
           known={known}
-          shake={shake}
           locked={lockedUntil > 0}
           onCard={tapCard}
           onPile={tapPile}
@@ -427,7 +426,6 @@ function MyHalf({
   g,
   who,
   known,
-  shake,
   locked,
   onCard,
   onPile,
@@ -436,7 +434,6 @@ function MyHalf({
   g: Game;
   who: Who;
   known: boolean;
-  shake: string | null;
   locked: boolean;
   onCard: (i: number) => void;
   onPile: () => void;
@@ -461,7 +458,7 @@ function MyHalf({
             <button
               key={`${c.value}${c.suit}`}
               type="button"
-              className={`sp-card${isExtra ? ' extra' : ''}${isExtra && i === side.hand.length - 1 ? ' back-next' : ''}${shake?.startsWith(`${i}-`) ? ` nope${+shake.split('-')[1] % 2 ? ' again' : ''}` : ''}`}
+              className={`sp-card${isExtra ? ' extra' : ''}${isExtra && i === side.hand.length - 1 ? ' back-next' : ''}`}
               onPointerDown={() => onCard(i)}
               aria-label={isExtra ? t('Put this card back') : t('Play this card')}
             >

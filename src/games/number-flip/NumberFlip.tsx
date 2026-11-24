@@ -4,6 +4,8 @@ import BigButton from '../../components/BigButton';
 import Finished from '../../components/Finished';
 import { t, tx } from '../../i18n';
 import { buzz, celebrate, sfx } from '../../lib/fx';
+import { shake } from '../../lib/cardFly';
+import Bump from '../../components/Bump';
 import { load, save } from '../../lib/storage';
 import { useApp, type Player } from '../../state/AppState';
 import type { GameProps } from '../types';
@@ -261,7 +263,6 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
   const who = byId(m.order[m.turn]);
   const daily = useMemo(() => (setup.mode === 'daily' ? dailyRolls(today(), setup.size) : null), [setup.mode, setup.size]);
   const [oneDie, setOneDie] = useState(false);
-  const [nope, setNope] = useState<number | null>(null);
   /** The flaps falling right now, in the order they go. */
   const [falling, setFalling] = useState<number[]>([]);
   // The box in 3D where the phone can; else the flat one. Already loaded (in the setup): straight in.
@@ -329,8 +330,7 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
     const pick = [...box.picked, n];
     if (!canGrow(box.open, dice, setup.level, pick)) {
       buzz([20, 30, 20]);
-      setNope(n);
-      window.setTimeout(() => setNope(null), 320);
+      shake(document.querySelector(`.nf-flap[data-n="${n}"]`), 4);
       return;
     }
     sfx.tick();
@@ -443,7 +443,8 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
       <button
         key={n}
         type="button"
-        className={`nf-flap${down ? ' down' : ''}${picked ? ' picked' : ''}${live && nope === n ? ' nope' : ''}${!live && down ? ' still' : ''}`}
+        data-n={live ? n : undefined}
+        className={`nf-flap${down ? ' down' : ''}${picked ? ' picked' : ''}${!live && down ? ' still' : ''}`}
         style={{ '--gx': `${-((n * 67) % 300)}px`, '--d': `${Math.max(0, live ? falling.indexOf(n) : 0) * STAGGER}ms` } as CSSProperties}
         aria-label={down ? t('{n}, flipped', { n }) : String(n)}
         aria-pressed={picked}
@@ -523,7 +524,7 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
                 <Avatar name={p.name} color={p.color} photo={p.photo} />
               </span>
               <span className="nf-chip-name">{p.name}</span>
-              <span className="nf-chip-stat">{stat(p)}</span>
+              <Bump className="nf-chip-stat" value={setup.mode === 'survival' ? (m.lives[p.id] ?? 0) : String(stat(p))}>{stat(p)}</Bump>
             </div>
           );
         })}

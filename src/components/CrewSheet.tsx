@@ -2,6 +2,7 @@ import { useRef, useState, type CSSProperties, type FormEvent } from 'react';
 import type { GameDefinition } from '../games/types';
 import { t } from '../i18n';
 import { buzz, sfx } from '../lib/fx';
+import { useListMotion } from '../lib/listMotion';
 import { unfill } from '../lib/noAutofill';
 import { joinLink } from '../lib/router';
 import { useRoom } from '../net/RoomProvider';
@@ -19,6 +20,8 @@ export default function CrewSheet({ game, open, onClose }: { game: GameDefinitio
   const { players, addPlayer, removePlayer } = useApp();
   const [name, setName] = useState('');
   const input = useRef<HTMLInputElement>(null);
+  const list = useRef<HTMLUListElement>(null);
+  const motion = useListMotion(list, players);
   // A game for so many and no more (that doesn't pick its players from the crew) stops at that.
   const cap = game.maxPlayers != null && !game.picksPlayers ? Math.min(game.maxPlayers, MAX_PLAYERS) : MAX_PLAYERS;
   const full = players.length >= cap;
@@ -33,6 +36,7 @@ export default function CrewSheet({ game, open, onClose }: { game: GameDefinitio
     }
     sfx.pop();
     buzz();
+    motion.before();
     addPlayer(name);
     setName('');
     input.current?.focus();
@@ -68,9 +72,9 @@ export default function CrewSheet({ game, open, onClose }: { game: GameDefinitio
         ) : (
           <p className="crew-sheet-note">{t('New players join in where the game can take them: right away, or from the next round.')}</p>
         )}
-        <ul className="crew-sheet-list">
+        <ul ref={list} className="crew-sheet-list">
           {players.map((p) => (
-            <li key={p.id} className="crew-sheet-row" style={{ '--chip': p.color } as CSSProperties}>
+            <li key={p.id} data-key={p.id} className="crew-sheet-row" style={{ '--chip': p.color } as CSSProperties}>
               <span className="bd-avatar xs" style={{ background: p.color }}>
                 <Avatar name={p.name} color={p.color} photo={p.photo} />
               </span>
@@ -80,10 +84,10 @@ export default function CrewSheet({ game, open, onClose }: { game: GameDefinitio
                   type="button"
                   className="crew-sheet-remove"
                   aria-label={t('Remove {name}', { name: p.name })}
-                  onClick={() => {
+                  onClick={(e) => {
                     sfx.boo();
                     buzz(30);
-                    removePlayer(p.id);
+                    motion.leave(e.currentTarget.closest('li'), () => removePlayer(p.id));
                   }}
                 >
                   <CloseIcon />

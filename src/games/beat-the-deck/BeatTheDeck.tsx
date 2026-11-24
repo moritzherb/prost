@@ -5,6 +5,7 @@ import { rankLabel } from '../../lib/cards';
 import { buzz, celebrate, sfx } from '../../lib/fx';
 import type { GameProps } from '../types';
 import { flyIn } from '../../lib/cardFly';
+import Bump from '../../components/Bump';
 import SoloCard, { lie, PileUnder } from '../solo/SoloCard';
 import SoloEnd from '../solo/SoloEnd';
 import { alive, guess, newGame, over, won, type Game, type Guess } from './logic';
@@ -108,7 +109,7 @@ export default function BeatTheDeck({ exit }: GameProps) {
       <div className="sol-foot">
         <span ref={pile} className="sol-pile">
           <SoloCard up={false} />
-          <span className="sol-pile-n">{g.deck.length}</span>
+          <Bump className="sol-pile-n" value={g.deck.length} by={1.15} />
         </span>
         <div className="btd-guess">
           <BigButton variant="light" disabled={pick == null} onClick={() => play('lower')}>
