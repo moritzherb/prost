@@ -4,9 +4,9 @@
  * looks down on all of it from in front and a little above, so every flap is seen the same way, and
  * one light from the top left throws the shadows. Drawn only while something moves.
  *
- * The square box (2 to 4 players) has a row on each side instead, set like a pinwheel round the felt
- * in the middle, each painted in its player's colour, and turns so whoever's on has their row in
- * front.
+ * The square box (4 players) has a row on each side instead, each between two corner pockets so no
+ * two rows meet, painted in its player's colour, and turns so whoever's on has their row in front.
+ * The camera is the same as for the one box.
  *
  * Units are centimetres; x to the right, y up, z towards you.
  */
@@ -290,10 +290,10 @@ export class Box3D {
     this.scene.add(this.root);
     this.atlas = canvasTexture(flapAtlas(this.size), this.renderer);
     if (square) {
-      // Inside the walls: a row's length and the band (slot and rail) of the next one across.
-      const inside = this.innerW + SLOT + RAIL_D;
+      // Inside the walls: a row's length, and a band (slot and rail) at each end of it: the corners.
+      const inside = this.innerW + 2 * (SLOT + RAIL_D);
       this.width = this.depth = inside + 2 * WALL;
-      const f = inside / 2 - SLOT - RAIL_D;
+      const f = this.innerW / 2;
       this.felt = { x0: -f, x1: f, z0: -f, z1: f };
       this.buildSquare(inside);
     } else {
@@ -376,12 +376,12 @@ export class Box3D {
   }
 
   /**
-   * The square box: a tray with four walls, and on each side a band of slot and rail with its row,
-   * turned a quarter from the one before. Each band runs from one corner to the next band, which
-   * closes its end (a pinwheel); the felt fills the middle.
+   * The square box: a tray with four walls, felt over all of the inside, and on each side a band of
+   * slot and rail with its row, turned a quarter from the one before. A row runs only between the
+   * two corners; the rails run wall to wall, so each corner is a pocket of felt of its own.
    */
   private buildSquare(inside: number) {
-    const { wood, woodUp, slotFloor } = this.woods();
+    const { wood, woodUp } = this.woods();
     const W = this.width;
     this.add(new THREE.BoxGeometry(W, 0.6, W), wood, 0, -0.3, 0);
     const wall = new THREE.BoxGeometry(W, WALL_H, WALL);
@@ -390,19 +390,20 @@ export class Box3D {
     const side = new THREE.BoxGeometry(WALL, WALL_H, W - 2 * WALL);
     this.add(side, woodUp, -W / 2 + WALL / 2, WALL_H / 2, 0);
     this.add(side.clone(), woodUp, W / 2 - WALL / 2, WALL_H / 2, 0);
-    const f = this.felt.x1 * 2;
-    this.add(new THREE.BoxGeometry(f, 0.08, f), this.feltMaterial(2.4), 0, 0.04, 0).castShadow = false;
+    this.add(new THREE.BoxGeometry(inside, 0.08, inside), this.feltMaterial(3.4), 0, 0.04, 0).castShadow = false;
     // Each band in its own turned frame: x along the row (1 on the left as its player sees it), z out
     // towards its player. The flaps stand by the rail, their numbers to the player over the slot (the
-    // wall in front would hide them), and fall out into it.
-    const cx = -(SLOT + RAIL_D) / 2;
+    // wall in front would hide them), and fall out into it. A block at each end shuts the slot off
+    // from the corner pocket.
+    const zSlot = inside / 2 - SLOT / 2;
     for (let s = 0; s < 4; s++) {
       const band = new THREE.Group();
       band.rotation.y = (s * Math.PI) / 2;
       this.root.add(band);
-      this.add(new THREE.BoxGeometry(this.innerW, 0.05, SLOT), slotFloor, cx, 0.025, inside / 2 - SLOT / 2, band);
-      this.add(new THREE.BoxGeometry(this.innerW, RAIL_H, RAIL_D), wood, cx, RAIL_H / 2, inside / 2 - SLOT - RAIL_D / 2, band);
-      this.rows.push(this.buildRow(band, cx, inside / 2 - SLOT + 0.6, -1));
+      this.add(new THREE.BoxGeometry(this.innerW, 0.04, SLOT), wood, 0, 0.1, zSlot, band); // a wooden ledge, as on the real ones
+      this.add(new THREE.BoxGeometry(inside, RAIL_H, RAIL_D), wood, 0, RAIL_H / 2, inside / 2 - SLOT - RAIL_D / 2, band);
+      for (const end of [-1, 1]) this.add(new THREE.BoxGeometry(RAIL_D, RAIL_H, SLOT), wood, end * (this.innerW / 2 + RAIL_D / 2), RAIL_H / 2, zSlot, band);
+      this.rows.push(this.buildRow(band, 0, inside / 2 - SLOT + 0.6, -1));
       this.rowPaint.push(null);
     }
   }
@@ -520,12 +521,12 @@ export class Box3D {
 
   /**
    * Fits the camera so the whole box (flaps standing included) fills the canvas, as it's turned
-   * now: the square box is seen more from above, and moves back a little while it turns, corner on.
+   * now: the square box from the same height as the one box, moving back a little while it turns, corner on.
    */
   private fit() {
     if (!this.w) return;
     const cam = this.camera;
-    const elev = ((this.square ? 54 : 39) * Math.PI) / 180;
+    const elev = (39 * Math.PI) / 180;
     const target = new THREE.Vector3(0, 1.2, this.square ? 0 : 0.6);
     const corners: THREE.Vector3[] = [];
     for (const x of [-this.width / 2, this.width / 2])

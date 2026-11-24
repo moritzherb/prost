@@ -16754,6 +16754,15 @@ html[data-look] .play-screen > .top-bar .round-btn {
   gap: 6px;
 }
 
+/* Up to four: one line always, the names giving way, so a score showing never pushes the box down. */
+.nf-players:not(:has(> :nth-child(5))) {
+  flex-wrap: nowrap;
+}
+
+.nf-players:not(:has(> :nth-child(5))) > .nf-chip {
+  flex: 0 1 auto;
+}
+
 .nf-chip {
   display: flex;
   align-items: center;
@@ -17939,10 +17948,10 @@ html[data-look] .play-screen > .top-bar .round-btn {
   aspect-ratio: 2.1;
 }
 
-/* The square box, seen more from above. */
+/* The square box: seen as the one box is, so a little deeper than it. */
 .nf-stage.square .nf-canvas-host {
-  aspect-ratio: 1.1;
-  max-height: 56dvh;
+  aspect-ratio: 1.3;
+  max-height: 54dvh;
 }
 
 .nf-canvas {
