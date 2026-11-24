@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react';
 import { useCrewButton, useYourTurn } from '../../lib/turn';
 import { RowIcon } from '../../components/Icons';
 import BigButton from '../../components/BigButton';
@@ -7,6 +7,7 @@ import Tap from '../../components/Tap';
 import { t } from '../../i18n';
 import { storeSafe } from '../../lib/native';
 import { cardName, type Card } from '../../lib/cards';
+import { flyCopy } from '../../lib/cardFly';
 import { buzz, celebrate, sfx } from '../../lib/fx';
 import { load, save } from '../../lib/storage';
 import { useRoom } from '../../net/RoomProvider';
@@ -192,6 +193,9 @@ export default function HoseRunter() {
     // Everyone in the room: a phone that's locked for a moment still plays.
     const people = room.members.filter((m) => tableless || !m.host);
     const ready = people.slice(0, MAX_PLAYERS);
+    // Everyone's row stays put when the switch below is flipped (the host's says whether it's the
+    // table), so nothing on the screen jumps.
+    const rows = room.members.filter((m) => m.host || ready.includes(m));
     return (
       <div className="hr">
         <div className="bd-head">
@@ -204,19 +208,28 @@ export default function HoseRunter() {
           )}
         </div>
         <ul className="member-list">
-          {ready.map((m) => (
-            <li key={m.id} className="member-row">
-              <span className="player-avatar" style={{ '--chip': m.color } as CSSProperties}>
-                <Avatar name={m.name} color={m.color} photo={m.photo} />
-              </span>
-              <span className="member-text">
-                <span className="member-name">{m.name}</span>
-              </span>
-              <span className="hr-lives">
-                <Hearts n={START_LIVES} />
-              </span>
-            </li>
-          ))}
+          {rows.map((m) => {
+            const table = m.host && !tableless;
+            return (
+              <li key={m.id} className={`member-row${table ? ' hr-table-row' : ''}`}>
+                <span className="player-avatar" style={{ '--chip': m.color } as CSSProperties}>
+                  <Avatar name={m.name} color={m.color} photo={m.photo} />
+                </span>
+                <span className="member-text">
+                  <span className="member-name">{m.name}</span>
+                </span>
+                {table ? (
+                  <span className="hr-table-tag">
+                    <RowIcon name="phone" /> {t('Table')}
+                  </span>
+                ) : (
+                  <span className="hr-lives">
+                    <Hearts n={START_LIVES} />
+                  </span>
+                )}
+              </li>
+            );
+          })}
         </ul>
         {people.length > MAX_PLAYERS && <p className="notice">{t('Max {max} players. The first {max} play.', { max: MAX_PLAYERS })}</p>}
         {!known && <p className="fine-print">{t('Turn order is the order above. A random player deals first.')}</p>}
@@ -227,11 +240,7 @@ export default function HoseRunter() {
             </span>
             <span className="setting-text">
               <span className="setting-label">{t('Table phone in the middle')}</span>
-              <span className="setting-hint">
-                {tableless
-                  ? t('Off: you play too. Every phone shows the middle cards.')
-                  : t('Put this phone in the middle: it shows the middle cards. Everyone else plays on their own phone.')}
-              </span>
+              <span className="setting-hint">{t('This phone shows the middle cards and doesn’t play. Off: it plays too.')}</span>
             </span>
             <span className="switch">
               <span className="switch-knob" />
@@ -331,18 +340,45 @@ function Table({ view, myId, act, connected }: { view: PlayerView; myId: string;
   // The dealer deciding: their three cards big in the middle of the screen, not down in the hand.
   const deciding = dealerPhase && myTurn && !!playing;
 
-  // Clear the selection (and fold the cards) whenever the table changes.
+  // Clear the selection whenever the table changes; the cards fold only when your own change (not
+  // each time someone else swaps or the turn moves on).
   const tableKey = JSON.stringify([view.middle, view.hand, view.turnId]);
+  const handKey = JSON.stringify(view.hand);
+  // Cards on their way after your swap: hidden where they were until the new table comes back.
+  const [leaving, setLeaving] = useState<{ hand: number[]; middle: number[] } | null>(null);
   useEffect(() => {
     setPickHand(null);
     setPickMiddle(null);
-    setFanOpen(false);
+    setLeaving(null);
   }, [tableKey]);
+  useEffect(() => setFanOpen(false), [handKey]);
+  const felt = useRef<HTMLDivElement>(null);
+  const fan = useRef<HTMLDivElement>(null);
+
+  /** Your swap shows at once: the cards fly across (the table catches up when the host answers). */
+  const fly = (hand: number[], middle: number[]) => {
+    const h = fan.current?.querySelectorAll<HTMLElement>('.hr-fan-card');
+    const m = felt.current?.querySelectorAll<HTMLElement>('.hr-card');
+    if (!h || !m) return;
+    hand.forEach((hi, k) => {
+      const mi = middle[k];
+      const a = h[hi];
+      const b = m[mi];
+      if (!a || !b) return;
+      const ra = a.getBoundingClientRect();
+      const rb = b.getBoundingClientRect();
+      flyCopy(a, ra, rb, { duration: 420, delay: k * 50 });
+      flyCopy(b, rb, ra, { duration: 420, delay: k * 50 });
+    });
+    setLeaving({ hand, middle });
+  };
 
   const send = (a: Action) => {
+    if (a.type === 'swap1') fly([a.hand], [a.middle]);
+    else if (a.type === 'swapAll') fly([0, 1, 2], [0, 1, 2]);
+    // The cards fold once the new ones are in (see handKey): the flying copies land where they show.
     setPickHand(null);
     setPickMiddle(null);
-    setFanOpen(false);
     act(a);
   };
 
@@ -382,12 +418,13 @@ function Table({ view, myId, act, connected }: { view: PlayerView; myId: string;
       {!dealerPhase && (
         <section className="hr-felt">
           <span className="hr-zone-label">{t('Middle')}</span>
-          <div className="hr-felt-cards">
+          <div ref={felt} className="hr-felt-cards">
             {view.middle.map((c, i) => (
               <CardButton
                 key={`m${i}-${cardName(c)}`}
                 card={c}
                 selected={pickMiddle === i}
+                leaving={!!leaving?.middle.includes(i)}
                 disabled={!myTurn}
                 onClick={() => setPickMiddle(pickMiddle === i ? null : i)}
               />
@@ -425,6 +462,8 @@ function Table({ view, myId, act, connected }: { view: PlayerView; myId: string;
           {!deciding && (
             <>
               <HandFan
+                ref={fan}
+                leaving={leaving?.hand}
                 cards={view.hand}
                 open={fanOpen}
                 onToggle={() => setFanOpen(!fanOpen)}
@@ -514,6 +553,8 @@ function Table({ view, myId, act, connected }: { view: PlayerView; myId: string;
  * Tap to pick them up (they spread out); then tap one to choose it for a swap.
  */
 function HandFan({
+  ref,
+  leaving,
   cards,
   open,
   onToggle,
@@ -521,6 +562,8 @@ function HandFan({
   selectable,
   onPick,
 }: {
+  ref: RefObject<HTMLDivElement | null>;
+  leaving?: number[];
   cards: Card[];
   open: boolean;
   onToggle: () => void;
@@ -529,11 +572,11 @@ function HandFan({
   onPick: (i: number) => void;
 }) {
   return (
-    <div className={`hr-fan${open ? ' open' : ''}`}>
+    <div ref={ref} className={`hr-fan${open ? ' open' : ''}`}>
       {cards.map((c, i) => (
         <Tap
           key={`h${i}-${cardName(c)}`}
-          className={`hr-fan-card${selected === i ? ' selected' : ''}`}
+          className={`hr-fan-card${selected === i ? ' selected' : ''}${leaving?.includes(i) ? ' leaving' : ''}`}
           style={{ '--i': i - (cards.length - 1) / 2 } as CSSProperties}
           ariaLabel={cardName(c)}
           onClick={() => {
@@ -552,9 +595,9 @@ function HandFan({
   );
 }
 
-function CardButton({ card, selected, disabled, onClick }: { card: Card; selected: boolean; disabled: boolean; onClick: () => void }) {
+function CardButton({ card, selected, leaving, disabled, onClick }: { card: Card; selected: boolean; leaving?: boolean; disabled: boolean; onClick: () => void }) {
   return (
-    <Tap className={`hr-card${selected ? ' selected' : ''}`} onClick={onClick} disabled={disabled} ariaLabel={cardName(card)}>
+    <Tap className={`hr-card${selected ? ' selected' : ''}${leaving ? ' leaving' : ''}`} onClick={onClick} disabled={disabled} ariaLabel={cardName(card)}>
       <PlayingCard card={card} size="lg" />
     </Tap>
   );

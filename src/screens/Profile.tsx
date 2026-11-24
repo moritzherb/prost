@@ -1,4 +1,5 @@
 import { useRef, useState, type CSSProperties } from 'react';
+import { GameGlyph } from '../home/AppIcon';
 import Avatar from '../components/Avatar';
 import PhotoCrop from '../components/PhotoCrop';
 import { CloseIcon } from '../components/Icons';
@@ -139,7 +140,7 @@ export default function Profile() {
           <span className="stat-label">{t('Games played')}</span>
         </div>
         <div className="stat-tile">
-          <span className="stat-num">{games[0] ? games[0].game!.emoji : '–'}</span>
+          <span className="stat-num">{games[0] ? <GameGlyph game={games[0].game!} /> : '–'}</span>
           <span className="stat-label">{games[0] ? t('Favourite: {game}', { game: t(games[0].game!.name) }) : t('Favourite game')}</span>
         </div>
         <div className="stat-tile">
@@ -157,7 +158,9 @@ export default function Profile() {
         <ul className="profile-games">
           {games.slice(0, 5).map(({ game, n }) => (
             <li key={game!.id}>
-              <span className="profile-game-emoji">{game!.emoji}</span>
+              <span className="profile-game-emoji">
+                <GameGlyph game={game!} />
+              </span>
               <span className="profile-game-name">{t(game!.name)}</span>
               <span className="profile-game-n">{t('{n}×', { n })}</span>
             </li>

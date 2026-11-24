@@ -253,7 +253,7 @@ export function TrashTable({
 
   return (
     <div className="tr fill">
-      <Board g={g} who={top} player={two[top]} flipped={local} hint={!known && mine} onSlot={(i, el) => dropOnSlot(top, i, el)} />
+      <Board g={g} who={top} player={two[top]} flipped={local} hint={mine} onSlot={(i, el) => dropOnSlot(top, i, el)} />
 
       <div className={`tr-middle${rotated ? ' flipped' : ''}`}>
         <button
@@ -330,7 +330,7 @@ export function TrashTable({
         </span>
       </div>
 
-      <Board g={g} who={bottom} player={two[bottom]} hint={!known && mine} onSlot={(i, el) => dropOnSlot(bottom, i, el)} />
+      <Board g={g} who={bottom} player={two[bottom]} hint={mine} onSlot={(i, el) => dropOnSlot(bottom, i, el)} />
 
       {over && g.winner != null && (
         <div className="tr-over">
@@ -400,7 +400,7 @@ function Board({
   who: Who;
   player: Player;
   flipped?: boolean;
-  /** Show where the held card goes (for groups that don't know the game yet). */
+  /** Show where the held card goes (the phone whose turn it is, on every phone the same). */
   hint?: boolean;
   onSlot: (i: number, el: Element) => void;
 }) {
@@ -547,9 +547,15 @@ function ghostFly(el: HTMLElement, [from, to]: [string, string], timing: Keyfram
   const turned = (tf: string) => (tf === 'none' ? 'rotate(180deg)' : `${tf} rotate(180deg)`);
   const a = ghost.animate([{ transform: turned(from) }, { transform: turned(to) }], timing);
   a.onfinish = a.oncancel = () => {
+    if (done) {
+      // The card leaves with the move: it stays hidden, and the copy stays where it landed until the
+      // move is drawn (showing the card back at its old place for a frame made it twitch).
+      done();
+      requestAnimationFrame(() => requestAnimationFrame(() => ghost.remove()));
+      return;
+    }
     ghost.remove();
     el.style.visibility = '';
-    done?.();
   };
 }
 

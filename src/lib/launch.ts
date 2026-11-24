@@ -49,12 +49,16 @@ export function launch(icon: Element | null, game: { id: string; color: string; 
   const fill = document.createElement('span');
   fill.className = 'launch-fill';
   const emoji = document.createElement('span');
-  emoji.className = glyphs.length > 1 ? 'launch-emoji app-duo' : 'launch-emoji';
-  for (const g of glyphs) {
-    const part = document.createElement(glyphs.length > 1 ? 'i' : 'span');
-    part.textContent = g;
-    emoji.append(part);
-  }
+  // The game's own drawing on the icon tapped comes along; else its emoji.
+  const art = icon.querySelector('svg.game-art');
+  emoji.className = !art && glyphs.length > 1 ? 'launch-emoji app-duo' : 'launch-emoji';
+  if (art) emoji.append(art.cloneNode(true));
+  else
+    for (const g of glyphs) {
+      const part = document.createElement(glyphs.length > 1 ? 'i' : 'span');
+      part.textContent = g;
+      emoji.append(part);
+    }
   // The emoji starts just on the icon's and glides to the middle as the colour comes in: from the
   // same moment, along the same curve, never a moment on its own over the home screen.
   const dx = r.left + r.width / 2 - w / 2;

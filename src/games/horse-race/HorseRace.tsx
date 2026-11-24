@@ -1,5 +1,4 @@
 import { useEffect, useState, type CSSProperties } from 'react';
-import MoreOptions from '../../components/MoreOptions';
 import { useCrewButton, usePlaying } from '../../lib/turn';
 import { RowIcon } from '../../components/Icons';
 import BigButton from '../../components/BigButton';
@@ -126,20 +125,17 @@ export default function HorseRace({ players, exit }: GameProps) {
           {t('Random for the rest')}
         </button>
 
-        {/* The track's length: fine as it is for most, so folded away. */}
-        <MoreOptions summary={`${t('Track length')}: ${rows}`}>
-          <section className="section">
-            <h3 className="section-title">{t('Track length')}</h3>
-            <div className="seg">
-              {ROW_OPTIONS.map((n) => (
-                <button key={n} type="button" className={`seg-btn${rows === n ? ' active' : ''}`} onClick={() => setRows(n)}>
-                  <span className="seg-main">{n}</span>
-                  <span className="seg-sub">{t('rows')}</span>
-                </button>
-              ))}
-            </div>
-          </section>
-        </MoreOptions>
+        <section className="section">
+          <h3 className="section-title">{t('Track length')}</h3>
+          <div className="seg">
+            {ROW_OPTIONS.map((n) => (
+              <button key={n} type="button" className={`seg-btn${rows === n ? ' active' : ''}`} onClick={() => setRows(n)}>
+                <span className="seg-main">{n}</span>
+                <span className="seg-sub">{t('rows')}</span>
+              </button>
+            ))}
+          </div>
+        </section>
 
         <div className="sticky-action">
           <BigButton size="xl" disabled={!allIn} onClick={() => setRace(newRace(rows, undefined, SUITS.filter((s) => players.some((p) => bets[p.id] === s))))}>

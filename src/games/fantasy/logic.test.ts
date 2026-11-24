@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bid, chooseTrump, legal, maxRounds, newDeck, newGame, playCard, points, takeTrick, trickWinner, type Card, type Game, type Played } from './logic';
+import { bid, chooseTrump, forbiddenBid, legal, maxRounds, newDeck, newGame, playCard, points, takeTrick, trickWinner, type Card, type Game, type Played } from './logic';
 
 const num = (faction: 'fire' | 'water' | 'nature' | 'astral', rank: number, id = rank + faction.length * 100): Card => ({ id, kind: 'number', faction, rank });
 const mage = (id: number): Card => ({ id, kind: 'archmage' });
@@ -66,8 +66,21 @@ describe('fantasy trick-taking', () => {
     expect(bid(g, g.turn, 2)).toBe(g);
     g = bid(g, 1, 1);
     expect(bid(g, 1, 0)).toBe(g);
-    g = bid(bid(g, 2, 0), 0, 0);
+    g = bid(g, 2, 0);
+    // The last bid can't make the bids add up to the round's one trick.
+    expect(forbiddenBid(g)).toBe(0);
+    expect(bid(g, 0, 0)).toBe(g);
+    g = bid(g, 0, 1);
     expect(g.phase).toBe('playing');
+  });
+
+  it('forbids the last bid that adds up to the round (3 cards: 1 and 0 bid, not 2)', () => {
+    const g: Game = { ...newGame(3), round: 3, phase: 'bidding', dealer: 2, turn: 2, bids: [1, 0, null] };
+    expect(forbiddenBid(g)).toBe(2);
+    expect(bid(g, 2, 2)).toBe(g);
+    expect(bid(g, 2, 3).bids).toEqual([1, 0, 3]);
+    expect(forbiddenBid({ ...g, bids: [3, 2, null] })).toBeNull();
+    expect(forbiddenBid({ ...g, bids: [1, null, null] })).toBeNull();
   });
 
   it('scores 20 + 10 per trick for an exact bid, −10 per trick off otherwise', () => {

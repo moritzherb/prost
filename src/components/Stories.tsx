@@ -8,6 +8,8 @@ import { CloseIcon } from './Icons';
  * Stories, as on Instagram: who's playing what right now. Placeholders for now (no accounts yet):
  * a line on the home screen with a ring per friend, tap one to see it full screen.
  * shortcut: fixed sample stories, until friends and a backend exist.
+ * Off the home screen for now (kept for later): put <StoryBar /> back on page 0 of home/Springboard.tsx
+ * and at the top of home/Launcher.tsx.
  */
 
 interface Story {

@@ -535,11 +535,11 @@ html[data-look='pop'] .w-shuffle .w-kicker {
 
 /* Card backs: the lime with the fine stripes of a card back. */
 html[data-look='pop'] .pcard-back {
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.2) 0 4px, transparent 4px 10px), var(--accent);
+  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.2) 0 4px, transparent 4px 10px), var(--card-back);
 }
 
 html[data-look='pop'] :is(.kc-slot, .deck-count-stack i) {
-  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.2) 0 2px, transparent 2px 5px), var(--accent);
+  background: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.2) 0 2px, transparent 2px 5px), var(--card-back);
 }
 
 /* The small line under a segment's label: readable on the chosen (grey) piece too. */

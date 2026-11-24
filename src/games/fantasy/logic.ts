@@ -87,9 +87,19 @@ export function chooseTrump(g: Game, seat: number, faction: Faction): Game {
   return { ...g, trump: faction, phase: 'bidding', turn: left(g, g.dealer) };
 }
 
-/** A bid, 0 to the round's number, in turn; locked once made. */
+/**
+ * The one bid the last to bid may not make: with it the bids would add up to the tricks there are in
+ * the round, so someone always has to miss. null: none (not the last bid, or it can't add up).
+ */
+export function forbiddenBid(g: Game): number | null {
+  if (g.phase !== 'bidding' || g.bids.filter((b) => b == null).length !== 1) return null;
+  const rest = g.round - g.bids.reduce<number>((sum, b) => sum + (b ?? 0), 0);
+  return rest >= 0 && rest <= g.round ? rest : null;
+}
+
+/** A bid, 0 to the round's number, in turn; locked once made. The last bid can't make them add up. */
 export function bid(g: Game, seat: number, n: number): Game {
-  if (g.phase !== 'bidding' || seat !== g.turn || g.bids[seat] != null || n < 0 || n > g.round || !Number.isInteger(n)) return g;
+  if (g.phase !== 'bidding' || seat !== g.turn || g.bids[seat] != null || n < 0 || n > g.round || !Number.isInteger(n) || n === forbiddenBid(g)) return g;
   const bids = g.bids.map((b, i) => (i === seat ? n : b));
   const done = bids.every((b) => b != null);
   return { ...g, bids, turn: done ? left(g, g.dealer) : left(g, seat), phase: done ? 'playing' : 'bidding' };

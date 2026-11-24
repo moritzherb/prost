@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import BigButton from '../../components/BigButton';
 import { t } from '../../i18n';
 import { buzz, celebrate, sfx } from '../../lib/fx';
 import { load, save } from '../../lib/storage';
 import type { GameProps } from '../types';
-import SoloCard from '../solo/SoloCard';
+import { flyIn } from '../../lib/cardFly';
+import SoloCard, { PileUnder } from '../solo/SoloCard';
 import SoloEnd from '../solo/SoloEnd';
 import { anyMove, deal, move, newGame, over, targets, won } from './logic';
 
@@ -23,6 +24,21 @@ export default function Accordion({ exit }: GameProps) {
       save('accordion-best', n);
       return n;
     });
+  }, [g]);
+
+  // A card dealt flies from the pile into the line, a pile moved flies onto the one it goes on.
+  // The line scrolls with the newest card; squeezed together, it comes back up by itself.
+  const felt = useRef<HTMLDivElement>(null);
+  const pileEl = useRef<HTMLSpanElement>(null);
+  const flight = useRef<{ pile: number; from: DOMRect } | null>(null);
+  useLayoutEffect(() => {
+    const f = flight.current;
+    flight.current = null;
+    const pileBox = f && (felt.current?.children[f.pile] as HTMLElement | undefined);
+    if (!f || !pileBox) return;
+    pileBox.scrollIntoView({ block: 'nearest' });
+    const el = pileBox.querySelector<HTMLElement>('.acc-top');
+    if (el) flyIn(el, f.from, 420);
   }, [g]);
 
   if (over(g)) {
@@ -45,6 +61,8 @@ export default function Accordion({ exit }: GameProps) {
   const go = (from: number, to: number) => {
     sfx.pop();
     buzz(10);
+    const rect = felt.current?.children[from]?.querySelector('.acc-top')?.getBoundingClientRect();
+    if (rect) flight.current = { pile: to, from: rect };
     setG(move(g, from, to));
     setPick(null);
   };
@@ -61,16 +79,17 @@ export default function Accordion({ exit }: GameProps) {
   return (
     <div className="sol bd-play fill">
       <p className="sol-status">{pick != null ? t('Onto which pile?') : anyMove(g) ? t('Tap a pile to move it') : t('Deal the next card')}</p>
-      <div className="sol-felt acc-line">
+      <div ref={felt} className="sol-felt acc-line">
         {g.piles.map((p, i) => (
           <button key={`${p[0].value}${p[0].suit}`} type="button" className={`acc-pile${pick === i ? ' picked' : ''}${open.includes(i) ? ' target' : ''}`} onClick={() => tap(i)}>
-            <SoloCard key={p.length} card={p[p.length - 1]} className="sol-land" />
+            <PileUnder cards={p.slice(0, -1)} />
+            <SoloCard key={p.length} card={p[p.length - 1]} className="acc-top" />
             {p.length > 1 && <span className="acc-n">{p.length}</span>}
           </button>
         ))}
       </div>
       <div className="sol-foot">
-        <span className="sol-pile">
+        <span ref={pileEl} className="sol-pile">
           <SoloCard up={false} className={g.deck.length ? '' : 'gone'} />
           <span className="sol-pile-n">{g.deck.length}</span>
         </span>
@@ -79,6 +98,8 @@ export default function Accordion({ exit }: GameProps) {
           disabled={!g.deck.length}
           onClick={() => {
             sfx.tick();
+            const from = pileEl.current?.getBoundingClientRect();
+            if (from) flight.current = { pile: g.piles.length, from };
             setG(deal(g));
             setPick(null);
           }}

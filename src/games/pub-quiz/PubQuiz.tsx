@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import Avatar from '../../components/Avatar';
 import BigButton from '../../components/BigButton';
 import Finished from '../../components/Finished';
+import Glyph from '../../components/Glyph';
 import Tap from '../../components/Tap';
 import { getLang, t, tx } from '../../i18n';
 import { buzz as vibrate, celebrate, sfx } from '../../lib/fx';
@@ -22,8 +23,9 @@ const LEVELS: { id: Level; label: string }[] = [
   { id: 4, label: tx('Impossible') },
 ];
 const COUNTS = [10, 20, 30];
-const TEAM_COLORS = ['#ff5a5f', '#3da9fc', '#ffc93c', '#7ae582'];
-const TEAM_NAMES = [tx('Team Red'), tx('Team Blue'), tx('Team Yellow'), tx('Team Green')];
+/** The teams' colours to pick from, each with the name a team of that colour has until it's renamed. */
+const TEAM_COLORS = ['#ff5a5f', '#3da9fc', '#ffc93c', '#7ae582', '#b388ff', '#ff8a3d', '#2ec4b6', '#f15bb5'];
+const TEAM_NAMES = [tx('Team Red'), tx('Team Blue'), tx('Team Yellow'), tx('Team Green'), tx('Team Purple'), tx('Team Orange'), tx('Team Teal'), tx('Team Pink')];
 
 export const TOPIC_NAME: Record<Topic, string> = {
   general: tx('General knowledge'),
@@ -80,10 +82,24 @@ function Setup({ room, onStart }: { room: ReturnType<typeof useShared<Shared>>['
   const [teamOf, setTeamOf] = useState<Record<string, number>>({});
   const nTeams = Math.max(2, Math.min(4, Math.ceil(players.length / 2)));
   const team = (id: string, i: number) => (teamOf[id] ?? i % nTeams) % nTeams;
+  // Each team's colour (a place in TEAM_COLORS) and its own name, if it was given one.
+  const [hues, setHues] = useState([0, 1, 2, 3]);
+  const [names, setNames] = useState<string[]>([]);
+  const colorOf = (k: number) => TEAM_COLORS[hues[k]];
+  const nameOf = (k: number) => names[k]?.trim() || t(TEAM_NAMES[hues[k]]);
+  // The next colour no other team has.
+  const recolor = (k: number) =>
+    setHues((h) => {
+      const taken = h.filter((_, j) => j !== k && j < nTeams);
+      let next = h[k];
+      do next = (next + 1) % TEAM_COLORS.length;
+      while (taken.includes(next));
+      return h.map((x, j) => (j === k ? next : x));
+    });
   const sides: Side[] = teams
-    ? TEAM_NAMES.slice(0, nTeams)
-        .map((name, k) => ({ id: `team-${k}`, name: t(name), color: TEAM_COLORS[k], members: players.filter((p, i) => team(p.id, i) === k).map((p) => p.id) }))
-        .filter((s) => s.members.length)
+    ? Array.from({ length: nTeams }, (_, k) => ({ id: `team-${k}`, name: nameOf(k), color: colorOf(k), members: players.filter((p, i) => team(p.id, i) === k).map((p) => p.id) })).filter(
+        (s) => s.members.length,
+      )
     : players.map((p) => ({ id: p.id, name: p.name, color: p.color, members: [p.id] }));
   const toggle = (l: Level) => setLevels((x) => (x.includes(l) ? (x.length > 1 ? x.filter((y) => y !== l) : x) : [...x, l].sort()));
   const pool = QUESTIONS.filter((q) => levels.includes(q.level)).length;
@@ -122,7 +138,7 @@ function Setup({ room, onStart }: { room: ReturnType<typeof useShared<Shared>>['
           <Tap
             key={p.id}
             className="pick-chip selected"
-            style={{ '--chip': teams ? TEAM_COLORS[team(p.id, i)] : p.color } as CSSProperties}
+            style={{ '--chip': teams ? colorOf(team(p.id, i)) : p.color } as CSSProperties}
             onClick={() => teams && setTeamOf((x) => ({ ...x, [p.id]: team(p.id, i) + 1 }))}
           >
             <span className="pick-chip-avatar">
@@ -133,6 +149,27 @@ function Setup({ room, onStart }: { room: ReturnType<typeof useShared<Shared>>['
         ))}
       </div>
       {teams && <p className="fine-print">{t('Tap a player to move them to the next team. Each team buzzes on any of its phones.')}</p>}
+      {/* The teams: tap the dot for another colour, type a name of your own. */}
+      {teams && (
+        <div className="pq-teams">
+          {Array.from({ length: nTeams }, (_, k) => (
+            <div key={k} className="pq-team" style={{ '--chip': colorOf(k) } as CSSProperties}>
+              <button type="button" className="pq-team-color" aria-label={t('Change colour')} onClick={() => recolor(k)} />
+              <input
+                className="pq-team-name"
+                value={names[k] ?? ''}
+                placeholder={t(TEAM_NAMES[hues[k]])}
+                maxLength={20}
+                aria-label={t('Team name')}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setNames((n) => Object.assign([...n], { [k]: v }));
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      )}
       <div className="sticky-action">
         <BigButton size="xl" disabled={sides.length < 1} onClick={() => onStart(newQuiz(sides, levels, Math.min(count, pool)))}>
           {players.length ? t('Start the quiz') : t('Waiting for players…')}
@@ -152,6 +189,37 @@ function Board({ q, mine }: { q: Quiz; mine?: string | null }) {
           <span className="pq-score-n">{q.scores[s.id]}</span>
         </span>
       ))}
+    </div>
+  );
+}
+
+/**
+ * An answer judged, on every phone: a big tick or cross in the colour of who answered, with their
+ * name, then it's gone. Not for one already judged when this screen opened.
+ */
+function VerdictFlash({ q }: { q: Quiz }) {
+  const v = q.verdict;
+  const [first] = useState(() => v?.n);
+  useEffect(() => {
+    if (!v || v.n === first) return;
+    if (v.right) {
+      sfx.tada();
+      vibrate([40, 40, 80]);
+    } else {
+      sfx.boo();
+      vibrate([80, 40, 80]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once per verdict
+  }, [v?.n]);
+  const side = v && q.sides.find((s) => s.id === v.side);
+  if (!v || !side || v.n === first) return null;
+  return (
+    <div key={v.n} className={`pq-verdict ${v.right ? 'right' : 'wrong'}`} style={{ '--chip': side.color } as CSSProperties} role="status">
+      <span className="pq-verdict-mark">
+        <Glyph name={v.right ? 'check' : 'wrong'} />
+      </span>
+      <span className="pq-verdict-word">{v.right ? t('Right') : t('Wrong')}</span>
+      <span className="pq-verdict-name">{side.name}</span>
     </div>
   );
 }
@@ -180,6 +248,7 @@ function Master({ q, act, onNew }: { q: Quiz; act: (next: (q: Quiz) => Quiz) => 
   const by = q.sides.find((s) => s.id === q.by);
   return (
     <div className="pq fill">
+      <VerdictFlash q={q} />
       <Board q={q} />
       <div className="pq-card" key={q.at}>
         <span className="pq-meta">
@@ -224,9 +293,10 @@ function Buzzer({ q, myId, act }: { q: Quiz; myId: string; act: (next: (q: Quiz)
   const by = q.sides.find((s) => s.id === q.by);
   const mine = !!by && by.id === side?.id;
   return (
-    <div className="pq fill">
+    <div className={`pq fill${mine ? ' answering' : ''}`} style={mine ? ({ '--chip': by.color } as CSSProperties) : undefined}>
+      <VerdictFlash q={q} />
       <Board q={q} mine={side?.id} />
-      <p className="pq-buzz-status">
+      <p key={mine ? q.seq : 'status'} className={`pq-buzz-status${mine ? ' mine' : ''}`}>
         {by ? (mine ? t('You buzzed: answer now!') : t('{name} buzzed!', { name: by.name })) : can ? t('Buzz when you know it') : side ? t('Wait until everyone else has buzzed') : t('You’re watching this quiz.')}
       </p>
       <div className="pq-buzz-room">
@@ -237,12 +307,13 @@ function Buzzer({ q, myId, act }: { q: Quiz; myId: string; act: (next: (q: Quiz)
           disabled={!can}
           onPointerDown={() => {
             if (!side || !can) return;
-            vibrate(30);
+            vibrate([60, 40, 60]);
             act((x) => buzz(x, side.id));
           }}
           aria-label={t('Buzz')}
         >
-          <span key={q.seq} className="pq-buzzer-cap">{by ? by.name : t('Buzz')}</span>
+          {/* A real buzzer: nothing written on it. */}
+          <span className="pq-buzzer-cap" />
         </button>
       </div>
     </div>

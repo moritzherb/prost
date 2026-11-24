@@ -203,6 +203,9 @@ export class Scene {
   private icons = new Map<string, HTMLCanvasElement>();
   private shadowPic: HTMLCanvasElement | null = null;
   private fingers = new Map<number, Point>();
+  /** Asked for less motion: the water lies still. */
+  private still = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  private waveTimer = 0;
   private gesture: { x: number; y: number; d: number; n: number; moved: number } | null = null;
 
   constructor(private canvas: HTMLCanvasElement) {
@@ -217,6 +220,7 @@ export class Scene {
 
   destroy() {
     cancelAnimationFrame(this.raf);
+    window.clearTimeout(this.waveTimer);
     this.canvas.removeEventListener('pointerdown', this.down);
     this.canvas.removeEventListener('pointermove', this.move);
     this.canvas.removeEventListener('pointerup', this.up);
@@ -833,6 +837,7 @@ export class Scene {
   /* ---------- Drawing ---------- */
 
   invalidate() {
+    window.clearTimeout(this.waveTimer);
     if (!this.raf) {
       this.last = performance.now();
       this.raf = requestAnimationFrame(this.frame);
@@ -888,6 +893,8 @@ export class Scene {
     }
     this.draw();
     if (busy || this.anims.length) this.invalidate();
+    // Water on the board: its waves keep moving, drawn about 15 times a second (not every frame).
+    else if (this.water.size && !this.still) this.waveTimer = window.setTimeout(() => this.invalidate(), 66);
   };
 
   private draw() {
@@ -920,8 +927,29 @@ export class Scene {
     ctx.fillStyle = this.table;
     ctx.fillRect(0, 0, w, h);
 
-    // The board itself.
+    // The board itself, in a frame of its own lying on the table (a shadow under it), so it doesn't
+    // just stop where the table begins: a dark rim, a lighter bevel on its inner edge.
     const m = this.mat();
+    const F_OUT = 0.34;
+    const rim = [
+      { x: m.x0 - F_OUT, y: m.y0 - F_OUT },
+      { x: m.x1 + F_OUT, y: m.y0 - F_OUT },
+      { x: m.x1 + F_OUT, y: m.y1 + F_OUT },
+      { x: m.x0 - F_OUT, y: m.y1 + F_OUT },
+    ];
+    if (poly(rim)) {
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+      ctx.shadowBlur = 28 * ratio;
+      ctx.shadowOffsetY = 10 * ratio;
+      ctx.fillStyle = shade(this.theme.far, -0.62);
+      ctx.fill();
+      ctx.restore();
+    }
+    if (poly([{ x: m.x0 - 0.06, y: m.y0 - 0.06 }, { x: m.x1 + 0.06, y: m.y0 - 0.06 }, { x: m.x1 + 0.06, y: m.y1 + 0.06 }, { x: m.x0 - 0.06, y: m.y1 + 0.06 }])) {
+      ctx.fillStyle = shade(this.theme.far, -0.2);
+      ctx.fill();
+    }
     if (poly([{ x: m.x0, y: m.y0 }, { x: m.x1, y: m.y0 }, { x: m.x1, y: m.y1 }, { x: m.x0, y: m.y1 }])) {
       const near = project(0, Math.max(m.y0, nearY));
       const far = project(0, m.y1);
@@ -984,15 +1012,20 @@ export class Scene {
     for (const [x, y] of wet) if (pond(x, y, 0.004)) ctx.fill();
     ctx.strokeStyle = 'rgba(255,255,255,0.55)';
     ctx.lineWidth = 1.5;
+    // The waves move: a phase that runs on with the clock (see frame: redrawn now and then while
+    // there's water), each line a little on its own.
+    const phase = this.still ? 0 : performance.now() / 1000;
     for (const [x, y] of wet) {
       // Waves along the way the water runs.
       const along = isWet(x, y - 1) || isWet(x, y + 1) ? !(isWet(x - 1, y) || isWet(x + 1, y)) : false;
       for (const k of [-0.2, 0.18]) {
+        const ph = phase * (k < 0 ? 2.2 : 1.7) + k * 9;
+        const sway = Math.sin(phase * 1.3 + x + y + k * 5) * 0.035;
         ctx.beginPath();
         let started = false;
         for (let t = -0.4; t <= 0.41; t += 0.1) {
-          const wx = along ? x + k + Math.sin((y + t) * 6) * 0.04 : x + t;
-          const wy = along ? y + t : y + k + Math.sin((x + t) * 6) * 0.04;
+          const wx = along ? x + k + sway + Math.sin((y + t) * 6 - ph) * 0.045 : x + t;
+          const wy = along ? y + t : y + k + sway + Math.sin((x + t) * 6 - ph) * 0.045;
           const p = project(wx, Math.max(nearY, wy));
           if (!p) continue;
           if (started) ctx.lineTo(p.sx, p.sy);

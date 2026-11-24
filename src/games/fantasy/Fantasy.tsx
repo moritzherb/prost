@@ -11,7 +11,7 @@ import { mix, parseColor, tintTop } from '../../lib/themeColor';
 import { flyCopy, flyIn, reducedMotion, seatArc } from '../../lib/cardFly';
 import { useShared } from '../../net/shared';
 import { useApp } from '../../state/AppState';
-import { bid, chooseTrump, FACTIONS, legal, MAX_PLAYERS, maxRounds, MIN_PLAYERS, newGame, nextRound, playCard, QUICK_ROUNDS, takeTrick, type Card, type Faction, type Game } from './logic';
+import { bid, chooseTrump, FACTIONS, forbiddenBid, legal, MAX_PLAYERS, maxRounds, MIN_PLAYERS, newGame, nextRound, playCard, QUICK_ROUNDS, takeTrick, type Card, type Faction, type Game } from './logic';
 
 interface Seat {
   id: string;
@@ -157,8 +157,10 @@ function Table({
       for (let r = 0; r < perSeat; r++)
         for (let p = 1; p <= g.players; p++) {
           const seat = (g.dealer + p) % g.players;
-          const to = (seat === me ? document.querySelector('.fz-hand .fan') : box.querySelector(`[data-seat="${seat}"] .fz-seat-who`))?.getBoundingClientRect();
-          if (to) flyCopy(deck, from, seat === me ? new DOMRect(to.left + to.width / 2 - 30, to.top, 60, 90) : to, { delay: k * gap, duration: 420, turn: 8 });
+          // Your own cards come down into your hand by themselves (.fz-fan.dealing): a back flying
+          // there too lay over them as they came in.
+          const to = seat === me ? null : box.querySelector(`[data-seat="${seat}"] .fz-seat-who`)?.getBoundingClientRect();
+          if (to) flyCopy(deck, from, to, { delay: k * gap, duration: 420, turn: 8 });
           k++;
         }
       sfx.tick();
@@ -310,8 +312,9 @@ function Table({
   const cx = size.w / 2;
   const cy = size.h * 0.56;
   const n = order.length;
-  // With many, the arc comes down beside the middle too (but stays above the deck in the corner).
-  const spots = seatArc(n, { cx, cy, rx: Math.max(0, cx - 46), ry: Math.max(0, cy - 30), from: n <= 2 ? 150 : n === 3 ? 166 : 186, maxY: size.h - (n >= 4 ? 124 : 30) });
+  // High up round the table's rim, clear of the middle where the cards are played; with many, the
+  // arc comes down beside it too (but stays above the deck in the corner).
+  const spots = seatArc(n, { cx, cy, rx: Math.max(0, cx - 46), ry: Math.max(0, cy - 30), from: n <= 2 ? 128 : n === 3 ? 150 : 172, maxY: size.h - (n >= 4 ? 124 : 30) });
   // The trick's cards as big as the table has room for.
   const tw = Math.round(Math.max(56, Math.min(88, size.w * 0.22, size.h * 0.23)));
   // The trick right in the middle of the round table (global.css .fz-table-area::before).
@@ -433,6 +436,8 @@ function Table({
                 key={n}
                 type="button"
                 className="fz-bid-btn"
+                // Last to bid: the bids mustn't add up to the round's tricks.
+                disabled={n === forbiddenBid(g)}
                 onClick={() => {
                   sfx.pop();
                   buzz(10);

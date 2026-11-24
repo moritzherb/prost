@@ -17,6 +17,7 @@ describe('Beat the Deck', () => {
     let g = newGame(deck);
     g = guess(g, 0, 'higher'); // 9 on 8: right
     expect(g.places[0]).toMatchObject({ top: c(9), count: 2, dead: false });
+    expect(g.places[0].below).toHaveLength(1);
     g = guess(g, 1, 'lower'); // 7 on 8: right
     expect(g.places[1].dead).toBe(false);
     g = guess(g, 2, 'higher'); // 5 on 8: wrong

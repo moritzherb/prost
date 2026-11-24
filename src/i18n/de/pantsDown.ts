@@ -39,6 +39,8 @@ const pantsDown: Record<string, string> = {
   'Max {max} players. The first {max} play.': 'Maximal {max} Spieler. Die ersten {max} spielen mit.',
   'Turn order is the order above. A random player deals first.':
     'Gespielt wird in der Reihenfolge oben. Ein zufälliger Spieler gibt zuerst.',
+  'This phone shows the middle cards and doesn’t play. Off: it plays too.': 'Dieses Handy zeigt die Karten in der Mitte und spielt nicht mit. Aus: Es spielt mit.',
+  Table: 'Tisch',
   'Off: you play too. Every phone shows the middle cards.': 'Aus: Du spielst mit. Jedes Handy zeigt die Karten in der Mitte.',
   'No spare phone for the table? Switch the table phone off: the host plays too, and every phone shows the middle cards.':
     'Kein Handy übrig für den Tisch? Schalte das Tisch-Handy aus: Der Host spielt mit, und jedes Handy zeigt die Karten in der Mitte.',

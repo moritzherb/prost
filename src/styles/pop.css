@@ -82,21 +82,9 @@ html[data-look='pop'][data-theme='dark'] {
   --pop-chip-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.16), 0 3px 6px rgba(0, 0, 0, 0.4), 0 12px 18px -10px rgba(0, 0, 0, 0.85);
 }
 
-/* ---------- The ground: plain, a soft light from the top. A fixed layer of its own (as the grain
-   was), so nothing on the page has to be redrawn with it. No grain in this look. ---------- */
-
-html[data-look='pop'] body {
-  background: transparent;
-}
-
-html[data-look='pop'] body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: radial-gradient(120% 40% at 50% 46%, var(--pop-glow), transparent 80%), var(--bg);
-}
+/* ---------- The ground: the page's own background (html), no layer of its own. A fixed ground
+   behind the page (z-index -1) made iPhones keep the page in a second layer over it, and that layer
+   could go missing: the screen turned the ground's colour, all or in part. No grain in this look. */
 
 html[data-look='pop'] body::after {
   display: none;
@@ -418,6 +406,28 @@ html[data-os='android'] .app-icon {
   height: calc(var(--ic, 60px) * 0.46);
   margin-top: calc(var(--ic, 60px) * 0.05);
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
+}
+
+/* A game's own drawing (components/GameArt.tsx): bigger than a line icon, a thing on the tile. */
+.game-art {
+  display: inline-block;
+  width: 1.15em;
+  height: 1.15em;
+  vertical-align: middle;
+  overflow: visible;
+}
+
+.app-icon svg.game-art {
+  width: calc(var(--ic, 60px) * 0.68);
+  height: calc(var(--ic, 60px) * 0.68);
+  margin-top: calc(var(--ic, 60px) * 0.03);
+  filter: drop-shadow(0 calc(var(--ic, 60px) * 0.04) calc(var(--ic, 60px) * 0.04) rgba(0, 0, 0, 0.32));
+}
+
+.launch-emoji svg.game-art {
+  display: block;
+  width: 150px;
+  height: 150px;
 }
 
 .app-icon.lime svg {

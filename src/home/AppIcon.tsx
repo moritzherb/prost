@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
+import GameArt, { hasArt } from '../components/GameArt';
 import type { GameDefinition } from '../games/types';
 import { t, tx } from '../i18n';
 import { buzz, sfx } from '../lib/fx';
@@ -23,8 +24,10 @@ export const glyphsOf = (game: GameDefinition) => (SECOND[game.id] ? [game.emoji
 /** Emoji whose picture sits off their middle (the slot machine's lever sticks out right): moved to look centred. */
 const NUDGE: Record<string, string> = { '🎰': '0.05em' };
 
-/** A game's emoji for its icon (two of them for Princess/King). */
+/** A game's picture for its icon: its own drawing (components/GameArt.tsx), else its emoji (two of
+ *  them for Princess/King). */
 export function GameGlyph({ game }: { game: GameDefinition }) {
+  if (hasArt(game.id)) return <GameArt id={game.id} />;
   const second = SECOND[game.id];
   const nudge = NUDGE[game.emoji];
   if (nudge) return <span style={{ display: 'inline-block', transform: `translateX(${nudge})` }}>{game.emoji}</span>;

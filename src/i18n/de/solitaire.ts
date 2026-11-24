@@ -1,4 +1,4 @@
-// The patience games for one: Beat the Deck, Clock Patience, Accordion.
+// The patience games for one: Beat the Deck, Accordion.
 const solitaire: Record<string, string> = {
   'Solved!': 'Gelöst!',
   // Accordion
@@ -32,24 +32,6 @@ const solitaire: Record<string, string> = {
   '{n} of 9 places still open.': '{n} von 9 Plätzen noch offen.',
   '{n} cards were left in the pile.': '{n} Karten waren noch im Stapel.',
   'Higher or lower than {rank}?': 'Höher oder tiefer als {rank}?',
-  // Clock Patience
-  'Clock Patience': 'Uhren-Patience',
-  'Thirteen piles round a clock. Get every card out before the fourth King.': 'Dreizehn Stapel rund um eine Uhr. Bring alle Karten raus vor dem vierten König.',
-  'Thirteen piles of four lie face down: twelve round a clock, one in the middle.': 'Dreizehn Stapel zu je vier liegen verdeckt: zwölf rund um eine Uhr, einer in der Mitte.',
-  'Turn the middle’s top card and lay it by its hour: Ace at one, Jack at eleven, Queen at twelve, Kings in the middle.':
-    'Dreh die oberste Karte der Mitte um und leg sie zu ihrer Stunde: Ass auf eins, Bube auf elf, Dame auf zwölf, Könige in die Mitte.',
-  'Then turn the top card of that pile, and so on.': 'Dann dreh die oberste Karte dieses Stapels um, und so weiter.',
-  'Every card out before the fourth King turns up: you win. The fourth King too soon: you lose. It’s all luck.':
-    'Alle Karten draußen, bevor der vierte König kommt: gewonnen. Der vierte König zu früh: verloren. Reines Glück.',
-  'Every card is out!': 'Alle Karten sind draußen!',
-  'The fourth King came too soon': 'Der vierte König kam zu früh',
-  '{n} of 52 cards laid.': '{n} von 52 Karten gelegt.',
-  'Turn the next card': 'Dreh die nächste Karte um',
-  'Turn the first card from the middle': 'Dreh die erste Karte der Mitte um',
-  'Goes to {hour}': 'Kommt zu {hour}',
-  'the middle': 'der Mitte',
-  'Lay it down': 'Hinlegen',
-  'Turn a card': 'Karte umdrehen',
 };
 
 export default solitaire;

@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { GameGlyph } from '../home/AppIcon';
 import { GAMES } from '../games/registry';
 import { playerRange, type GameDefinition } from '../games/types';
 import { t } from '../i18n';
@@ -37,7 +38,9 @@ export default function GameCard({
     >
       <span className="ticket-stub">
         <span className="ticket-no">{gameNumber(game)}</span>
-        <span className="ticket-emoji">{game.emoji}</span>
+        <span className="ticket-emoji">
+          <GameGlyph game={game} />
+        </span>
       </span>
       <span className="ticket-body">
         <span className="ticket-name">{t(game.name)}</span>
