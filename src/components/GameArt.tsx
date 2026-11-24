@@ -529,6 +529,8 @@ const ART: Record<string, Art> = {
         {lin('ga-tile', '#fff9e8', '#e7dcc0')}
       </defs>
       <rect x="4" y="22" width="56" height="30" rx="6" fill="url(#ga-box)" />
+      {/* The light on the box's top edge: rounded at both ends, inside its corners, behind the flaps. */}
+      <rect x="9" y="23.2" width="46" height="1.8" rx="0.9" fill="#fff" opacity="0.3" />
       <rect x="8" y="26" width="48" height="22" rx="3" fill="#5c3818" />
       {[0, 1, 2, 3].map((i) =>
         i === 2 ? (
@@ -542,7 +544,6 @@ const ART: Record<string, Art> = {
           </g>
         ),
       )}
-      <Gloss d="M6 24h52v3H6z" o={0.25} />
     </>
   ),
   'mega-ttt': () => (
