@@ -112,14 +112,16 @@ export default function PubQuizSolo({ exit }: GameProps) {
       </div>
       <div className="pq-judge">
         {shown ? (
+          // Keyed: unkeyed, React reuses the "Show answer" button for the first one, and it fades from green to red.
           <>
-            <BigButton variant="danger" onClick={() => next(false)}>
+            <BigButton key="no" variant="danger" onClick={() => next(false)}>
               {t('Didn’t know')}
             </BigButton>
-            <BigButton onClick={() => next(true)}>{t('Knew it')}</BigButton>
+            <BigButton key="yes" onClick={() => next(true)}>{t('Knew it')}</BigButton>
           </>
         ) : (
           <BigButton
+            key="show"
             className="pq-show"
             disabled={locked}
             onClick={() => {

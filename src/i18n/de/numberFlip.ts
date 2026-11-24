@@ -63,8 +63,9 @@ const numberFlip: Record<string, string> = {
   '{names} shut the box and win the round': '{names} schließt alle Klappen und gewinnt die Runde',
   '{names}: highest score this round': '{names}: höchste Punktzahl dieser Runde',
   'All level': 'Alle gleichauf',
-  'Square, a side each': 'Quadratisch, jeder eine Seite',
-  'One box': 'Ein Kasten',
+  '4 players': '4 Spieler',
+  'One square box, a row of flaps on each side. It turns to whoever is up. Lowest score wins the round.':
+    'Ein quadratischer Kasten, auf jeder Seite eine Klappenreihe. Er dreht sich zum Spieler am Zug. Die wenigsten Punkte gewinnen die Runde.',
 };
 
 export default numberFlip;
