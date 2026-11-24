@@ -5784,6 +5784,13 @@ li {
   flex-shrink: 0;
 }
 
+/* The Next button reaches down into the screen's bottom padding (as on the other screens' last
+   button) and sits closer to the table, so the table gets that room. */
+.kl > .sticky-action {
+  margin-bottom: calc(-12px - env(safe-area-inset-bottom));
+  padding-top: 6px;
+}
+
 .kl-pills {
   display: flex;
   justify-content: center;
