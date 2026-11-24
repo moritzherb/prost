@@ -112,13 +112,7 @@ const ART: Record<string, Art> = {
       <Gloss d="M19 25c1 6 3.5 10 7 12.5-5-1-8-6-8.6-12.5z" o={0.55} />
       {/* The crown hovers over the cup, a little higher and smaller: hollow, so the inside of its back wall shows between the front points. */}
       <g transform="translate(32 7.5) scale(0.88) translate(-32 -8)">
-        {/* The crown of the photo: three slim points with a ball each over scooped curves, two more points
-            and the inside showing behind them, then a thick band with a lip and studs. */}
-        <path d="M19.5 9L26 7l6 1.5 6-1.5 6.5 2 .5 6H19z" fill="#d9a41b" />
-        <path d="M21.5 13.5L25 5.6l3.5 7.9z" fill="#ecbb2e" />
-        <path d="M35.5 13.5L39 5.6l3.5 7.9z" fill="#ecbb2e" />
-        <circle cx="25" cy="5.2" r="1.6" fill="#e8b320" />
-        <circle cx="39" cy="5.2" r="1.6" fill="#e8b320" />
+        {/* The crown of the photo: three slim points with a ball each over scooped curves, then a thick band with a lip and studs. */}
         <path d="M18.8 16L16.6 5.6 19 5.8Q20.4 11.6 24.6 12.4Q29.2 12.8 30.4 5.4L32 3.6 33.6 5.4Q34.8 12.8 39.4 12.4Q43.6 11.6 45 5.8L47.4 5.6 45.2 16z" fill="url(#ga-gold)" />
         <circle cx="17.7" cy="4.4" r="2.3" fill="#f3c63a" />
         <circle cx="32" cy="2.6" r="2.5" fill="#f3c63a" />
@@ -330,24 +324,27 @@ const ART: Record<string, Art> = {
   president: () => (
     <>
       <defs>
-        {lin('ga-shirt', '#ffffff', '#e6eaf1')}
-        {lin('ga-tie', '#3b3b3f', '#111113')}
+        {lin('ga-shirt', '#e4ecfb', '#a9c0ee')}
+        {lin('ga-tie', '#ff4a4a', '#a00f18')}
+        {/* The tie's stripes stay on the tie. */}
+        <clipPath id="ga-tie-clip">
+          <path d="M28.5 25h7l-1 8.5 6.5 20-9 6.5-9-6.5 6.5-20z" />
+        </clipPath>
       </defs>
-      {/* A plain white short-sleeved shirt, front on. Moved up a unit so the picture sits in the middle. */}
-      <g transform="translate(0 -1)">
-        <path d="M24 6L14 10 4 22l6 7 6-4v36h32V25l6 4 6-7L50 10 40 6z" fill="url(#ga-shirt)" />
-        {/* Its outline: one open line, none across the neck. */}
-        <path d="M24 6L14 10 4 22l6 7 6-4v36h32V25l6 4 6-7L50 10 40 6" fill="none" stroke="#b4bccb" strokeWidth="1.2" strokeLinejoin="round" strokeLinecap="round" />
-        {/* The neck opening, and the collar's back band behind the tie. */}
-        <path d="M24 6h16L32 23z" fill="#d9dee8" />
-        {/* The tie: knot under the collar wings, then hanging down the front. */}
-        <path d="M29.2 23.5h5.6l-.8 5.5h-4z" fill="#232326" />
-        <path d="M29.6 28.5h4.8l4 24-6.4 6-6.4-6z" fill="url(#ga-tie)" />
-        <Gloss d="M31.4 30.5h1.4l-3.4 21-2-2z" o={0.18} />
-        {/* The collar wings lie on the shirt from the neck, pointing down and out. */}
-        <path d="M24 6L32 23.2 25.2 27.2 17.6 12.4z" fill="#ffffff" stroke="#b4bccb" strokeWidth="1.2" strokeLinejoin="round" />
-        <path d="M40 6L32 23.2 38.8 27.2 46.4 12.4z" fill="#ffffff" stroke="#b4bccb" strokeWidth="1.2" strokeLinejoin="round" />
+      {/* The shirt, whole, with sloping shoulders. */}
+      <path d="M6 15L20 6h24l14 9v45H6z" fill="url(#ga-shirt)" />
+      <path d="M20 6L6 15v45h52V15L44 6" fill="none" stroke="#8fa9dc" strokeWidth="1" strokeLinejoin="round" />
+      {/* The neck opening between the collar wings: one plain V in a darker blue. */}
+      <path d="M20 6h24L32 27z" fill="#8fa9dc" />
+      {/* The tie, knot and body in one piece. */}
+      <path d="M28.5 25h7l-1 8.5 6.5 20-9 6.5-9-6.5 6.5-20z" fill="url(#ga-tie)" />
+      <g clipPath="url(#ga-tie-clip)" stroke="#7d0f15" strokeWidth="2" opacity="0.4">
+        <path d="M20 42l24-14M20 50l24-14M20 58l24-14" />
       </g>
+      <Gloss d="M31 35h2l-4 16-2.5-2.5z" o={0.35} />
+      {/* The collar lies on the shirt: each wing starts at the neck, its upper edge along the shoulder, its point down by the knot. */}
+      <path d="M20 6L31 26 21 34 10 12.4z" fill="#e6eeff" stroke="#8fa9dc" strokeWidth="1" strokeLinejoin="round" />
+      <path d="M44 6L33 26 43 34 54 12.4z" fill="#e6eeff" stroke="#8fa9dc" strokeWidth="1" strokeLinejoin="round" />
     </>
   ),
   arschloch: () => (
