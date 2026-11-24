@@ -5,7 +5,7 @@ import { buzz, celebrate, sfx } from '../../lib/fx';
 import { load, save } from '../../lib/storage';
 import type { GameProps } from '../types';
 import { flyIn } from '../../lib/cardFly';
-import SoloCard, { PileUnder } from '../solo/SoloCard';
+import SoloCard, { lie, PileUnder } from '../solo/SoloCard';
 import SoloEnd from '../solo/SoloEnd';
 import { anyMove, deal, move, newGame, over, targets, won } from './logic';
 
@@ -83,7 +83,7 @@ export default function Accordion({ exit }: GameProps) {
         {g.piles.map((p, i) => (
           <button key={`${p[0].value}${p[0].suit}`} type="button" className={`acc-pile${pick === i ? ' picked' : ''}${open.includes(i) ? ' target' : ''}`} onClick={() => tap(i)}>
             <PileUnder cards={p.slice(0, -1)} />
-            <SoloCard key={p.length} card={p[p.length - 1]} className="acc-top" />
+            <SoloCard key={p.length} card={p[p.length - 1]} className="acc-top" style={lie(p[p.length - 1])} />
             {p.length > 1 && <span className="acc-n">{p.length}</span>}
           </button>
         ))}
