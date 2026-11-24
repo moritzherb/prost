@@ -111,15 +111,22 @@ const ART: Record<string, Art> = {
       <ellipse cx="27" cy="20.6" rx="5.5" ry="0.9" fill="#fff" opacity="0.25" />
       <Gloss d="M19 25c1 6 3.5 10 7 12.5-5-1-8-6-8.6-12.5z" o={0.55} />
       {/* The crown hovers over the cup, a little higher and smaller: hollow, so the inside of its back wall shows between the front points. */}
-      <g transform="translate(32 7) scale(0.88) translate(-32 -8)">
-        {/* One solid crown, flaring up from its band to three points; the dark inside shows through its open top. */}
-        <path d="M20 16L18.5 2 26 8 32 0 38 8 45.5 2 44 16z" fill="url(#ga-gold)" />
-        <path d="M21 4.8L26 9.8 32 3.6 38 9.8 43 4.8 42.6 12C38 14.8 26 14.8 21.4 12z" fill="#8a5a06" />
-        <rect x="19.5" y="12" width="25" height="4.6" rx="2" fill="#d99a00" />
-        <circle cx="32" cy="14.3" r="1.5" fill="#e5484d" />
-        <circle cx="25.5" cy="14.3" r="1.1" fill="#3b82f6" />
-        <circle cx="38.5" cy="14.3" r="1.1" fill="#22a06b" />
-        <Gloss d="M20.6 11.5l-.8-8.5 3 3.4z" o={0.55} />
+      <g transform="translate(32 7.5) scale(0.88) translate(-32 -8)">
+        {/* The crown of the photo: three slim points with a ball each over scooped curves, two more points
+            and the inside showing behind them, then a thick band with a lip and studs. */}
+        <path d="M19.5 9L26 7l6 1.5 6-1.5 6.5 2 .5 6H19z" fill="#9c6a08" />
+        <path d="M21.5 13.5L25 5.6l3.5 7.9z" fill="#c8920f" />
+        <path d="M35.5 13.5L39 5.6l3.5 7.9z" fill="#c8920f" />
+        <circle cx="25" cy="5.2" r="1.6" fill="#e8b320" />
+        <circle cx="39" cy="5.2" r="1.6" fill="#e8b320" />
+        <path d="M18.8 16L16.6 5.6 19 5.8Q20.4 11.6 24.6 12.4Q29.2 12.8 30.4 5.4L32 3.6 33.6 5.4Q34.8 12.8 39.4 12.4Q43.6 11.6 45 5.8L47.4 5.6 45.2 16z" fill="url(#ga-gold)" />
+        <circle cx="17.7" cy="4.4" r="2.3" fill="#f3c63a" />
+        <circle cx="32" cy="2.6" r="2.5" fill="#f3c63a" />
+        <circle cx="46.3" cy="4.4" r="2.3" fill="#f3c63a" />
+        <rect x="18" y="12.2" width="28" height="1.5" rx=".75" fill="#f7d460" />
+        <path d="M18 13.7h28l-.5 3.6c-4 1.2-23 1.2-27 0z" fill="#d99a00" />
+        <path d="M24 14.2l1.1 1.2-1.1 1.2-1.1-1.2zM32 14.2l1.1 1.2-1.1 1.2-1.1-1.2zM40 14.2l1.1 1.2-1.1 1.2-1.1-1.2z" fill="#a86f00" />
+        <Gloss d="M19.2 12l-.7-6.5 1.8 4.8z" o={0.55} />
       </g>
     </>
   ),
