@@ -4,7 +4,8 @@ import { t } from '../../i18n';
 import { buzz, celebrate, sfx } from '../../lib/fx';
 import { load, save } from '../../lib/storage';
 import type { GameProps } from '../types';
-import { flyIn } from '../../lib/cardFly';
+import { flyIn, reducedMotion } from '../../lib/cardFly';
+import { EASE_OUT } from '../../lib/listMotion';
 import Bump from '../../components/Bump';
 import SoloCard, { lie, PileUnder } from '../solo/SoloCard';
 import SoloEnd from '../solo/SoloEnd';
@@ -37,9 +38,18 @@ export default function Accordion({ exit }: GameProps) {
     flight.current = null;
     const pileBox = f && (felt.current?.children[f.pile] as HTMLElement | undefined);
     if (!f || !pileBox) return;
+    // The line scrolls to its place at once (the card's flight is worked out against it), and every
+    // pile glides from where it was instead: a jump of a whole row reads as a glitch.
+    const line = felt.current!;
+    const was = line.scrollTop;
     pileBox.scrollIntoView({ block: 'nearest' });
+    const moved = line.scrollTop - was;
+    if (moved && !reducedMotion()) {
+      for (const c of line.children) c.animate([{ transform: `translateY(${moved}px)` }, { transform: 'none' }], { duration: 320, easing: EASE_OUT });
+    }
     const el = pileBox.querySelector<HTMLElement>('.acc-top');
-    if (el) flyIn(el, f.from, 420);
+    // The pile starts `moved` lower (the glide), so the card is told to start that much higher.
+    if (el) flyIn(el, new DOMRect(f.from.x, f.from.y - moved, f.from.width, f.from.height), 420);
   }, [g]);
 
   if (over(g)) {

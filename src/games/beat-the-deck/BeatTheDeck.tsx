@@ -27,11 +27,12 @@ export default function BeatTheDeck({ exit }: GameProps) {
     const id = window.setTimeout(() => setTurned(g), TURN_MS);
     return () => window.clearTimeout(id);
   }, [g]);
-  // The end comes once the last card has landed, or the last place has turned over.
+  // The end comes a second after the last card has landed (its flight takes 420 ms), or the last
+  // place has turned over: a beat to take it in, not straight on top of it.
   const [endOf, setEndOf] = useState<Game | null>(null);
   useEffect(() => {
     if (!over(g) || showing != null) return;
-    const id = window.setTimeout(() => setEndOf(g), g.last?.right ? 1000 : 500);
+    const id = window.setTimeout(() => setEndOf(g), g.last?.right ? 1420 : 1000);
     return () => window.clearTimeout(id);
   }, [g, showing]);
   // The card drawn flies from the pile onto the place it was guessed for.
@@ -46,7 +47,10 @@ export default function BeatTheDeck({ exit }: GameProps) {
   }, [g]);
   const done = endOf === g;
   useEffect(() => {
-    if (done && won(g)) celebrate();
+    // A moment after the end screen is up: the confetti starting in the same frame made it stutter.
+    if (!done || !won(g)) return;
+    const id = window.setTimeout(celebrate, 250);
+    return () => window.clearTimeout(id);
   }, [done, g]);
 
   if (done)

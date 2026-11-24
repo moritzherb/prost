@@ -5,7 +5,7 @@ import { buzz, sfx } from '../../lib/fx';
 import type { Player } from '../../state/AppState';
 import { drawDie } from './die3d';
 import { drawThrown, spinFor, type Thrown } from './solid3d';
-import { onFiguresReady, pawnSprite, SPRITE_H, type PawnDef } from './pawns';
+import { figurePending, loadFigures, onFiguresReady, pawnSprite, SPRITE_H, type PawnDef } from './pawns';
 
 const PIPS: Record<number, number[]> = {
   1: [4],
@@ -313,6 +313,12 @@ export function PawnIcon({ pawn, size = 40 }: { pawn: PawnDef; size?: number }) 
     c.width = Math.round(size * 0.8 * ratio);
     c.height = Math.round(size * ratio);
     const ctx = c.getContext('2d')!;
+    // A figure still loading shows nothing yet, not its flat token that would then switch to the 3D one.
+    if (figurePending(pawn)) {
+      loadFigures();
+      ctx.clearRect(0, 0, c.width, c.height);
+      return;
+    }
     const sprite = pawnSprite(pawn, Math.min(ratio, 2.5));
     const sr = Math.min(ratio, 2.5);
     const m = (size * 0.86) / SPRITE_H;

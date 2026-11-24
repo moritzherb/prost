@@ -19673,8 +19673,9 @@ html.table-phone .game-bar .top-bar-side.right {
    its tick or cross draws itself in (a cross shakes its head), a ring rolls out from it, then the word
    and who answered, in their colour. Then it all fades. */
 .pq-verdict {
-  position: absolute;
-  inset: -12px calc(-1 * var(--gutter)) -12px;
+  /* The whole screen, the bars on top and the safe areas too, not just the game's box. */
+  position: fixed;
+  inset: 0;
   z-index: 20;
   display: flex;
   flex-direction: column;

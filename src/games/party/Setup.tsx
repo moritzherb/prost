@@ -9,9 +9,12 @@ import type { Player } from '../../state/AppState';
 import { PawnIcon } from './bits';
 import { FetchBoardSheet, ShareBoardSheet } from './BoardCode';
 import type { Board, Draft } from './boards';
-import { PAWNS, type PawnDef } from './pawns';
+import { loadFigures, PAWNS, type PawnDef } from './pawns';
 import Glyph from '../../components/Glyph';
 import type { GlyphName } from '../../lib/glyphs';
+
+// The 3D figures start loading as soon as the setup is opened, before the picker needs them.
+loadFigures();
 
 const THEME_ICON: Record<string, GlyphName> = { classic: 'dice' };
 

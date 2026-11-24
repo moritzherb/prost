@@ -252,6 +252,9 @@ const ART: Record<string, Art> = {
         {rad('ga-pig', '#ffd6e0', '#f0849f')}
         {rad('ga-snout', '#ffb3c6', '#e66a8a')}
         {lin('ga-ear', '#f7a1b6', '#d85c7c')}
+        <clipPath id="ga-pig-clip">
+          <ellipse cx="32" cy="35" rx="22" ry="20" />
+        </clipPath>
       </defs>
       {/* Ears, rooted in the head (their feet lie under it), folded forward a little, pink inside. */}
       <path d="M14.5 28C10 19 10.5 10 15 6.5c5.5 2.5 10.5 7 13 12z" fill="url(#ga-ear)" />
@@ -269,7 +272,10 @@ const ART: Record<string, Art> = {
       <circle cx="41" cy="30" r="3.2" fill="#2b1d22" />
       <circle cx="24.1" cy="28.9" r="1.1" fill="#fff" />
       <circle cx="42.1" cy="28.9" r="1.1" fill="#fff" />
-      <Gloss d="M15 27c2-7 8-11.5 15-12.5-6 3-10 7-11.5 13.5z" o={0.5} />
+      {/* Clipped to the head: the highlight may not reach past its edge. */}
+      <g clipPath="url(#ga-pig-clip)">
+        <Gloss d="M15 27c2-7 8-11.5 15-12.5-6 3-10 7-11.5 13.5z" o={0.5} />
+      </g>
     </>
   ),
   speed: () => (
@@ -306,19 +312,19 @@ const ART: Record<string, Art> = {
         {lin('ga-tie', '#ff6b6b', '#b4161e')}
         {/* The tie's stripes stay on the tie. */}
         <clipPath id="ga-tie-clip">
-          <path d="M29.5 27h5l6 25-8.5 8-8.5-8z" />
+          <path d="M28 12h8l-1.5 15 6 25-8.5 8-8.5-8 6-25z" />
         </clipPath>
       </defs>
       <path d="M8 10l24 14 24-14v48H8z" fill="url(#ga-shirt)" />
       {/* The neckband behind the tie, the tie running up under the collar, the collar wings over its knot. */}
       <path d="M21 7l11 20 11-20z" fill="#cfd3db" />
-      <path d="M28 12h8l-1.5 17h-5z" fill="#a9121b" />
-      <path d="M29.5 27h5l6 25-8.5 8-8.5-8z" fill="url(#ga-tie)" />
+      <path d="M28 12h8l-1.5 15 6 25-8.5 8-8.5-8 6-25z" fill="url(#ga-tie)" />
+      <path d="M28 12h8l-1.5 15-2.5 2-2.5-2z" fill="#a9121b" />
       <g clipPath="url(#ga-tie-clip)" stroke="#7d0f15" strokeWidth="2" opacity="0.4">
         <path d="M20 42l24-14M20 50l24-14M20 58l24-14" />
       </g>
-      <path d="M32 27L19 4 8 14l14 20zM32 27L45 4l11 10-14 20z" fill="#f4f5f7" />
-      <path d="M32 27L19 4M32 27L45 4" fill="none" stroke="#d3d6dd" strokeWidth="1" />
+      <path d="M28.5 25L19 4 8 14l14 20zM35.5 25L45 4l11 10-14 20z" fill="#f4f5f7" />
+      <path d="M28.5 25L19 4M35.5 25L45 4" fill="none" stroke="#d3d6dd" strokeWidth="1" />
       <Gloss d="M30.5 31h2l-4 19-2.5-2.5z" o={0.35} />
     </>
   ),
@@ -414,7 +420,7 @@ const ART: Record<string, Art> = {
         <Gloss d="M8.5 25l2 14.5h-3.2z" o={0.5} />
       </g>
       {/* The Princess's tiara, as she wears it in the game (princess-treatment/Heads.tsx), in front on the right. */}
-      <g transform="translate(43 42) rotate(8) scale(0.84) translate(-60 -25)">
+      <g transform="translate(43 40) rotate(8) scale(0.84) translate(-60 -25)">
         <path d="M37 38.5L45 24.5l7 9 8-19 8 19 7-9 8 14z" fill="#000" opacity="0.18" />
         <path d="M37 36L45 22l7 9 8-19 8 19 7-9 8 14z" fill="url(#ga-tiara)" stroke="#d99a00" strokeWidth="1.9" strokeLinejoin="round" />
         <circle cx="60" cy="25" r="4.4" fill="#ff5fa2" stroke="#d6337f" strokeWidth="1.3" />
