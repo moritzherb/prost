@@ -110,13 +110,16 @@ const ART: Record<string, Art> = {
       <path d="M19 23.6C23 26.4 41 26.4 45 23.6c-1.6 2.2-6.5 3.4-13 3.4s-11.4-1.2-13-3.4z" fill="#ffe58a" opacity="0.55" />
       <ellipse cx="27" cy="20.6" rx="5.5" ry="0.9" fill="#fff" opacity="0.25" />
       <Gloss d="M19 25c1 6 3.5 10 7 12.5-5-1-8-6-8.6-12.5z" o={0.55} />
-      {/* The crown hovers over the cup: pointed gold body, a darker band with jewels, as the King's in the Princess/King icon. */}
-      <path d="M19.5 14l1.5-12.5 6.5 6L32 0.5l4.5 7 6.5-6 1.5 12.5z" fill="url(#ga-gold)" />
-      <rect x="19.5" y="12" width="25" height="4.6" rx="2" fill="#d99a00" />
-      <circle cx="32" cy="14.3" r="1.5" fill="#e5484d" />
-      <circle cx="25.5" cy="14.3" r="1.1" fill="#3b82f6" />
-      <circle cx="38.5" cy="14.3" r="1.1" fill="#22a06b" />
-      <Gloss d="M22 11.5l-.8-8 2.6 2.4z" o={0.55} />
+      {/* The crown hovers over the cup, a little higher and smaller: hollow, so the inside of its back wall shows between the front points. */}
+      <g transform="translate(32 7) scale(0.88) translate(-32 -8)">
+        <path d="M21.5 12.5l1-11 5 4.5 4.5-6 4.5 6 5-4.5 1 11z" fill="#b3790a" />
+        <path d="M19.5 14l1.5-11 6.5 5 4.5-3.5 4.5 3.5 6.5-5 1.5 11z" fill="url(#ga-gold)" />
+        <rect x="19.5" y="12" width="25" height="4.6" rx="2" fill="#d99a00" />
+        <circle cx="32" cy="14.3" r="1.5" fill="#e5484d" />
+        <circle cx="25.5" cy="14.3" r="1.1" fill="#3b82f6" />
+        <circle cx="38.5" cy="14.3" r="1.1" fill="#22a06b" />
+        <Gloss d="M22 11.5l-.8-5.5 2.6 2.4z" o={0.55} />
+      </g>
     </>
   ),
   klatschen: () => {
@@ -319,7 +322,7 @@ const ART: Record<string, Art> = {
   president: () => (
     <>
       <defs>
-        {lin('ga-shirt', '#f4f8ff', '#a9c0ee')}
+        {lin('ga-shirt', '#ffffff', '#e6eaf1')}
         {lin('ga-tie', '#ff4a4a', '#a00f18')}
         {/* The tie's stripes stay on the tie. */}
         <clipPath id="ga-tie-clip">
@@ -327,9 +330,9 @@ const ART: Record<string, Art> = {
         </clipPath>
       </defs>
       {/* The shirt, whole, with sloping shoulders. */}
-      <path d="M6 15L20 6h24l14 9v45H6z" fill="url(#ga-shirt)" />
+      <path d="M6 15L20 6h24l14 9v45H6z" fill="url(#ga-shirt)" stroke="#aab3c4" strokeWidth="1.2" strokeLinejoin="round" />
       {/* The neck opening: one plain V in a darker blue. */}
-      <path d="M19 6l13 21 13-21z" fill="#8fa9dc" />
+      <path d="M19 6l13 21 13-21z" fill="#c4cbd9" />
       {/* The tie: knot tucked under the collar, then hanging down the front of the shirt. */}
       <path d="M28.5 26h7l-1 8h-5z" fill="#a9121b" />
       <path d="M29 33h6l6 21-9 6-9-6z" fill="url(#ga-tie)" />
@@ -338,7 +341,7 @@ const ART: Record<string, Art> = {
       </g>
       <Gloss d="M31 35h2l-4 16-2.5-2.5z" o={0.35} />
       {/* The collar wings over it, meeting just above the knot. */}
-      <path d="M31 25L17 7 7 16l14 21zM33 25L47 7l10 9-14 21z" fill="#e6eeff" />
+      <path d="M31 25L17 7 7 16l14 21zM33 25L47 7l10 9-14 21z" fill="#ffffff" stroke="#aab3c4" strokeWidth="1.2" strokeLinejoin="round" />
     </>
   ),
   arschloch: () => (
