@@ -17893,6 +17893,30 @@ html[data-look] .play-screen > .top-bar .round-btn {
   opacity: 0.5;
 }
 
+/* Taking someone out: a small ✕ at the end of their chip, with a full-size place to tap. */
+.crew-sheet-remove {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-right: -6px;
+  border-radius: 50%;
+  background: var(--fill-2, rgba(128, 128, 128, 0.25));
+  color: var(--muted);
+}
+
+.crew-sheet-remove::after {
+  content: '';
+  position: absolute;
+  inset: -11px;
+}
+
+.crew-sheet-remove svg {
+  width: 12px;
+  height: 12px;
+}
+
 /* ---------- Number Flip in 3D: the box drawn by box3d.ts, the felt's writing laid over its front ---------- */
 
 .nf-stage {
