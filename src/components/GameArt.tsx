@@ -98,16 +98,22 @@ const ART: Record<string, Art> = {
       <defs>
         {lin('ga-gold', '#ffe58a', '#d99a00')}
         {lin('ga-gold-d', '#f2c230', '#a86f00')}
+        {/* The cup's inside: dark under the near rim, lit on the far wall, so it reads as hollow. */}
+        {lin('ga-cup-in', '#6e4300', '#e3ad2a')}
       </defs>
-      <ellipse cx="32" cy="54" rx="13" ry="4.5" fill="url(#ga-gold-d)" />
-      <rect x="29" y="38" width="6" height="15" rx="2" fill="url(#ga-gold-d)" />
-      <path d="M16 22h32c0 12-6.5 19-16 19s-16-7-16-19z" fill="url(#ga-gold)" />
-      <ellipse cx="32" cy="22" rx="16" ry="4" fill="#9b2318" />
-      <ellipse cx="29" cy="21.2" rx="7" ry="1.4" fill="#fff" opacity="0.3" />
-      <path d="M21 16l2-10 5 5 4-8 4 8 5-5 2 10z" fill="url(#ga-gold)" />
+      {/* The crown stands in the cup: drawn first, the cup's front then hides its foot. */}
+      <path d="M21 21V16l2-10 5 5 4-8 4 8 5-5 2 10V21z" fill="url(#ga-gold)" />
       <circle cx="32" cy="11.5" r="1.8" fill="#e5484d" />
       <circle cx="25.5" cy="13.5" r="1.4" fill="#3b82f6" />
       <circle cx="38.5" cy="13.5" r="1.4" fill="#22a06b" />
+      <ellipse cx="32" cy="54" rx="13" ry="4.5" fill="url(#ga-gold-d)" />
+      <rect x="29" y="38" width="6" height="15" rx="2" fill="url(#ga-gold-d)" />
+      <path d="M16 22h32c0 12-6.5 19-16 19s-16-7-16-19z" fill="url(#ga-gold)" />
+      {/* The rim, and the open top inside it. */}
+      <ellipse cx="32" cy="22" rx="16" ry="4.2" fill="#f7cf55" />
+      <ellipse cx="32" cy="22.4" rx="14.2" ry="3.1" fill="url(#ga-cup-in)" />
+      <path d="M19 23.6C23 26.4 41 26.4 45 23.6c-1.6 2.2-6.5 3.4-13 3.4s-11.4-1.2-13-3.4z" fill="#ffe58a" opacity="0.55" />
+      <ellipse cx="27" cy="20.6" rx="5.5" ry="0.9" fill="#fff" opacity="0.25" />
       <Gloss d="M19 25c1 6 3.5 10 7 12.5-5-1-8-6-8.6-12.5z" o={0.55} />
     </>
   ),
@@ -311,8 +317,8 @@ const ART: Record<string, Art> = {
   president: () => (
     <>
       <defs>
-        {lin('ga-shirt', '#ffffff', '#d9dde4')}
-        {lin('ga-tie', '#ff6b6b', '#b4161e')}
+        {lin('ga-shirt', '#f4f8ff', '#a9c0ee')}
+        {lin('ga-tie', '#ff4a4a', '#a00f18')}
         {/* The tie's stripes stay on the tie. */}
         <clipPath id="ga-tie-clip">
           <path d="M29 33h6l6 21-9 6-9-6z" />
@@ -321,8 +327,8 @@ const ART: Record<string, Art> = {
       {/* The shirt, whole, with sloping shoulders. */}
       <path d="M6 15L20 6h24l14 9v45H6z" fill="url(#ga-shirt)" />
       {/* The collar's back band, standing up behind the neck, and the neck opening in its shade. */}
-      <path d="M19 5Q32 17 45 5v9Q32 26 19 14z" fill="#d3d7de" />
-      <path d="M21 8Q32 19 43 8l-11 17z" fill="#b9bec8" />
+      <path d="M19 5Q32 17 45 5v9Q32 26 19 14z" fill="#8fa9dc" />
+      <path d="M21 8Q32 19 43 8l-11 17z" fill="#6f8bc4" />
       {/* The tie: knot tucked under the collar, then hanging down the front of the shirt. */}
       <path d="M28.5 26h7l-1 8h-5z" fill="#a9121b" />
       <path d="M29 33h6l6 21-9 6-9-6z" fill="url(#ga-tie)" />
@@ -331,8 +337,8 @@ const ART: Record<string, Art> = {
       </g>
       <Gloss d="M31 35h2l-4 16-2.5-2.5z" o={0.35} />
       {/* The collar wings over it, meeting just above the knot. */}
-      <path d="M31 25L17 7 7 16l14 21zM33 25L47 7l10 9-14 21z" fill="#f4f5f7" />
-      <path d="M31 25L17 7M33 25L47 7" fill="none" stroke="#d3d6dd" strokeWidth="1" />
+      <path d="M31 25L17 7 7 16l14 21zM33 25L47 7l10 9-14 21z" fill="#e6eeff" />
+      <path d="M31 25L17 7M33 25L47 7" fill="none" stroke="#9db4e3" strokeWidth="1" />
     </>
   ),
   arschloch: () => (
@@ -688,6 +694,19 @@ const ART: Record<string, Art> = {
   ),
 };
 
+/**
+ * Pictures whose drawn parts don't sit in the middle of the 64 x 64 square (measured on their
+ * rendered outline: the middle of it is (32, 32)): moved by what they're off, so they sit centred
+ * on the tile. The party pawn is also a touch smaller.
+ */
+const NUDGE: Record<string, string> = {
+  schweinerei: 'translate(0 1.2)',
+  'horse-race': 'translate(0.4 0)',
+  'hose-runter': 'translate(1.6 0)',
+  party: 'translate(32 32) scale(0.94) translate(-32 -30.9)',
+  vierer: 'translate(0 1.3)',
+};
+
 /** Whether a game has a picture of its own here. */
 export const hasArt = (id: string) => id in ART;
 
@@ -697,7 +716,13 @@ export default function GameArt({ id }: { id: string }) {
   if (!Draw) return null;
   return (
     <svg className="game-art" viewBox="0 0 64 64" aria-hidden="true">
-      <Draw />
+      {NUDGE[id] ? (
+        <g transform={NUDGE[id]}>
+          <Draw />
+        </g>
+      ) : (
+        <Draw />
+      )}
     </svg>
   );
 }
