@@ -134,8 +134,9 @@ export default function PubQuizSolo({ players, exit }: GameProps) {
           <BigButton
             key="show"
             className="pq-show"
-            disabled={locked}
+            // Not `disabled`: that greys the button out, then it turns green again. Looks the same, just ignores taps.
             onClick={() => {
+              if (locked) return;
               sfx.tick();
               setShown(true);
             }}

@@ -423,19 +423,20 @@ const ART: Record<string, Art> = {
   'ten-but': () => (
     <>
       <defs>
-        {rad('ga-sign', '#ffffff', '#e3ded2')}
-        {lin('ga-wood', '#d9a066', '#8c5a2b')}
-        {rad('ga-down', '#ff8a80', '#c62828')}
+        {lin('ga-tail', '#ff6b6b', '#b71c1c')}
+        {rad('ga-medal', '#ffe27a', '#e0a100')}
+        {rad('ga-face', '#fffdf3', '#f3e3b0')}
       </defs>
-      <rect x="28" y="40" width="8" height="21" rx="3" fill="url(#ga-wood)" />
-      <circle cx="32" cy="25" r="20" fill="#c81e28" />
-      <circle cx="32" cy="25" r="16.5" fill="url(#ga-sign)" />
-      <text x="32" y="32" textAnchor="middle" fontFamily={FONT} fontWeight="900" fontSize="19" fill="#1d1d1b" letterSpacing="-1">
+      {/* An award rosette: two ribbon tails, a gold disc, the top score on it. */}
+      <path d="M17 36l-6 24 10-5 5 7 6-22z" fill="url(#ga-tail)" />
+      <path d="M47 36l6 24-10-5-5 7-6-22z" fill="url(#ga-tail)" />
+      <circle cx="32" cy="28" r="23" fill="url(#ga-medal)" />
+      <circle cx="32" cy="28" r="23" fill="none" stroke="#c98a00" strokeWidth="1.5" />
+      <circle cx="32" cy="28" r="17.5" fill="url(#ga-face)" stroke="#d9a41a" strokeWidth="1.4" />
+      <text x="32" y="36" textAnchor="middle" fontFamily={FONT} fontWeight="900" fontSize="23" fill="#c81e28" letterSpacing="-1.5">
         10
       </text>
-      <circle cx="50" cy="44" r="8.5" fill="url(#ga-down)" />
-      <path d="M50 39.5v8.5M46.2 44.8L50 48.6l3.8-3.8" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-      <Gloss d="M17 20c2-6 7-10 13-11-5 2.5-9 6-10.5 12z" o={0.6} />
+      <Gloss d="M15 20c2.5-7 8-11.5 15-12.5-6 3-10.5 7-12.5 14z" o={0.55} />
     </>
   ),
   party: () => (
