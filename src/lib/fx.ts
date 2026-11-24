@@ -246,11 +246,11 @@ export function confetti(amount = 80) {
   if (!ctx) return;
   const w = window.innerWidth;
   const h = window.innerHeight;
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  // A bit under the phone's own resolution: the dice are small, and a big canvas redrawn every frame is what lags.
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
   canvas.className = 'confetti-layer';
   canvas.width = Math.round(w * dpr);
   canvas.height = Math.round(h * dpr);
-  ctx.scale(dpr, dpr);
   const colors = [accentNow(), ...PAPER];
   const reach = Math.min(1.25, h / 844);
   const rnd = (a: number, b: number) => a + Math.random() * (b - a);
@@ -258,7 +258,7 @@ export function confetti(amount = 80) {
     const left = i % 2 === 0;
     // Up and in from each corner, fanned out.
     const angle = ((left ? -71 : -109) + rnd(-14, 14)) * (Math.PI / 180);
-    const speed = rnd(1500, 2500) * reach;
+    const speed = rnd(2300, 3500) * reach;
     const color = colors[i % colors.length];
     return {
       x: left ? rnd(-8, 12) : w - rnd(-8, 12),
@@ -266,25 +266,29 @@ export function confetti(amount = 80) {
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
       delay: (left ? 0 : 0.12) + rnd(0, 0.08),
-      life: rnd(2.6, 3.6),
-      size: rnd(15, 22),
+      life: rnd(1.9, 2.7),
+      size: rnd(14, 20),
       rot: rnd(0, Math.PI * 2),
       vr: rnd(-5, 5),
       sway: rnd(0, Math.PI * 2),
       vs: rnd(2, 4),
-      sprite: dieSprite(color, 1 + Math.floor(rnd(0, 6)), 48 * dpr),
+      // Made at the size it is drawn (20 px): no scaling down 80 times a frame.
+      sprite: dieSprite(color, 1 + Math.floor(rnd(0, 6)), Math.round(20 * dpr)),
     };
   });
   document.body.appendChild(canvas);
   const DRAG = 2.3;
-  const GRAVITY = 600;
+  // Dice are heavy: they drop fast, not flutter.
+  const GRAVITY = 1900;
   let last = performance.now();
   const start = last;
   const frame = (now: number) => {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     const age = (now - start) / 1000;
-    ctx.clearRect(0, 0, w, h);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalAlpha = 1;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     let alive = false;
     for (const b of bits) {
       const t = age - b.delay;
@@ -301,12 +305,12 @@ export function confetti(amount = 80) {
       b.y += b.vy * dt;
       b.rot += b.vr * dt;
       b.sway += b.vs * dt;
-      ctx.save();
-      ctx.globalAlpha = Math.min(1, (b.life - t) / 0.6);
-      ctx.translate(b.x + Math.sin(b.sway) * 10, b.y);
-      ctx.rotate(b.rot);
+      // One matrix set per piece (save, translate, rotate, restore was most of the frame).
+      const cs = Math.cos(b.rot) * dpr;
+      const sn = Math.sin(b.rot) * dpr;
+      ctx.setTransform(cs, sn, -sn, cs, (b.x + Math.sin(b.sway) * 10) * dpr, b.y * dpr);
+      ctx.globalAlpha = b.life - t < 0.4 ? (b.life - t) / 0.4 : 1;
       ctx.drawImage(b.sprite, -b.size / 2, -b.size / 2, b.size, b.size);
-      ctx.restore();
     }
     if (alive) requestAnimationFrame(frame);
     else canvas.remove();
