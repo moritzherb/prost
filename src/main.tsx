@@ -16,6 +16,7 @@ import { BOOT_GROUND, SPLASH_MS, fadeBoot } from './lib/launch';
 import { coverTop } from './lib/themeColor';
 import { watchForUpdates } from './lib/update';
 import { wakeAudio } from './lib/fx';
+import { watchRipples } from './lib/ripple';
 import ErrorBoundary from './components/ErrorBoundary';
 import { RoomProvider } from './net/RoomProvider';
 import { AppProvider } from './state/AppState';
@@ -69,6 +70,9 @@ watchAppHeight();
 watchBoxes();
 // No "Undo Typing" when the phone is shaken (lib/forgetTyping.ts).
 watchTyping();
+
+// Android's touch ripple on the app's buttons (lib/ripple.ts).
+watchRipples();
 
 void fontsReady().then(() => {
   createRoot(document.getElementById('root')!).render(
