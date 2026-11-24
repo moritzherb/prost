@@ -306,16 +306,19 @@ const ART: Record<string, Art> = {
         {lin('ga-tie', '#ff6b6b', '#b4161e')}
         {/* The tie's stripes stay on the tie. */}
         <clipPath id="ga-tie-clip">
-          <path d="M29.5 30h5l6 22-8.5 8-8.5-8z" />
+          <path d="M29.5 27h5l6 25-8.5 8-8.5-8z" />
         </clipPath>
       </defs>
       <path d="M8 10l24 14 24-14v48H8z" fill="url(#ga-shirt)" />
-      <path d="M32 24L14 6l-6 10 14 16zM32 24L50 6l6 10-14 16z" fill="#f4f5f7" />
-      <path d="M28 23h8l-1.5 7h-5z" fill="#c81e28" />
-      <path d="M29.5 30h5l6 22-8.5 8-8.5-8z" fill="url(#ga-tie)" />
+      {/* The neckband behind the tie, the tie running up under the collar, the collar wings over its knot. */}
+      <path d="M21 7l11 20 11-20z" fill="#cfd3db" />
+      <path d="M28 12h8l-1.5 17h-5z" fill="#a9121b" />
+      <path d="M29.5 27h5l6 25-8.5 8-8.5-8z" fill="url(#ga-tie)" />
       <g clipPath="url(#ga-tie-clip)" stroke="#7d0f15" strokeWidth="2" opacity="0.4">
         <path d="M20 42l24-14M20 50l24-14M20 58l24-14" />
       </g>
+      <path d="M32 27L19 4 8 14l14 20zM32 27L45 4l11 10-14 20z" fill="#f4f5f7" />
+      <path d="M32 27L19 4M32 27L45 4" fill="none" stroke="#d3d6dd" strokeWidth="1" />
       <Gloss d="M30.5 31h2l-4 19-2.5-2.5z" o={0.35} />
     </>
   ),
