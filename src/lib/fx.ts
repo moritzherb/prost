@@ -239,7 +239,7 @@ function accentNow() {
  * that slow in the air, then tumble down swaying, and fade before they land. One canvas over the
  * screen (a layer per piece made iPhones flicker).
  */
-export function confetti(amount = 80) {
+export function confetti(amount = 100) {
   if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
