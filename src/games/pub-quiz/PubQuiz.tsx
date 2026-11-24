@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import Avatar from '../../components/Avatar';
 import BigButton from '../../components/BigButton';
 import Finished from '../../components/Finished';
-import Glyph from '../../components/Glyph';
 import Tap from '../../components/Tap';
 import { getLang, t, tx } from '../../i18n';
 import { buzz as vibrate, celebrate, sfx } from '../../lib/fx';
@@ -216,7 +215,17 @@ export function VerdictFlash({ q }: { q: Quiz }) {
   return (
     <div key={v.n} className={`pq-verdict ${v.right ? 'right' : 'wrong'}`} style={{ '--chip': side.color } as CSSProperties} role="status">
       <span className="pq-verdict-mark">
-        <Glyph name={v.right ? 'check' : 'wrong'} />
+        {/* Drawn in, stroke by stroke (pathLength 1 for the dash animation). */}
+        <svg viewBox="0 0 52 52" aria-hidden="true">
+          {v.right ? (
+            <path d="M15 27.5l7.5 7.5L38 18.5" pathLength={1} />
+          ) : (
+            <>
+              <path d="M18 18l16 16" pathLength={1} />
+              <path d="M34 18L18 34" pathLength={1} />
+            </>
+          )}
+        </svg>
       </span>
       <span className="pq-verdict-word">{v.right ? t('Right') : t('Wrong')}</span>
       <span className="pq-verdict-name">{side.name}</span>

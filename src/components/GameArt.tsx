@@ -223,16 +223,21 @@ const ART: Record<string, Art> = {
           {lin('ga-leather', '#c48650', '#5f3818')}
           {lin('ga-die', '#ffffff', '#dfd9cb')}
         </defs>
-        {/* The cup upside down: its closed bottom on top, the rim below. */}
-        <path d="M17 9.5a3 3 0 0 1 3-3h20a3 3 0 0 1 3 3L47 41H13z" fill="url(#ga-leather)" />
-        <rect x="10.5" y="38" width="39" height="8" rx="4" fill="#4d2c11" />
-        <Gloss d="M20.5 9.5h4.5l-3 29h-4.5z" o={0.22} />
-        {/* Mäxchen: a two and a one. */}
-        {die(13, 41, -10, [
+        {/* Its shadow on the table, under the cup lifted off. */}
+        <ellipse cx="45" cy="56" rx="11" ry="2.4" fill="#000" opacity="0.14" />
+        {/* Mäxchen, now to be seen: a two and a one. */}
+        {die(7, 37, -10, [
           [5, 5],
           [13, 13],
         ])}
-        {die(34, 40, 12, [[9, 9]])}
+        {die(27, 39, 8, [[9, 9]])}
+        {/* The cup, lifted up and tipped to the side, its open mouth (dark inside) turned to the dice. */}
+        <g transform="translate(38 29) rotate(24) scale(0.68) translate(-30 -44)">
+          <path d="M17 9.5a3 3 0 0 1 3-3h20a3 3 0 0 1 3 3L47 41H13z" fill="url(#ga-leather)" />
+          <Gloss d="M20.5 9.5h4.5l-3 29h-4.5z" o={0.22} />
+          <rect x="10.5" y="38" width="39" height="8" rx="4" fill="#4d2c11" />
+          <ellipse cx="30" cy="45" rx="18" ry="3.6" fill="#24130a" />
+        </g>
       </>
     );
   },
@@ -388,11 +393,10 @@ const ART: Record<string, Art> = {
     <>
       <defs>
         {lin('ga-gold', '#ffe58a', '#d99a00')}
-        {lin('ga-silver', '#ffffff', '#b8bfcc')}
-        {rad('ga-pink', '#ffd0e6', '#e0448f')}
+        {lin('ga-tiara', '#ffe680', '#ffcc33')}
       </defs>
       {/* The King's crown, gold, behind on the left. */}
-      <g transform="rotate(-10 22 36)">
+      <g transform="translate(0 -3) rotate(-10 22 36)">
         <path d="M5 44l3-22 8 9 6-15 6 15 8-9 3 22z" fill="url(#ga-gold)" />
         <rect x="5" y="41" width="34" height="8" rx="2.5" fill="#d99a00" />
         <circle cx="22" cy="45" r="2.3" fill="#e5484d" />
@@ -400,14 +404,13 @@ const ART: Record<string, Art> = {
         <circle cx="31.5" cy="45" r="1.6" fill="#22a06b" />
         <Gloss d="M8.5 25l2 14.5h-3.2z" o={0.5} />
       </g>
-      {/* The Princess's tiara, silver with pink stones, in front on the right. */}
-      <g transform="rotate(8 44 44)">
-        <path d="M24 54c3-9 11-15 20-15s17 6 20 15c-6-3-13-4.5-20-4.5S30 51 24 54z" fill="url(#ga-silver)" />
-        <path d="M33 45.5c1-5 4-8 7-10l4-10 4 10c3 2 6 5 7 10-3.5-1.5-7.5-2.3-11-2.3S36.5 44 33 45.5z" fill="url(#ga-silver)" />
-        <circle cx="44" cy="37" r="3.6" fill="url(#ga-pink)" />
-        <circle cx="35" cy="47.5" r="2" fill="url(#ga-pink)" />
-        <circle cx="53" cy="47.5" r="2" fill="url(#ga-pink)" />
-        <circle cx="44" cy="25.5" r="1.8" fill="url(#ga-pink)" />
+      {/* The Princess's tiara, as she wears it in the game (princess-treatment/Heads.tsx), in front on the right. */}
+      <g transform="translate(43 42) rotate(8) scale(0.84) translate(-60 -25)">
+        <path d="M37 38.5L45 24.5l7 9 8-19 8 19 7-9 8 14z" fill="#000" opacity="0.18" />
+        <path d="M37 36L45 22l7 9 8-19 8 19 7-9 8 14z" fill="url(#ga-tiara)" stroke="#d99a00" strokeWidth="1.9" strokeLinejoin="round" />
+        <circle cx="60" cy="25" r="4.4" fill="#ff5fa2" stroke="#d6337f" strokeWidth="1.3" />
+        <circle cx="45.5" cy="29" r="2.5" fill="#7fd6ff" />
+        <circle cx="74.5" cy="29" r="2.5" fill="#7fd6ff" />
       </g>
     </>
   ),
