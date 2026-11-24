@@ -112,32 +112,57 @@ const ART: Record<string, Art> = {
     </>
   ),
   klatschen: () => {
-    // One hand, palm on, fingers up and together, the thumb out to the side: a single material
-    // (one gradient over the picture), so its parts don't show seams.
-    const hand = (fill: string) => (
-      <g fill={fill}>
-        <rect x="14" y="24" width="20" height="26" rx="9" />
-        <rect x="14" y="10" width="5.4" height="26" rx="2.7" />
-        <rect x="19" y="6.5" width="5.4" height="28" rx="2.7" />
-        <rect x="24" y="7.5" width="5.4" height="27" rx="2.7" />
-        <rect x="28.8" y="11" width="5.2" height="24" rx="2.6" />
-        <rect x="31" y="27" width="6" height="16" rx="3" transform="rotate(-38 34 35)" />
-      </g>
+    // Two hands mid-clap, like the clapping-hands emoji: drawn upright round the wrist (0, 0), then
+    // leant over to the left. Pinky to index: each finger's left edge and tip.
+    const fingers = [
+      [-11.2, -30],
+      [-5.6, -35.5],
+      [0, -37],
+      [5.6, -34.5],
+    ];
+    const hand = (fill: string, thumb: boolean) => (
+      <>
+        {thumb && (
+          <g transform="rotate(26 10 -6)">
+            <rect x="6.6" y="-25" width="6.6" height="20" rx="3.3" fill={fill} />
+            <ellipse cx="9.4" cy="-21.6" rx="1.3" ry="2.2" fill="#fff" opacity="0.45" />
+          </g>
+        )}
+        <rect x="-11.2" y="-24" width="22.4" height="27" rx="10.5" fill={fill} />
+        {fingers.map(([x, top], i) => (
+          <g key={x}>
+            {/* A soft groove where it lies on the finger before it (never past that finger's tip). */}
+            {i > 0 && <rect x={x - 0.9} y={fingers[i - 1][1] + 2.8} width="5.6" height={-14 - fingers[i - 1][1] - 2.8} rx="2.8" fill="#a2560a" opacity="0.16" />}
+            <rect x={x} y={top} width="5.6" height={-12 - top} rx="2.8" fill={fill} />
+            <ellipse cx={x + 2.2} cy={top + 3.4} rx="1.2" ry="2.2" fill="#fff" opacity="0.45" />
+          </g>
+        ))}
+      </>
     );
+    // A motion stroke: round and wide out at (x, y), coming to a point at (tx, ty) by the hands.
+    const ray = (x: number, y: number, tx: number, ty: number, w: number) => {
+      const l = Math.hypot(tx - x, ty - y);
+      const nx = ((y - ty) / l) * (w / 2);
+      const ny = ((tx - x) / l) * (w / 2);
+      return `M${x + nx} ${y + ny}L${tx} ${ty}L${x - nx} ${y - ny}A${w / 2} ${w / 2} 0 0 0 ${x + nx} ${y + ny}z`;
+    };
     return (
       <>
         <defs>
-          {linU('ga-skin-b', '#f6c08f', '#c7784a')}
-          {linU('ga-skin-f', '#ffe1c2', '#e59a62')}
+          {linU('ga-clap-b', '#fbc843', '#e38816', 0, -40, 0, 4)}
+          {linU('ga-clap-f', '#ffe476', '#f5aa2a', 0, -40, 0, 4)}
+          {/* Cream, not the emoji's orange: the tile is orange. */}
+          {lin('ga-clap-ray', '#fffaf0', '#ffdc9c')}
         </defs>
-        {/* The hand behind, darker; the one in front, lit. */}
-        {/* Palm to palm: the one behind leans right, the one in front leans left over it. */}
-        <g transform="translate(32 36) scale(1.16) translate(-32 -36)">
-          <g transform="translate(3 6) rotate(13 24 50)">{hand('url(#ga-skin-b)')}</g>
-          <g transform="translate(61 6) scale(-1 1) rotate(13 24 50)">{hand('url(#ga-skin-f)')}</g>
+        {/* The hand behind sits lower left of the one in front, so its pinky side and fingertips show. */}
+        <g transform="translate(46.5 50) rotate(-42) scale(0.92)">
+          <g transform="translate(-6.5 -1)">{hand('url(#ga-clap-b)', false)}</g>
+          {hand('url(#ga-clap-f)', true)}
         </g>
-        <g fill="none" stroke="#ffd23f" strokeWidth="3.2" strokeLinecap="round">
-          <path d="M12 8l3.5 4.5M52 8l-3.5 4.5M5 21h5M59 21h-5" />
+        <g fill="url(#ga-clap-ray)">
+          <path d={ray(7.5, 21.5, 14.5, 24.5, 3.6)} />
+          <path d={ray(13, 8.5, 18, 15, 3.6)} />
+          <path d={ray(25.5, 5, 26, 13, 3.6)} />
         </g>
       </>
     );
