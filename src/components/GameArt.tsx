@@ -348,16 +348,15 @@ const ART: Record<string, Art> = {
       {/* A folded white shirt, as the 👔 emoji draws it: rounded shoulders, the shoulder folds, a standing collar round the neck, its two points over the tie's knot. */}
       <path d="M9 18Q9 10 17 9.5h30Q55 10 55 18v40q0 2-2 2H11q-2 0-2-2z" fill="url(#ga-shirt)" stroke="#c3cad6" strokeWidth="0.9" />
       <path d="M11 22.5Q16 20.5 21.5 21M53 22.5Q48 20.5 42.5 21" fill="none" stroke="#d3d8e1" strokeWidth="0.9" strokeLinecap="round" />
-      {/* Inside the collar. */}
-      <path d="M21 10.5h22L32 22.5z" fill="#d6dbe4" />
-      {/* The collar in one piece: its back standing up round the neck and its two points, filled
-          first and outlined after, so no seam shows where the points meet the back. */}
-      <path d="M19.5 10Q32 2.5 44.5 10l-.6 2.4Q32 6.4 20.1 12.4z" fill="#f4f6f9" />
-      {/* The tie: a slim knot under the collar, the blade down to a point above the hem. */}
-      <path d="M29.2 20.5h5.6l-1 7h-3.6z" fill="#2a2a2e" />
-      <path d="M30.3 27h3.4l2.5 25.5-4.2 4.6-4.2-4.6z" fill="url(#ga-tie)" />
+      {/* The collar as one white shape (its back round the neck and its two points), the inside of
+          the neck as one grey shape fitted exactly to its inner edge, then the tie, then the two
+          outlines on top: no other line inside the collar. */}
+      <path d="M30.2 22.6L26.6 27.8 18 15Q17.6 12 19.5 10Q32 2.5 44.5 10Q46.4 12 46 15L37.4 27.8 33.8 22.6z" fill="#ffffff" />
+      <path d="M21.4 12Q32 6.3 42.6 12L33.8 22.6h-3.6z" fill="#d6dbe4" />
+      {/* The tie: the knot coming out from under the collar, the blade down to a point above the hem. */}
+      <path d="M30.2 22.6h3.6l-.5 5h-2.6z" fill="#2a2a2e" />
+      <path d="M30.6 27.2h2.8l2.8 25.3-4.2 4.6-4.2-4.6z" fill="url(#ga-tie)" />
       <path d="M31.2 29l-1.2 23" stroke="#fff" strokeWidth="0.8" opacity="0.12" />
-      <path d="M19.5 10L30.2 22.6 26.6 27.8 18 15Q17.6 12 19.5 10zM44.5 10L33.8 22.6 37.4 27.8 46 15Q46.4 12 44.5 10z" fill="#ffffff" />
       <path d="M30.2 22.6L26.6 27.8 18 15Q17.6 12 19.5 10Q32 2.5 44.5 10Q46.4 12 46 15L37.4 27.8 33.8 22.6" fill="none" stroke="#c3cad6" strokeWidth="0.9" strokeLinejoin="round" strokeLinecap="round" />
       <path d="M30.2 22.6L21.4 12Q32 6.3 42.6 12L33.8 22.6" fill="none" stroke="#c3cad6" strokeWidth="0.9" strokeLinejoin="round" strokeLinecap="round" />
     </>
