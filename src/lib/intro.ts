@@ -29,6 +29,19 @@ const LAYERS = ':scope > :is(.sb-pages, .sb-dots-bar, .sb-dock, .os-done, .la-gl
 export function playIntro() {
   const home = document.querySelector<HTMLElement>('.os-home');
   if (!home || typeof home.animate !== 'function' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // An Android phone has no zoom: home's content settles in from a touch smaller, Material's emphasized curve.
+  if (home.querySelector(':scope .la-grid, :scope .la-dock')) {
+    for (const el of home.querySelectorAll<HTMLElement>(LAYERS)) {
+      el.animate(
+        [
+          { transform: 'scale(0.94)', opacity: 0.6 },
+          { transform: 'none', opacity: 1 },
+        ],
+        { duration: 400, easing: 'cubic-bezier(0.05, 0.7, 0.1, 1)', fill: 'backwards' },
+      );
+    }
+    return;
+  }
   const screen = home.getBoundingClientRect();
   const cx = screen.left + screen.width / 2;
   const cy = screen.top + screen.height / 2;
