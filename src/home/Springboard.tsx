@@ -59,7 +59,7 @@ const FAST = 0.3;
 /** The pages settling, as an iPhone's do. */
 const SETTLE = 'transform 0.38s cubic-bezier(0.2, 0.8, 0.25, 1)';
 
-/** The page home showed last (-1: the App Library): back from a game, it shows again. */
+/** The page home showed last (-1: the App Library): back from a game or any other screen, it shows again. */
 let lastPage = 0;
 
 /**
@@ -85,8 +85,9 @@ export default function Springboard({ players, recent, returning, dock, wall, on
   const viewport = useRef<HTMLDivElement>(null);
   const strip = useRef<HTMLDivElement>(null);
   const main = useRef<HTMLElement>(null);
-  // Back from a game: the page it was opened on (the second, the App Library) again.
-  const want = useRef(returning ? lastPage : 0);
+  // Back from a game or a screen (settings, the crew, the back swipe): the page it was left from
+  // (the second, the App Library) again, not the first.
+  const want = useRef(lastPage);
   const [page, setPage] = useState(() => Math.max(0, want.current));
   const [libSearch, setLibSearch] = useState(false);
   const pageRef = useRef(page);

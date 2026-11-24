@@ -1,5 +1,5 @@
 /*
- * Opening a game from the home screen: the screen fills evenly with the game's colour (the strip
+ * Opening a game from the home screen: the screen is the game's colour at once (the strip
  * under the clock along with it, frame by frame), the emoji glides from the icon to the middle and
  * grows; the game's page loads behind the splash, and the splash fades (the strip with it).
  * Coming back, the home screen lets that icon settle again.
@@ -13,7 +13,7 @@ import { playIntro } from './intro';
 import { holdScreen } from './router';
 import { coverTop, mix, STRIP_LAG, topColor, topLayer, tone } from './themeColor';
 
-/** Filling the screen, staying as the splash, fading out (ms). */
+/** The emoji's glide to the middle (the colour is there at once), staying as the splash, fading out (ms). */
 const GROW = 420;
 const HOLD = 480;
 const FADE = 320;
@@ -77,9 +77,10 @@ export function launch(icon: Element | null, game: { id: string; color: string; 
   };
   emoji.style.transform = at(0);
   veil.append(fill, emoji);
+  fill.style.opacity = '1';
   document.body.append(veil);
 
-  // The colour comes in evenly all over, and the strip under the clock with it: both set in the
+  // The colour is there at once all over, and the strip under the clock with it: both set in the
   // same frame from the same number (a compositor animation for the colour would start a moment
   // later on an iPhone than the strip, and the two would part). The strip goes from what was there
   // to the splash's colour along its top, and back to the game's ground.
@@ -126,7 +127,8 @@ export function launch(icon: Element | null, game: { id: string; color: string; 
     if (strip === layer) strip = null;
   };
   /** How much colour shows `t` ms in. */
-  const amount = (t: number) => (t < GROW ? inOut(t / GROW) : t < fadeAt ? 1 : 1 - inOut((t - fadeAt) / FADE));
+  // The colour is there at once (no fade in) and only fades out, onto the game's own page.
+  const amount = (t: number) => (t < fadeAt ? 1 : 1 - inOut((t - fadeAt) / FADE));
   const frame = (now: number) => {
     if (gone || !veil.isConnected) return done();
     if (!prev || now - start < GROW) shown = now - start;
