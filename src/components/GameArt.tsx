@@ -253,11 +253,11 @@ const ART: Record<string, Art> = {
         {rad('ga-snout', '#ffb3c6', '#e66a8a')}
         {lin('ga-ear', '#f7a1b6', '#d85c7c')}
       </defs>
-      {/* Ears, folded forward a little, pink inside. */}
-      <path d="M11 24C8 15 10 8 14 6c5 2 11 7 13 12z" fill="url(#ga-ear)" />
-      <path d="M53 24c3-9 1-16-3-18-5 2-11 7-13 12z" fill="url(#ga-ear)" />
-      <path d="M14 20c-1-5 0-9 2-10 3 1.5 6 4 7.5 7z" fill="#ffc4d3" />
-      <path d="M50 20c1-5 0-9-2-10-3 1.5-6 4-7.5 7z" fill="#ffc4d3" />
+      {/* Ears, rooted in the head (their feet lie under it), folded forward a little, pink inside. */}
+      <path d="M14.5 28C10 19 10.5 10 15 6.5c5.5 2.5 10.5 7 13 12z" fill="url(#ga-ear)" />
+      <path d="M49.5 28C54 19 53.5 10 49 6.5c-5.5 2.5-10.5 7-13 12z" fill="url(#ga-ear)" />
+      <path d="M16.5 23c-1.5-5-.5-9 2-10.5 3 1.5 6 4 7.5 7z" fill="#ffc4d3" />
+      <path d="M47.5 23c1.5-5 .5-9-2-10.5-3 1.5-6 4-7.5 7z" fill="#ffc4d3" />
       <ellipse cx="32" cy="35" rx="22" ry="20" fill="url(#ga-pig)" />
       <ellipse cx="18.5" cy="40" rx="4.5" ry="3" fill="#ff8fab" opacity="0.6" />
       <ellipse cx="45.5" cy="40" rx="4.5" ry="3" fill="#ff8fab" opacity="0.6" />
@@ -359,12 +359,13 @@ const ART: Record<string, Art> = {
       <defs>{lin('ga-bin', '#e8ebf0', '#8d95a3')}</defs>
       <path d="M14 22h36l-4 36H18z" fill="url(#ga-bin)" />
       <path d="M22 28l1.5 24M32 28v24M42 28l-1.5 24" stroke="#6f7785" strokeWidth="2.4" strokeLinecap="round" opacity="0.6" />
+      {/* The light on the bin's left, under the lid (which is drawn over it). */}
+      <Gloss d="M16.4 27h4l2.3 29h-3z" o={0.45} />
       {/* The lid, tipped up a little. */}
       <g transform="rotate(-10 32 18)">
         <rect x="11" y="15" width="42" height="7" rx="3.5" fill="#a8afbb" />
         <rect x="26" y="10.5" width="12" height="5.5" rx="2.75" fill="#7d8594" />
       </g>
-      <Gloss d="M16 24h4l2.5 32h-3z" o={0.45} />
     </>
   ),
   'who-drinks': () => (
@@ -422,19 +423,36 @@ const ART: Record<string, Art> = {
   'ten-but': () => (
     <>
       <defs>
-        {rad('ga-sign', '#ffffff', '#e3ded2')}
-        {lin('ga-wood', '#d9a066', '#8c5a2b')}
-        {rad('ga-down', '#ff8a80', '#c62828')}
+        {lin('ga-plate', '#ffffff', '#e8e2d3')}
       </defs>
-      <rect x="28" y="40" width="8" height="21" rx="3" fill="url(#ga-wood)" />
-      <circle cx="32" cy="25" r="20" fill="#c81e28" />
-      <circle cx="32" cy="25" r="16.5" fill="url(#ga-sign)" />
-      <text x="32" y="32" textAnchor="middle" fontFamily={FONT} fontWeight="900" fontSize="19" fill="#1d1d1b" letterSpacing="-1">
-        10
+      {/* A perfect score, and the -1 points it loses flying off it. */}
+      <rect x="4" y="26" width="56" height="30" rx="9" fill="url(#ga-plate)" />
+      <text x="32" y="48" textAnchor="middle" fontFamily={FONT} fontWeight="900" fontSize="19" fill="#1d1d1b" letterSpacing="-1.2">
+        10/10
       </text>
-      <circle cx="50" cy="44" r="8.5" fill="url(#ga-down)" />
-      <path d="M50 39.5v8.5M46.2 44.8L50 48.6l3.8-3.8" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-      <Gloss d="M17 20c2-6 7-10 13-11-5 2.5-9 6-10.5 12z" o={0.6} />
+      {[
+        [13, 20, 12, -14],
+        [31, 14, 15, 4],
+        [48, 19, 12, 14],
+      ].map(([x, y, size, rot]) => (
+        <text
+          key={x}
+          x={x}
+          y={y}
+          textAnchor="middle"
+          fontFamily={FONT}
+          fontWeight="900"
+          fontSize={size}
+          fill="#e5252f"
+          stroke="#fff"
+          strokeWidth="2.6"
+          paintOrder="stroke"
+          strokeLinejoin="round"
+          transform={`rotate(${rot} ${x} ${y})`}
+        >
+          -1
+        </text>
+      ))}
     </>
   ),
   party: () => (
@@ -453,7 +471,6 @@ const ART: Record<string, Art> = {
           <stop offset="1" stopColor="#bdb4a5" />
         </radialGradient>
       </defs>
-      <ellipse cx="32" cy="60" rx="19" ry="3.6" fill="#000" opacity="0.2" />
       <g transform="translate(32 59)">
         <ellipse cx="0" cy="-3" rx="18" ry="4.8" fill="#b4ab9b" />
         <rect x="-18" y="-7.8" width="36" height="4.8" fill="url(#ga-pawn)" />

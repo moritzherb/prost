@@ -457,18 +457,6 @@ html[data-os='android'] .app-icon.sm {
   box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.35), 0 5px 8px -5px rgba(0, 0, 0, 0.7);
 }
 
-/* Back from a game: its icon settles into place. */
-.app.returning .app-icon {
-  animation: app-settle 0.45s cubic-bezier(0.2, 0.85, 0.25, 1);
-}
-
-@keyframes app-settle {
-  from {
-    transform: scale(1.6);
-    opacity: 0;
-  }
-}
-
 /* Two emoji on one icon (Princess and King), sized in em so every size fits. */
 .app-duo {
   display: inline-flex;

@@ -18,6 +18,9 @@ type XY = [number, number];
 
 /** Seen a little from above, as a pawn standing on the board. */
 const TILT = 12;
+/** The picture's lower edge is PAD under the base's middle; seen from above the front of the base reaches
+ *  further down than that unless it stands a little higher. */
+const LIFT = 6;
 const PAD = 10;
 const INK = '#1f1d1a';
 
@@ -92,11 +95,11 @@ function pedestal(k: Kit, color: string) {
   k.lathe(
     [
       [0, 0],
-      [50, 0],
-      [55, 4],
-      [55, 10],
-      [50, 14.5],
-      [36, 15.5],
+      [44, 0],
+      [49, 4],
+      [49, 10],
+      [44, 14.5],
+      [32, 15.5],
       [0, 15.5],
     ],
     shade(color, -0.22),
@@ -355,6 +358,7 @@ export function figureSprite(def: PawnDef, ratio: number): HTMLCanvasElement | n
     build(figure, def.color);
     figure.group.rotation.y = TURNED[def.id] ?? 0;
     k.group.add(figure.group);
+    k.group.position.y = LIFT;
     scene.add(k.group);
     const cam = new THREE.OrthographicCamera(-w / 2, w / 2, h - PAD, -PAD, 1, 3000);
     const t = (TILT * Math.PI) / 180;

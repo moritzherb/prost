@@ -6,6 +6,7 @@ import { findGame, GAMES, playableGames } from '../games/registry';
 import type { GameDefinition } from '../games/types';
 import { getLang, t } from '../i18n';
 import { buzz, sfx } from '../lib/fx';
+import { playIntro } from '../lib/intro';
 import { launch, lastLaunched } from '../lib/launch';
 import { lineup } from '../lib/lineup';
 import { pick } from '../lib/random';
@@ -89,6 +90,11 @@ export default function PopHome() {
   );
 
   const [returning] = useState(() => lastLaunched());
+  // Every time home shows again (back from a game, a screen, the back swipe), the apps swoosh in and
+  // settle as they do on opening the app. Not at start-up: the start-up screen's fade does that itself.
+  useLayoutEffect(() => {
+    if (!document.getElementById('boot')) playIntro();
+  }, []);
   // The last three games played on this phone, newest first.
   const [recent] = useState(() => recentGames().map(findGame).filter((g): g is GameDefinition => !!g));
   // Android shows its favourites on the home screen: the recent games, then the line-up, then the rest.

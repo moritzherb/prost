@@ -80,8 +80,9 @@ export function drawPawnAt(ctx: CanvasRenderingContext2D, def: PawnDef, h: numbe
   ctx.lineWidth = line;
   ctx.strokeStyle = 'rgba(0,0,0,0.35)';
   if (def.look === 'figure') {
-    // A round base in the colour, the figure standing on it.
-    ctx.fillStyle = shade(def.color, -0.35);
+    // A round base in the colour, the figure standing on it: one disc, its underside in the same
+    // shading as its side (a separate dark ellipse under it read as a stain).
+    ctx.fillStyle = sideGradient(ctx, h, def.color, 0.35);
     ctx.beginPath();
     ctx.ellipse(0, -0.05 * h, 0.3 * h, 0.09 * h, 0, 0, Math.PI * 2);
     ctx.fill();
@@ -96,8 +97,8 @@ export function drawPawnAt(ctx: CanvasRenderingContext2D, def: PawnDef, h: numbe
   const color = def.color;
   // Matte, as painted wood: only the disco ball shines; the gold one a little.
   const gloss = def.look === 'disco' ? 0.7 : def.look === 'gold' ? 0.3 : 0.12;
-  // Base: a flat cylinder.
-  ctx.fillStyle = shade(color, -0.4);
+  // Base: a flat cylinder, its underside shaded as its side (no separate dark ellipse under it).
+  ctx.fillStyle = sideGradient(ctx, h, color, gloss);
   ctx.beginPath();
   ctx.ellipse(0, -0.05 * h, 0.3 * h, 0.08 * h, 0, 0, Math.PI * 2);
   ctx.fill();
