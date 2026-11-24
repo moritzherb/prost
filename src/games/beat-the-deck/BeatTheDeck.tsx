@@ -9,19 +9,23 @@ import SoloCard, { lie, PileUnder } from '../solo/SoloCard';
 import SoloEnd from '../solo/SoloEnd';
 import { alive, guess, newGame, over, won, type Game, type Guess } from './logic';
 
+/** When a wrong place is edge on, half way through turning over (.btd-place.turning: delay + duration). */
+const TURN_MS = 1200;
+
 /** Beat the Deck: higher or lower on one of nine cards, through the whole deck. */
 export default function BeatTheDeck({ exit }: GameProps) {
   const [g, setG] = useState(newGame);
   const [pick, setPick] = useState<number | null>(null);
-  // A wrong guess: the card lands, shows red a moment and the place starts turning (.turning), then
-  // lies face down (.down, the turn's second half). The timing matches the CSS.
-  const [showing, setShowing] = useState<number | null>(null);
+  // A wrong guess: the card lands, shows red a moment and the place lifts and turns over (.turning),
+  // then lies face down (.down, the turn's second half). Worked out in the render, so the very
+  // first frame already shows it face up; TURN_MS matches the CSS.
+  const [turned, setTurned] = useState<Game | null>(null);
+  const showing = g.last && !g.last.right && turned !== g ? g.last.place : null;
   useEffect(() => {
-    if (!g.last || g.last.right) return setShowing(null);
-    setShowing(g.last.place);
-    const id = window.setTimeout(() => setShowing(null), 1000);
+    if (!g.last || g.last.right) return;
+    const id = window.setTimeout(() => setTurned(g), TURN_MS);
     return () => window.clearTimeout(id);
-  }, [g.last]);
+  }, [g]);
   // The end comes once the last card has landed, or the last place has turned over.
   const [endOf, setEndOf] = useState<Game | null>(null);
   useEffect(() => {
@@ -85,8 +89,8 @@ export default function BeatTheDeck({ exit }: GameProps) {
       <div ref={felt} className="sol-felt btd-grid">
         {g.places.map((p, i) => {
           const face = !p.dead || showing === i;
-          // The last guess: a green rim if it was right, red if not.
-          const mark = g.last?.place === i ? (g.last.right ? ' right' : ' wrong') : '';
+          // The last guess: a green rim if it was right, red if not (gone once the place lies face down).
+          const mark = g.last?.place === i && face ? (g.last.right ? ' right' : ' wrong') : '';
           return (
             <button
               key={i}
