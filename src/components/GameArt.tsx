@@ -472,7 +472,7 @@ const ART: Record<string, Art> = {
         </radialGradient>
       </defs>
       <g transform="translate(32 59)">
-        <ellipse cx="0" cy="-3" rx="18" ry="4.8" fill="#b4ab9b" />
+        <ellipse cx="0" cy="-3" rx="18" ry="4.8" fill="url(#ga-pawn)" />
         <rect x="-18" y="-7.8" width="36" height="4.8" fill="url(#ga-pawn)" />
         <ellipse cx="0" cy="-7.8" rx="18" ry="4.8" fill="#f6f2eb" />
         <path d="M-16.2 -7.8C-15 -20.4 -6 -26.4 -5.1 -37.2L5.1 -37.2C6 -26.4 15 -20.4 16.2 -7.8A16.2 4.2 0 0 1 -16.2 -7.8z" fill="url(#ga-pawn)" />
