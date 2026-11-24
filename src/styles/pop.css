@@ -1618,6 +1618,27 @@ html[data-os='android'] .app-x {
   }
 }
 
+/* An Android launcher has no wiggle: its apps hold still while they can be moved. */
+html[data-os='android'] .os-home.editing .os-grid.movable .app .app-icon {
+  animation: none;
+}
+
+/* Android's touch ripple (lib/ripple.ts): its buttons keep it inside their own shape. */
+html[data-os='android'] :is(.big-btn, .os-alert-btn, .la-menu-item, .seg-btn) {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.ripple {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.14;
+  pointer-events: none;
+}
+
 /* The app being dragged: its place stays empty, a copy follows the finger, lifted. */
 .app.lifted {
   opacity: 0;
@@ -1754,6 +1775,18 @@ html[data-os='android'] .os-alert-btn {
 
 html[data-os='android'] .os-alert-btn:not(.danger) {
   background: color-mix(in oklab, var(--ink) 8%, transparent);
+}
+
+/* Android's dialog comes in as Material's does: from a touch smaller, on the emphasized curve. */
+html[data-os='android'] .os-alert {
+  animation: os-alert-in-md 0.3s cubic-bezier(0.05, 0.7, 0.1, 1) both;
+}
+
+@keyframes os-alert-in-md {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
 }
 
 @keyframes os-alert-in {
