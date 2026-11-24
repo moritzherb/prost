@@ -14,7 +14,7 @@ import { recentGames } from '../lib/recent';
 import { followFade, topColor, topLayer } from '../lib/themeColor';
 import { useTopTint } from '../lib/useTopTint';
 import { loadPhoto, wallpaperFor } from '../lib/wallpaper';
-import { navigate, paths } from '../lib/router';
+import { navigate, paths, takeSwipedBack } from '../lib/router';
 import { useRoom } from '../net/RoomProvider';
 import { useApp } from '../state/AppState';
 import { AppButton, GameGlyph, glyphsOf, IconArt } from './AppIcon';
@@ -69,7 +69,8 @@ export default function PopHome() {
   // Every time home shows again (back from a game, a screen, the back swipe), it zooms in as the
   // iPhone's does after closing an app, as on opening the app. Not at start-up: the start-up screen's fade does that itself.
   useLayoutEffect(() => {
-    if (!document.getElementById('boot')) playIntro();
+    // (Not after the phone's own swipe back: it has moved home's picture in already.)
+    if (!document.getElementById('boot') && !takeSwipedBack()) playIntro();
   }, []);
   // The last three games played on this phone, newest first.
   const [recent] = useState(() => recentGames().map(findGame).filter((g): g is GameDefinition => !!g));
