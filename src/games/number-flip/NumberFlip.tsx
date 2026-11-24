@@ -52,7 +52,6 @@ function canDraw3D() {
 import { woodVars } from './wood';
 import { useCrewButton } from '../../lib/turn';
 import Glyph from '../../components/Glyph';
-import MoreOptions from '../../components/MoreOptions';
 import type { GlyphName } from '../../lib/glyphs';
 
 interface Setup {
@@ -60,14 +59,19 @@ interface Setup {
   size: BoardSize;
   level: Level;
   rounds: 5 | 10;
-  /** 2 to 4 players: a square box, each player's row of flaps on a side of their own. */
+  /** The 4 players mode: a square box, each player's row of flaps on a side of their own. */
   square?: boolean;
 }
 
-/** The square box is for 2 to 4 players. */
-const squareFor = (setup: Setup, players: number) => !!setup.square && players >= 2 && players <= 4;
+/** The square box is for exactly 4 players. */
+const squareFor = (setup: Setup, players: number) => !!setup.square && players === 4;
 
-const MODE_INFO: Record<Mode, { name: string; text: string; icon: GlyphName }> = {
+/** The 4 players mode sits with the modes in the setup, but is a box rather than a rule set: it plays classic. */
+type Pick = Mode | 'four';
+const PICKS: Pick[] = [...MODES, 'four'];
+
+const MODE_INFO: Record<Pick, { name: string; text: string; icon: GlyphName }> = {
+  four: { name: tx('4 players'), text: tx('One square box, a row of flaps on each side. It turns to whoever is up. Lowest score wins the round.'), icon: 'group' },
   classic: { name: tx('Classic'), text: tx('Everyone plays one box a round. Lowest score wins the round.'), icon: 'dice' },
   tournament: { name: tx('Tournament'), text: tx('Scores add up over the rounds. Lowest total wins.'), icon: 'trophy' },
   survival: { name: tx('Survival'), text: tx('3 lives each. The highest score of a round loses one. Last one standing wins.'), icon: 'heart' },
@@ -153,9 +157,10 @@ function SetupScreen({ setup, onChange, solo, count, onStart }: { setup: Setup; 
     onChange({ ...setup, ...patch });
   };
   const mode = solo && setup.mode === 'survival' ? 'classic' : setup.mode;
+  const square = squareFor(setup, count);
+  const picked: Pick = square ? 'four' : mode;
   // The box takes a moment to build: done while the setup shows, not when the game starts.
   const size = setup.size;
-  const square = squareFor(setup, count);
   useEffect(() => {
     const id = window.setTimeout(() => {
       if (!canDraw3D()) woodVars();
@@ -169,15 +174,15 @@ function SetupScreen({ setup, onChange, solo, count, onStart }: { setup: Setup; 
       <section className="section">
         <h3 className="section-title">{t('Mode')}</h3>
         <div className="nf-modes" role="radiogroup" aria-label={t('Mode')}>
-          {MODES.map((id) => (
+          {PICKS.map((id) => (
             <button
               key={id}
               type="button"
               role="radio"
-              aria-checked={mode === id}
-              className={`nf-mode${mode === id ? ' on' : ''}`}
-              disabled={solo && id === 'survival'}
-              onClick={() => set({ mode: id })}
+              aria-checked={picked === id}
+              className={`nf-mode${picked === id ? ' on' : ''}`}
+              disabled={id === 'four' ? count !== 4 : solo && id === 'survival'}
+              onClick={() => set(id === 'four' ? { mode: 'classic', square: true } : { mode: id, square: false })}
             >
               <span className="nf-mode-icon" aria-hidden>
                 <Glyph name={MODE_INFO[id].icon} />
@@ -189,8 +194,8 @@ function SetupScreen({ setup, onChange, solo, count, onStart }: { setup: Setup; 
         {/* Every mode's text in the same place, only the picked one seen: as tall as the longest, so
             nothing below moves when the mode changes. */}
         <div className="nf-mode-texts">
-          {[...MODES, 'solo' as const].map((id) => {
-            const on = id === 'solo' ? solo && setup.mode === 'survival' : id === mode && !(solo && setup.mode === 'survival');
+          {[...PICKS, 'solo' as const].map((id) => {
+            const on = id === 'solo' ? solo && setup.mode === 'survival' : id === picked && !(solo && setup.mode === 'survival');
             return (
               <p key={id} className={`nf-mode-text${on ? ' on' : ''}`} aria-hidden={!on}>
                 {id === 'solo' ? t('Survival needs 2 or more players.') : t(MODE_INFO[id].text)}
@@ -200,18 +205,9 @@ function SetupScreen({ setup, onChange, solo, count, onStart }: { setup: Setup; 
         </div>
       </section>
 
-      {/* 2 to 4 players: one box passed round, or the square one with a side each that turns. */}
-      {count >= 2 && count <= 4 && (
-        <section className="panel nf-opts no-rounds">
-          <Choice label={t('Box')} options={['one', 'square'] as const} value={setup.square ? 'square' : 'one'} name={(v) => (v === 'square' ? t('Square, a side each') : t('One box'))} onPick={(v) => set({ square: v === 'square' })} />
-        </section>
-      )}
-
-      {/* The box and the level: most never change them, so they're folded away. Rounds only for a
-          tournament: last, with its room kept when it's not there. */}
-      <MoreOptions summary={`1–${setup.size} · ${setup.level === 'hard' ? t('Hard') : t('Normal')}${mode === 'tournament' ? ` · ${setup.rounds}` : ''}`}>
+      {/* The box and the level. Rounds only for a tournament: last, with its room kept when it's not there. */}
       <section className={`panel nf-opts${mode === 'tournament' ? '' : ' no-rounds'}`}>
-        <Choice label={t('Box')} options={[9, 12] as const} value={setup.size} name={(n) => `1–${n}`} onPick={(n) => set({ size: n })} />
+        <Choice label={t('Box')} options={[9, 12] as const} value={square ? 9 : setup.size} name={(n) => `1–${n}`} off={(n) => square && n !== 9} onPick={(n) => set({ size: n })} />
         <Choice label={t('Level')} options={['normal', 'hard'] as const} value={setup.level} name={(l) => (l === 'hard' ? t('Hard') : t('Normal'))} onPick={(l) => set({ level: l })} />
         <div className="nf-opt-notes">
           <p className={`nf-opt-note${setup.level === 'normal' ? ' on' : ''}`} aria-hidden={setup.level !== 'normal'}>
@@ -223,7 +219,6 @@ function SetupScreen({ setup, onChange, solo, count, onStart }: { setup: Setup; 
         </div>
         {mode === 'tournament' && <Choice label={t('Rounds')} options={[5, 10] as const} value={setup.rounds} name={(n) => String(n)} onPick={(n) => set({ rounds: n })} />}
       </section>
-      </MoreOptions>
 
       <div className="sticky-action">
         <BigButton size="xl" onClick={() => onStart({ ...setup, mode })}>
@@ -235,12 +230,12 @@ function SetupScreen({ setup, onChange, solo, count, onStart }: { setup: Setup; 
 }
 
 /** One setting: its name, then its choices as pills. */
-function Choice<T extends string | number>({ label, options, value, name, onPick }: { label: string; options: readonly T[]; value: T; name: (v: T) => string; onPick: (v: T) => void }) {
+function Choice<T extends string | number>({ label, options, value, name, onPick, off }: { label: string; options: readonly T[]; value: T; name: (v: T) => string; onPick: (v: T) => void; off?: (v: T) => boolean }) {
   return (
     <div className="nf-opt" role="radiogroup" aria-label={label}>
       <span className="nf-opt-label">{label}</span>
       {options.map((o) => (
-        <button key={String(o)} type="button" role="radio" aria-checked={value === o} className={`nf-pill${value === o ? ' on' : ''}`} onClick={() => onPick(o)}>
+        <button key={String(o)} type="button" role="radio" aria-checked={value === o} className={`nf-pill${value === o ? ' on' : ''}`} disabled={off?.(o)} onClick={() => onPick(o)}>
           {name(o)}
         </button>
       ))}

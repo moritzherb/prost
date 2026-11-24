@@ -16672,6 +16672,10 @@ html[data-look] .play-screen > .top-bar .round-btn {
   transform: scale(0.96);
 }
 
+.nf-pill:disabled {
+  opacity: 0.4;
+}
+
 .nf-pill.on {
   background: var(--accent);
   color: var(--on-accent);
