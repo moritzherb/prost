@@ -551,9 +551,9 @@ const ART: Record<string, Art> = {
       <rect x="6" y="8" width="52" height="52" rx="10" fill="#000" opacity="0.16" />
       <rect x="6" y="6" width="52" height="52" rx="10" fill="url(#ga-board)" />
       <path d="M24 12v40M40 12v40M12 24h40M12 40h40" stroke="#4a4a46" strokeWidth="3" strokeLinecap="round" />
-      <path d="M13 13l7 7M20 13l-7 7M45 29l7 7M52 29l-7 7M29 45l6 6M35 45l-6 6" stroke="#2f6fe0" strokeWidth="3.4" strokeLinecap="round" />
-      <circle cx="32" cy="32" r="4.4" fill="none" stroke="#e5484d" strokeWidth="3.2" />
-      <circle cx="48.5" cy="16.5" r="4.4" fill="none" stroke="#e5484d" strokeWidth="3.2" />
+      <path d="M13 13l7 7M20 13l-7 7M45 29l7 7M52 29l-7 7M29 45l6 6M35 45l-6 6" stroke="#e5484d" strokeWidth="3.4" strokeLinecap="round" />
+      <circle cx="32" cy="32" r="4.4" fill="none" stroke="#2f6fe0" strokeWidth="3.2" />
+      <circle cx="48.5" cy="16.5" r="4.4" fill="none" stroke="#2f6fe0" strokeWidth="3.2" />
     </>
   ),
   'beat-the-deck': () => (
