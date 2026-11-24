@@ -1,53 +1,41 @@
-import { EASE_OUT } from './listMotion';
-
-/** How much bigger the home screen starts, as the phone's comes in after unlocking or closing an app. */
-const FROM = 1.2;
-const MS = 600;
-
-/**
- * Apple's default spring (SwiftUI `.smooth`: 0.5 s, no bounce), critically damped, as a CSS
- * `linear()` curve: it gathers fast and comes to rest without overshooting. Older engines get the
- * strong ease-out instead.
+/*
+ * Measured on an iPhone screen recording (60 fps) of unlocking to the home screen: the first frame
+ * shows home 3.34 times its size, already fully opaque, and it comes down onto its place in about
+ * 400 ms, fastest at first. The depth left (1 - 1/scale) shrinks by the same share every frame,
+ * with a time constant of 70 ms; the scale follows from it.
  */
-const SPRING = (() => {
-  const w = (2 * Math.PI) / 0.5;
-  const points = Array.from({ length: 41 }, (_, i) => {
-    const t = ((i / 40) * MS) / 1000;
-    return i === 40 ? 1 : +(1 - (1 + w * t) * Math.exp(-w * t)).toFixed(4);
-  });
-  const curve = `linear(${points.join(', ')})`;
-  return typeof CSS !== 'undefined' && CSS.supports('animation-timing-function', curve) ? curve : EASE_OUT;
-})();
+const FROM = 3.34;
+const TAU = 70;
+const MS = 420;
+const STEPS = 28;
+const SCALES = Array.from({ length: STEPS + 1 }, (_, i) => {
+  if (i === STEPS) return 1;
+  const depth = (1 - 1 / FROM) * Math.exp(-((i / STEPS) * MS) / TAU);
+  return +(1 / (1 - depth)).toFixed(4);
+});
+
+/** What's on the home screen, in layers that zoom together (the wallpaper under them stays put). */
+const LAYERS = ':scope > :is(.sb-pages, .sb-dots-bar, .sb-dock, .os-done, .la-glance, .la-widgets, .la-grid, .la-dock, .la-search)';
 
 /**
- * The home screen comes in as the iPhone's does after unlocking or closing an app: everything on it
- * as one layer, a little bigger and faded out, zooming down onto its place from the middle of the
- * screen, all at once. On opening the app, and every time home shows again after that; transform
- * and opacity only, so it runs on the phone's compositor.
+ * Home comes in as the iPhone's does after unlocking: everything on it as one layer, zoomed in
+ * around the middle of the screen, coming down onto its place. No fade (an iPhone has none), so
+ * nothing on it is ever see-through or darkened on its way. On opening the app and every time
+ * home shows again; transform only, on the phone's compositor.
  */
 export function playIntro() {
   const home = document.querySelector<HTMLElement>('.os-home');
   if (!home || typeof home.animate !== 'function' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-  // The dock and the page dots move as wholes (their glass with them); the apps in the dock ride along.
-  const items = [...home.querySelectorAll<HTMLElement>('.app, .widget, .sb-dock, .sb-dots-bar')].filter((el) => {
-    if (!el.matches('.sb-dock') && el.closest('.sb-dock')) return false;
+  const screen = home.getBoundingClientRect();
+  const cx = screen.left + screen.width / 2;
+  const cy = screen.top + screen.height / 2;
+  for (const el of home.querySelectorAll<HTMLElement>(LAYERS)) {
     const r = el.getBoundingClientRect();
-    return r.bottom > 0 && r.top < h && r.right > 0 && r.left < w;
-  });
-  for (const el of items) {
-    const r = el.getBoundingClientRect();
-    // Each piece scaled about the screen's middle, as if the whole layer were: same zoom, no stagger.
-    const dx = (r.left + r.width / 2 - w / 2) * (FROM - 1);
-    const dy = (r.top + r.height / 2 - h / 2) * (FROM - 1);
+    // Each layer scaled around the same point, the screen's middle: together they move as one.
+    const origin = `${cx - r.left}px ${cy - r.top}px`;
     el.animate(
-      [
-        { transform: `translate(${dx}px, ${dy}px) scale(${FROM})`, opacity: 0 },
-        { opacity: 1, offset: 0.55 },
-        { transform: 'none', opacity: 1 },
-      ],
-      { duration: MS, easing: SPRING, fill: 'backwards' },
+      SCALES.map((s) => ({ transform: `scale(${s})`, transformOrigin: origin })),
+      { duration: MS, easing: 'linear', fill: 'backwards' },
     );
   }
 }
