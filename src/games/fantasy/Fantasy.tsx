@@ -345,7 +345,7 @@ function Table({
           const s = seats[i];
           const spot = spots[k];
           return (
-            <div key={s.id} data-seat={i} className={`fz-seat${g.turn === i && !dealing ? ' on' : ''}${spot && spot.x > cx + 4 ? ' right' : ''}`} style={spot ? { left: spot.x, top: spot.y } : undefined}>
+            <div key={s.id} data-seat={i} className={`fz-seat${g.turn === i && !dealing ? ' on' : ''}${spot && spot.x > cx + 4 ? ' right' : ''}`} style={spot ? { transform: `translate(calc(${spot.x}px - 50%), calc(${spot.y}px - 50%))` } : undefined}>
               <span className="fz-seat-who">
                 <span className="bd-avatar xs" style={{ background: s.color }}>
                   <Avatar name={s.name} color={s.color} photo={photoOf(s.id)} />
