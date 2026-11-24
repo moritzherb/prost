@@ -348,20 +348,17 @@ const ART: Record<string, Art> = {
       {/* A folded white shirt, as the 👔 emoji draws it: rounded shoulders, the shoulder folds, a standing collar round the neck, its two points over the tie's knot. */}
       <path d="M9 18Q9 10 17 9.5h30Q55 10 55 18v40q0 2-2 2H11q-2 0-2-2z" fill="url(#ga-shirt)" stroke="#c3cad6" strokeWidth="0.9" />
       <path d="M11 22.5Q16 20.5 21.5 21M53 22.5Q48 20.5 42.5 21" fill="none" stroke="#d3d8e1" strokeWidth="0.9" strokeLinecap="round" />
-      {/* The collar as one white shape (its back round the neck and its two points), the inside of
-          the neck as one grey shape fitted exactly to its inner edge, then the tie, then the two
-          outlines on top: no other line inside the collar. */}
-      <path d="M30.2 22.6L26.6 27.8 18 15Q17.6 12 19.5 10Q32 2.5 44.5 10Q46.4 12 46 15L37.4 27.8 33.8 22.6z" fill="#ffffff" />
-      <path d="M21.4 12Q32 6.3 42.6 12L33.8 22.6h-3.6z" fill="#d6dbe4" />
-      {/* The tie as worn: its knot sits in the bottom of the neck opening, the collar points lie over
-          its sides (drawn again on top), the blade hangs from it down to a point above the hem. */}
-      <path d="M30.6 27h2.8l2.8 25.5-4.2 4.6-4.2-4.6z" fill="url(#ga-tie)" />
+      {/* As the 👔 emoji: the tie first, its knot reaching up under the collar; then the collar in one
+          white shape, its two points meeting in the middle over the knot; the bit of its inside that
+          shows round the neck; the outlines last. */}
+      <path d="M30.4 25.6h3.2l2.6 26.4-4.2 4.6-4.2-4.6z" fill="url(#ga-tie)" />
       <path d="M31.2 29l-1.2 23" stroke="#fff" strokeWidth="0.8" opacity="0.12" />
-      <path d="M27.8 18.6h8.4l-2.6 9h-3.2z" fill="#26262a" />
-      <path d="M27.8 18.6h4.2v9h-1.6z" fill="#fff" opacity="0.07" />
-      <path d="M21.4 12L30.2 22.6 26.6 27.8 18 15Q17.6 12 19.5 10zM42.6 12L33.8 22.6 37.4 27.8 46 15Q46.4 12 44.5 10z" fill="#ffffff" />
-      <path d="M30.2 22.6L26.6 27.8 18 15Q17.6 12 19.5 10Q32 2.5 44.5 10Q46.4 12 46 15L37.4 27.8 33.8 22.6" fill="none" stroke="#c3cad6" strokeWidth="0.9" strokeLinejoin="round" strokeLinecap="round" />
-      <path d="M30.2 22.6L21.4 12Q32 6.3 42.6 12L33.8 22.6" fill="none" stroke="#c3cad6" strokeWidth="0.9" strokeLinejoin="round" strokeLinecap="round" />
+      <path d="M28 18Q32 14.5 36 18L34.2 26Q32 27.4 29.8 26z" fill="#26262a" />
+      <path d="M31 19.5Q33.2 22 32.6 25.6" fill="none" stroke="#000" strokeWidth="0.8" opacity="0.45" strokeLinecap="round" />
+      <path d="M32 17.5L25.6 27 18 15Q17.6 12 19.5 10Q32 2.5 44.5 10Q46.4 12 46 15L38.4 27z" fill="#ffffff" />
+      <path d="M21.4 12Q32 6.3 42.6 12L32 17.5z" fill="#d6dbe4" />
+      <path d="M32 17.5L25.6 27 18 15Q17.6 12 19.5 10Q32 2.5 44.5 10Q46.4 12 46 15L38.4 27z" fill="none" stroke="#c3cad6" strokeWidth="0.9" strokeLinejoin="round" />
+      <path d="M21.4 12Q32 6.3 42.6 12M21.4 12L32 17.5 42.6 12" fill="none" stroke="#c3cad6" strokeWidth="0.9" strokeLinejoin="round" strokeLinecap="round" />
     </>
   ),
   arschloch: () => (
