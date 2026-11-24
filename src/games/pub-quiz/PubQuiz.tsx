@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import Avatar from '../../components/Avatar';
 import BigButton from '../../components/BigButton';
+import Bump from '../../components/Bump';
 import Finished from '../../components/Finished';
 import Tap from '../../components/Tap';
 import { getLang, t, tx } from '../../i18n';
@@ -185,7 +186,7 @@ export function Board({ q, mine }: { q: Quiz; mine?: string | null }) {
       {ranking(q).map((s) => (
         <span key={s.id} className={`pq-score${q.by === s.id ? ' buzzed' : ''}${mine === s.id ? ' mine' : ''}`} style={{ '--chip': s.color } as CSSProperties}>
           <span className="pq-score-name">{s.name}</span>
-          <span className="pq-score-n">{q.scores[s.id]}</span>
+          <Bump className="pq-score-n" value={q.scores[s.id]} />
         </span>
       ))}
     </div>

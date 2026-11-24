@@ -20,6 +20,19 @@ export function flyIn(el: HTMLElement, from: DOMRect, duration = 380) {
   el.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${s}) rotate(-6deg)` }, { transform: end === 'none' ? 'none' : end }], { duration, easing: EASE });
 }
 
+const shaking = new WeakMap<Element, Animation>();
+
+/**
+ * A wrong move: the element shakes its head once and settles, on top of whatever it is already moved
+ * or turned by. Tapped again mid-shake, it starts over from where it is.
+ */
+export function shake(el: Element | null | undefined, px = 6) {
+  if (!el || reducedMotion() || typeof el.animate !== 'function') return;
+  shaking.get(el)?.cancel();
+  const k = (f: number) => ({ translate: `${f * px}px 0`, rotate: `${f * 0.45 * px}deg` });
+  shaking.set(el, el.animate([k(0), { ...k(-1), offset: 0.18 }, { ...k(0.7), offset: 0.42 }, { ...k(-0.35), offset: 0.66 }, { ...k(0.12), offset: 0.86 }, k(0)], { duration: 400, easing: 'linear', composite: 'add' }));
+}
+
 /**
  * A copy of `template` flies from `from` to `to` (shrinking or growing to its size) and is gone:
  * a back dealt to a seat, a card of a trick taken to its winner. Waits `delay` ms first.

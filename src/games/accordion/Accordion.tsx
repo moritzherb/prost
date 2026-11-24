@@ -5,6 +5,7 @@ import { buzz, celebrate, sfx } from '../../lib/fx';
 import { load, save } from '../../lib/storage';
 import type { GameProps } from '../types';
 import { flyIn } from '../../lib/cardFly';
+import Bump from '../../components/Bump';
 import SoloCard, { lie, PileUnder } from '../solo/SoloCard';
 import SoloEnd from '../solo/SoloEnd';
 import { anyMove, deal, move, newGame, over, targets, won } from './logic';
@@ -91,7 +92,7 @@ export default function Accordion({ exit }: GameProps) {
       <div className="sol-foot">
         <span ref={pileEl} className="sol-pile">
           <SoloCard up={false} className={g.deck.length ? '' : 'gone'} />
-          <span className="sol-pile-n">{g.deck.length}</span>
+          <Bump className="sol-pile-n" value={g.deck.length} by={1.15} />
         </span>
         <BigButton
           size="xl"

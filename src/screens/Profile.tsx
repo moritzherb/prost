@@ -1,4 +1,4 @@
-import { useRef, useState, type CSSProperties } from 'react';
+import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { GameGlyph } from '../home/AppIcon';
 import Avatar from '../components/Avatar';
 import PhotoCrop from '../components/PhotoCrop';
@@ -9,6 +9,8 @@ import { RANK_ICON, RANK_NAME } from '../games/president/President';
 import type { Rank } from '../games/president/logic';
 import { t } from '../i18n';
 import { buzz, sfx } from '../lib/fx';
+import { reducedMotion } from '../lib/cardFly';
+import { EASE_OUT } from '../lib/listMotion';
 import { keepHd, loadImage, releaseImage, sharp } from '../lib/photo';
 import { navigate, paths } from '../lib/router';
 import { unfill } from '../lib/noAutofill';
@@ -29,6 +31,15 @@ export default function Profile() {
   const [confirmReset, setConfirmReset] = useState(false);
   // A picked photo, waiting for its part to be chosen.
   const [cropping, setCropping] = useState<HTMLImageElement | null>(null);
+  // A new photo (or none) fades in where the old one was, instead of swapping in one frame.
+  const avatar = useRef<HTMLButtonElement>(null);
+  const shownPhoto = useRef(profile.photo);
+  useLayoutEffect(() => {
+    if (shownPhoto.current === profile.photo) return;
+    shownPhoto.current = profile.photo;
+    const el = avatar.current?.firstElementChild;
+    if (el && !reducedMotion() && typeof el.animate === 'function') el.animate([{ opacity: 0, transform: 'scale(0.96)' }, { opacity: 1, transform: 'none' }], { duration: 250, easing: EASE_OUT });
+  }, [profile.photo]);
 
   const onFile = async (f: File | undefined) => {
     if (!f) return;
@@ -67,6 +78,7 @@ export default function Profile() {
       <section className="profile-card">
         {/* Tap the picture to change it (a photo), as the button under it does. */}
         <button
+          ref={avatar}
           type="button"
           className={`profile-avatar${busy ? ' busy' : ''}`}
           style={{ '--chip': profile.color } as CSSProperties}
