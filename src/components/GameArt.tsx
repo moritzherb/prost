@@ -721,6 +721,7 @@ const NUDGE: Record<string, string> = {
   'hose-runter': 'translate(1.6 0)',
   party: 'translate(32 32) scale(0.94) translate(-32 -30.9)',
   vierer: 'translate(0 1.3)',
+  'princess-treatment': 'translate(-0.6 -0.5)',
 };
 
 /** Whether a game has a picture of its own here. */
