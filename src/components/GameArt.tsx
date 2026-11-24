@@ -187,8 +187,10 @@ const ART: Record<string, Art> = {
   ),
   'five-thousand': () => {
     // Poker dice, as the game's: one shows the Ace, one the King.
-    const die = (x: number, y: number, turn: number, letter: string, color: string) => (
+    const die = (x: number, y: number, turn: number, letter: string, color: string, front = false) => (
       <g transform={`rotate(${turn} ${x + 13} ${y + 13})`}>
+        {/* The front one throws a soft shadow up onto the other: two dice, not one lump. */}
+        {front && <rect x={x + 2} y={y - 2.5} width="26" height="28" rx="7" fill="#3d3628" opacity="0.28" filter="url(#ga-die-blur)" />}
         <rect x={x} y={y + 3} width="26" height="26" rx="6.5" fill="url(#ga-die-s)" />
         <rect x={x} y={y} width="26" height="26" rx="6.5" fill="url(#ga-die)" />
         <text x={x + 13} y={y + 20.5} textAnchor="middle" fontFamily={FONT} fontWeight="900" fontSize="19" fill={color}>
@@ -201,9 +203,12 @@ const ART: Record<string, Art> = {
         <defs>
           {lin('ga-die', '#ffffff', '#dfd9cb')}
           {lin('ga-die-s', '#c9c1ad', '#9d937b')}
+          <filter id="ga-die-blur" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="1.4" />
+          </filter>
         </defs>
-        {die(32, 10, 14, 'K', '#1d1d1b')}
-        {die(7, 25, -12, 'A', '#d62d20')}
+        {die(34, 8, 14, 'K', '#1d1d1b')}
+        {die(5, 27, -12, 'A', '#d62d20', true)}
       </>
     );
   },

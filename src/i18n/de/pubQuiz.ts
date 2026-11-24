@@ -55,6 +55,7 @@ const pubQuiz: Record<string, string> = {
   'Question {n} of {m}': 'Frage {n} von {m}',
   Answer: 'Antwort',
   '{name} buzzed!': '{name} hat gebuzzert!',
+  'One phone, turn by turn': 'Ein Handy, reihum',
   Wrong: 'Falsch',
   Right: 'Richtig',
   'Read it out. Waiting for a buzz…': 'Lies vor. Warte auf einen Buzzer…',

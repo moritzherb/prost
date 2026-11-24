@@ -330,7 +330,7 @@ function Buzzer({ q, myId, act }: { q: Quiz; myId: string; act: (next: (q: Quiz)
   );
 }
 
-function End({ q, onNew }: { q: Quiz; onNew?: () => void }) {
+export function End({ q, onNew }: { q: Quiz; onNew?: () => void }) {
   const order = ranking(q);
   const top = q.scores[order[0]?.id] ?? 0;
   const winners = order.filter((s) => q.scores[s.id] === top);
