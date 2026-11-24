@@ -281,10 +281,13 @@ const ART: Record<string, Art> = {
   speed: () => (
     <>
       <defs>{lin('ga-bolt', '#fff58a', '#ffa200')}</defs>
+      {/* Bolt and speed lines as one group, shifted right: the lines on the left made it sit left of the middle. */}
+      <g transform="translate(3 0)">
       <path d="M36 4L15 36h14l-6 24 26-36H35z" fill="url(#ga-bolt)" />
       <path d="M36 4L15 36h7z" fill="#fff" opacity="0.45" />
       <path d="M49 24L23 60l6-24h6z" fill="#c26a00" opacity="0.35" />
       <path d="M6 22h7M4 30h6M8 46h6" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" opacity="0.8" />
+      </g>
     </>
   ),
   palace: () => (
