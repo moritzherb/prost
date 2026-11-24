@@ -112,14 +112,14 @@ const ART: Record<string, Art> = {
       <Gloss d="M19 25c1 6 3.5 10 7 12.5-5-1-8-6-8.6-12.5z" o={0.55} />
       {/* The crown hovers over the cup, a little higher and smaller: hollow, so the inside of its back wall shows between the front points. */}
       <g transform="translate(32 7) scale(0.88) translate(-32 -8)">
-        {/* One crown: the back wall (darker, its points higher) and the front (its points lower) share the same two sides, so the inside shows between them. */}
-        <path d="M19.5 14L20.5 1.5 26.5 5.5 32 0 37.5 5.5 43.5 1.5 44.5 14z" fill="#b3790a" />
-        <path d="M19.5 14L20.5 6 27 9.5 32 5.5 37 9.5 43.5 6 44.5 14z" fill="url(#ga-gold)" />
+        {/* One solid crown, flaring up from its band to three points; the dark inside shows through its open top. */}
+        <path d="M20 16L18.5 2 26 8 32 0 38 8 45.5 2 44 16z" fill="url(#ga-gold)" />
+        <path d="M21 4.8L26 9.8 32 3.6 38 9.8 43 4.8 42.6 12C38 14.8 26 14.8 21.4 12z" fill="#8a5a06" />
         <rect x="19.5" y="12" width="25" height="4.6" rx="2" fill="#d99a00" />
         <circle cx="32" cy="14.3" r="1.5" fill="#e5484d" />
         <circle cx="25.5" cy="14.3" r="1.1" fill="#3b82f6" />
         <circle cx="38.5" cy="14.3" r="1.1" fill="#22a06b" />
-        <Gloss d="M21.2 11.5l-.2-4.5 2 2.4z" o={0.55} />
+        <Gloss d="M20.6 11.5l-.8-8.5 3 3.4z" o={0.55} />
       </g>
     </>
   ),
@@ -324,7 +324,7 @@ const ART: Record<string, Art> = {
     <>
       <defs>
         {lin('ga-shirt', '#ffffff', '#e6eaf1')}
-        {lin('ga-tie', '#ff4a4a', '#a00f18')}
+        {lin('ga-tie', '#3b3b3f', '#111113')}
         {/* The tie's stripes stay on the tie. */}
         <clipPath id="ga-tie-clip">
           <path d="M29 33h6l6 21-9 6-9-6z" />
@@ -333,14 +333,11 @@ const ART: Record<string, Art> = {
       {/* The shirt, whole, with sloping shoulders. */}
       <path d="M6 15L20 6h24l14 9v45H6z" fill="url(#ga-shirt)" stroke="#aab3c4" strokeWidth="1.2" strokeLinejoin="round" />
       {/* The neck opening, seen between the collar wings. */}
-      <path d="M21 6.6h22L32 27z" fill="#c4cbd9" />
+      <path d="M21 6.6h22L32 27z" fill="#d9dee8" />
       {/* The tie: knot under the collar wings, then hanging down the front of the shirt. */}
-      <path d="M28.5 26h7l-1 8h-5z" fill="#a9121b" />
+      <path d="M28.5 26h7l-1 8h-5z" fill="#232326" />
       <path d="M29 33h6l6 21-9 6-9-6z" fill="url(#ga-tie)" />
-      <g clipPath="url(#ga-tie-clip)" stroke="#7d0f15" strokeWidth="2" opacity="0.4">
-        <path d="M20 42l24-14M20 50l24-14M20 58l24-14" />
-      </g>
-      <Gloss d="M31 35h2l-4 16-2.5-2.5z" o={0.35} />
+      <Gloss d="M31 35h2l-4 16-2.5-2.5z" o={0.18} />
       {/* The collar lies on the shirt: each wing starts at the neck and points down and out, inside the shirt's own edge. */}
       <path d="M21 6.6L31 26 22 32 14.5 15z" fill="#ffffff" stroke="#aab3c4" strokeWidth="1.2" strokeLinejoin="round" />
       <path d="M43 6.6L33 26 42 32 49.5 15z" fill="#ffffff" stroke="#aab3c4" strokeWidth="1.2" strokeLinejoin="round" />
