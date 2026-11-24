@@ -31,13 +31,14 @@ export function playIntro() {
   if (!home || typeof home.animate !== 'function' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   // An Android phone has no zoom: home's content settles in from a touch smaller, Material's emphasized curve.
   if (home.querySelector(':scope .la-grid, :scope .la-dock')) {
+    shrinkIntoIcon(home.querySelector<HTMLElement>(':scope .app.returning .app-icon'));
     for (const el of home.querySelectorAll<HTMLElement>(LAYERS)) {
       el.animate(
         [
           { transform: 'scale(0.94)', opacity: 0.6 },
           { transform: 'none', opacity: 1 },
         ],
-        { duration: 400, easing: 'cubic-bezier(0.05, 0.7, 0.1, 1)', fill: 'backwards' },
+        { duration: 400, easing: EMPHASIZED, fill: 'backwards' },
       );
     }
     return;
@@ -74,4 +75,40 @@ export function playIntro() {
       { duration: MS, easing: 'linear', fill: 'backwards' },
     );
   }
+}
+
+/** Android's emphasized curve, for its way back home. */
+const EMPHASIZED = 'cubic-bezier(0.05, 0.7, 0.1, 1)';
+
+/**
+ * Back from a game on Android, its window goes back into the icon it came from: a card in the
+ * icon's colour, the whole screen at first, shrinks onto the icon (its corners rounding to the
+ * icon's) and gives way to it at the end. Clip-path and opacity only, on the compositor.
+ */
+function shrinkIntoIcon(icon: HTMLElement | null) {
+  if (!icon) return;
+  const r = icon.getBoundingClientRect();
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  // An icon off the screen (another page of home) has nowhere to go back into.
+  if (r.right <= 0 || r.left >= w || r.bottom <= 0 || r.top >= h) return;
+  const look = getComputedStyle(icon);
+  const card = document.createElement('div');
+  card.setAttribute('aria-hidden', 'true');
+  card.style.cssText = `position:fixed;inset:0;z-index:50;pointer-events:none;background:${look.background || look.backgroundColor}`;
+  document.body.append(card);
+  const radius = Math.min(r.width / 2, parseFloat(look.borderTopLeftRadius) || r.width * 0.25);
+  const anim = card.animate(
+    [
+      { clipPath: 'inset(0px round 28px)', opacity: 1, easing: EMPHASIZED },
+      { clipPath: `inset(${r.top}px ${w - r.right}px ${h - r.bottom}px ${r.left}px round ${radius}px)`, opacity: 1, offset: 0.75, easing: 'ease-out' },
+      { clipPath: `inset(${r.top}px ${w - r.right}px ${h - r.bottom}px ${r.left}px round ${radius}px)`, opacity: 0 },
+    ],
+    { duration: 420, fill: 'forwards' },
+  );
+  const gone = () => card.remove();
+  anim.onfinish = gone;
+  anim.oncancel = gone;
+  // In case the frames stop (the app in the background): gone in any case.
+  window.setTimeout(gone, 1200);
 }
