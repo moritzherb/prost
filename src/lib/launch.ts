@@ -8,6 +8,7 @@
  * goes and the next one comes. Only opacity and transforms move: nothing is laid out again.
  */
 
+import { sfx } from './fx';
 import { playIntro } from './intro';
 import { holdScreen } from './router';
 import { coverTop, mix, STRIP_LAG, topColor, topLayer, tone } from './themeColor';
@@ -31,6 +32,7 @@ let strip: ReturnType<typeof topLayer> | null = null;
  */
 export function launch(icon: Element | null, game: { id: string; color: string; emoji: string }, go: () => void, glyphs: string[] = [game.emoji]) {
   last = game.id;
+  sfx.open();
   const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!icon || reduce || typeof document === 'undefined') {
     go();

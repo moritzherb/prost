@@ -7,16 +7,16 @@ import { joinLink } from '../lib/router';
 import { useRoom } from '../net/RoomProvider';
 import { MAX_PLAYERS, useApp } from '../state/AppState';
 import Avatar from './Avatar';
-import { PlusIcon } from './Icons';
+import { CloseIcon, PlusIcon } from './Icons';
 import QrCode from './QrCode';
 import Sheet from './Sheet';
 
 /**
- * The crew from inside a game: who's playing, and a name to add someone who just turned up. Only
- * adding: taking someone out mid-game would pull them out of the game's own turns and scores.
+ * The crew from a game's setup menu (the only place the button shows): who's playing, a name to add
+ * someone who just turned up, and an ✕ to take someone out, down to the fewest the game needs.
  */
 export default function CrewSheet({ game, open, onClose }: { game: GameDefinition; open: boolean; onClose: () => void }) {
-  const { players, addPlayer } = useApp();
+  const { players, addPlayer, removePlayer } = useApp();
   const [name, setName] = useState('');
   const input = useRef<HTMLInputElement>(null);
   // A game for so many and no more (that doesn't pick its players from the crew) stops at that.
@@ -75,6 +75,20 @@ export default function CrewSheet({ game, open, onClose }: { game: GameDefinitio
                 <Avatar name={p.name} color={p.color} photo={p.photo} />
               </span>
               <span className="crew-sheet-name">{p.name}</span>
+              {players.length > Math.max(1, game.minPlayers) && (
+                <button
+                  type="button"
+                  className="crew-sheet-remove"
+                  aria-label={t('Remove {name}', { name: p.name })}
+                  onClick={() => {
+                    sfx.boo();
+                    buzz(30);
+                    removePlayer(p.id);
+                  }}
+                >
+                  <CloseIcon />
+                </button>
+              )}
             </li>
           ))}
         </ul>
@@ -111,6 +125,21 @@ export function RoomCrewSheet({ open, onClose }: { open: boolean; onClose: () =>
                 <Avatar name={m.name} color={m.color} photo={m.photo} />
               </span>
               <span className="crew-sheet-name">{m.name}</span>
+              {/* The host can take someone out of the room (not themself). */}
+              {room.role === 'host' && !m.host && (
+                <button
+                  type="button"
+                  className="crew-sheet-remove"
+                  aria-label={t('Remove {name}', { name: m.name })}
+                  onClick={() => {
+                    sfx.boo();
+                    buzz(30);
+                    room.removeMember(m.id);
+                  }}
+                >
+                  <CloseIcon />
+                </button>
+              )}
             </li>
           ))}
         </ul>

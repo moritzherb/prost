@@ -5,22 +5,30 @@ import { rankLabel } from '../../lib/cards';
 import { buzz, celebrate, sfx } from '../../lib/fx';
 import type { GameProps } from '../types';
 import { flyIn } from '../../lib/cardFly';
-import SoloCard, { PileUnder } from '../solo/SoloCard';
+import SoloCard, { lie, PileUnder } from '../solo/SoloCard';
 import SoloEnd from '../solo/SoloEnd';
-import { alive, guess, newGame, over, won, type Guess } from './logic';
+import { alive, guess, newGame, over, won, type Game, type Guess } from './logic';
 
 /** Beat the Deck: higher or lower on one of nine cards, through the whole deck. */
 export default function BeatTheDeck({ exit }: GameProps) {
   const [g, setG] = useState(newGame);
   const [pick, setPick] = useState<number | null>(null);
-  // A wrong guess: the card lands, shows red a moment, then its place turns over.
+  // A wrong guess: the card lands, shows red a moment and the place starts turning (.turning), then
+  // lies face down (.down, the turn's second half). The timing matches the CSS.
   const [showing, setShowing] = useState<number | null>(null);
   useEffect(() => {
     if (!g.last || g.last.right) return setShowing(null);
     setShowing(g.last.place);
-    const id = window.setTimeout(() => setShowing(null), 1300);
+    const id = window.setTimeout(() => setShowing(null), 1000);
     return () => window.clearTimeout(id);
   }, [g.last]);
+  // The end comes once the last card has landed, or the last place has turned over.
+  const [endOf, setEndOf] = useState<Game | null>(null);
+  useEffect(() => {
+    if (!over(g) || showing != null) return;
+    const id = window.setTimeout(() => setEndOf(g), g.last?.right ? 1000 : 500);
+    return () => window.clearTimeout(id);
+  }, [g, showing]);
   // The card drawn flies from the pile onto the place it was guessed for.
   const felt = useRef<HTMLDivElement>(null);
   const pile = useRef<HTMLSpanElement>(null);
@@ -31,7 +39,7 @@ export default function BeatTheDeck({ exit }: GameProps) {
     const el = f && felt.current?.children[f.place]?.querySelector<HTMLElement>('.btd-top');
     if (el) flyIn(el, f.from, 420);
   }, [g]);
-  const done = over(g) && showing == null;
+  const done = endOf === g;
   useEffect(() => {
     if (done && won(g)) celebrate();
   }, [done, g]);
@@ -83,12 +91,12 @@ export default function BeatTheDeck({ exit }: GameProps) {
             <button
               key={i}
               type="button"
-              className={`btd-place${pick === i ? ' picked' : ''}${p.dead ? ' dead' : ''}`}
+              className={`btd-place${pick === i ? ' picked' : ''}${showing === i ? ' turning' : p.dead ? ' down' : ''}`}
               disabled={p.dead}
               onClick={() => setPick(pick === i ? null : i)}
             >
               <PileUnder cards={p.below} up={face} />
-              <SoloCard key={`${p.count}`} card={p.top} up={face} className={`btd-top${mark}`} />
+              <SoloCard key={`${p.count}`} card={p.top} up={face} className={`btd-top${mark}`} style={lie(p.top)} />
             </button>
           );
         })}

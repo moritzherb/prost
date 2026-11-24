@@ -55,11 +55,26 @@ function audio() {
   if (!fxSettings.sound) return null;
   try {
     ctx ??= new AudioContext();
-    if (ctx.state === 'suspended') void ctx.resume();
+    // Suspended at first, 'interrupted' on an iPhone after the app was away: on again.
+    if (ctx.state !== 'running') void ctx.resume();
     return ctx;
   } catch {
     return null;
   }
+}
+
+/**
+ * Wakes the sound as a finger lifts (an iPhone only lets a touch start it, and starts it late): so
+ * the sound of what that tap opens isn't lost, the first time or after the app was away.
+ */
+export function wakeAudio() {
+  const ac = audio();
+  if (!ac || ac.state === 'running') return;
+  // A moment of silence played inside the touch is what lets an iPhone's sound out.
+  const src = ac.createBufferSource();
+  src.buffer = ac.createBuffer(1, 1, ac.sampleRate);
+  src.connect(ac.destination);
+  src.start();
 }
 
 /** One soft note: a few ms to come in (no click), then it dies away like a struck thing. */
@@ -81,18 +96,23 @@ function tone(freq: number, start: number, duration: number, type: OscillatorTyp
 }
 
 let grain: AudioBuffer | null = null;
-/** A short burst of filtered noise: the paper and wood in a card laid down or a tap. */
-function noise(start: number, duration: number, freq: number, volume: number) {
-  const ac = audio();
-  if (!ac) return;
+/** 0.2 s of white noise, made once. */
+function grainOf(ac: AudioContext) {
   if (!grain) {
     grain = ac.createBuffer(1, Math.round(ac.sampleRate * 0.2), ac.sampleRate);
     const d = grain.getChannelData(0);
     for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   }
+  return grain;
+}
+
+/** A short burst of filtered noise: the paper and wood in a card laid down or a tap. */
+function noise(start: number, duration: number, freq: number, volume: number) {
+  const ac = audio();
+  if (!ac) return;
   const t = ac.currentTime + start;
   const src = ac.createBufferSource();
-  src.buffer = grain;
+  src.buffer = grainOf(ac);
   const band = ac.createBiquadFilter();
   band.type = 'bandpass';
   band.frequency.value = freq;
@@ -110,6 +130,28 @@ export const sfx = {
   pop: () => {
     noise(0, 0.05, 2400, 0.22);
     tone(240, 0, 0.12, 'sine', 0.14, 150);
+  },
+  // An app opening: a soft breath of air rising, and two bright notes going up.
+  open: () => {
+    const ac = audio();
+    if (!ac) return;
+    const t = ac.currentTime;
+    const src = ac.createBufferSource();
+    src.buffer = grainOf(ac);
+    const band = ac.createBiquadFilter();
+    band.type = 'bandpass';
+    band.Q.value = 0.9;
+    band.frequency.setValueAtTime(700, t);
+    band.frequency.exponentialRampToValueAtTime(3200, t + 0.2);
+    const gain = ac.createGain();
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(0.09, t + 0.06);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+    src.connect(band).connect(gain).connect(ac.destination);
+    src.start(t);
+    src.stop(t + 0.24);
+    tone(587, 0.05, 0.28, 'sine', 0.1);
+    tone(880, 0.12, 0.42, 'sine', 0.09);
   },
   // A tick, like a wheel's peg passing: tiny and dry.
   tick: () => noise(0, 0.018, 4200, 0.12),

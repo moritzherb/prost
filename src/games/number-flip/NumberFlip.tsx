@@ -155,13 +155,14 @@ function SetupScreen({ setup, onChange, solo, count, onStart }: { setup: Setup; 
   const mode = solo && setup.mode === 'survival' ? 'classic' : setup.mode;
   // The box takes a moment to build: done while the setup shows, not when the game starts.
   const size = setup.size;
+  const square = squareFor(setup, count);
   useEffect(() => {
     const id = window.setTimeout(() => {
       if (!canDraw3D()) woodVars();
-      else void loadBox3D().then((mod) => mod.prepareBox3D(size));
+      else void loadBox3D().then((mod) => mod.prepareBox3D(square ? 9 : size, square));
     }, 300);
     return () => window.clearTimeout(id);
-  }, [size]);
+  }, [size, square]);
   useEffect(() => () => box3d?.dropBox3D(), []);
   return (
     <div className="bd nf-setup">
@@ -475,6 +476,16 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
   const sideOf = (i: number) => (players.length === 2 ? i * 2 : i);
   const seat = players.findIndex((p) => p.id === m.order[m.turn]);
   const turnAngle = -(90 * sideOf(seat) + 360 * (m.round - 1));
+  // The same for the box in 3D: each side's colour and flaps, a lap more each round.
+  const squareSides = {
+    sides: [0, 1, 2, 3].map((side) => {
+      const i = players.findIndex((_, k) => sideOf(k) === side);
+      if (i < 0) return null;
+      return { color: players[i].color, open: i === seat ? box.open : (m.rows[players[i].id] ?? flaps(9)) };
+    }),
+    live: sideOf(seat),
+    turn: sideOf(seat) + 4 * (m.round - 1),
+  };
   const squareBox = () => (
     <div className="nf-square-stage">
       <div className={`nf-square${stuck ? ' stuck' : ''}`} style={{ ...(woodVars() as CSSProperties), '--turn': `${turnAngle}deg` } as CSSProperties}>
@@ -530,15 +541,16 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
         </div>
       )}
 
-      {square ? (
+      {square && !three ? (
         squareBox()
       ) : three ? (
-        <Suspense fallback={<div className={`nf-stage size-${setup.size}`}><div className="nf-canvas-host" /></div>}>
+        <Suspense fallback={<div className={`nf-stage size-${setup.size}${square ? ' square' : ''}`}><div className="nf-canvas-host" /></div>}>
           <Box3DView
             size={setup.size}
             flaps={flapState}
             dice={dice}
             rolls={box.rolls}
+            square={square ? squareSides : undefined}
             onTap={tap}
             onFail={() => setThree(false)}
           >

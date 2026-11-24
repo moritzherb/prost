@@ -16,13 +16,13 @@ interface Shared {
   quiz: Quiz | null;
 }
 
-const LEVELS: { id: Level; label: string }[] = [
+export const LEVELS: { id: Level; label: string }[] = [
   { id: 1, label: tx('Easy') },
   { id: 2, label: tx('Medium') },
   { id: 3, label: tx('Hard') },
   { id: 4, label: tx('Impossible') },
 ];
-const COUNTS = [10, 20, 30];
+export const COUNTS = [10, 20, 30];
 /** The teams' colours to pick from, each with the name a team of that colour has until it's renamed. */
 const TEAM_COLORS = ['#ff5a5f', '#3da9fc', '#ffc93c', '#7ae582', '#b388ff', '#ff8a3d', '#2ec4b6', '#f15bb5'];
 const TEAM_NAMES = [tx('Team Red'), tx('Team Blue'), tx('Team Yellow'), tx('Team Green'), tx('Team Purple'), tx('Team Orange'), tx('Team Teal'), tx('Team Pink')];
@@ -180,7 +180,7 @@ function Setup({ room, onStart }: { room: ReturnType<typeof useShared<Shared>>['
 }
 
 /** The scores, best first: a slim row on top of every phone. */
-function Board({ q, mine }: { q: Quiz; mine?: string | null }) {
+export function Board({ q, mine }: { q: Quiz; mine?: string | null }) {
   return (
     <div className="pq-board">
       {ranking(q).map((s) => (
@@ -197,7 +197,7 @@ function Board({ q, mine }: { q: Quiz; mine?: string | null }) {
  * An answer judged, on every phone: a big tick or cross in the colour of who answered, with their
  * name, then it's gone. Not for one already judged when this screen opened.
  */
-function VerdictFlash({ q }: { q: Quiz }) {
+export function VerdictFlash({ q }: { q: Quiz }) {
   const v = q.verdict;
   const [first] = useState(() => v?.n);
   useEffect(() => {

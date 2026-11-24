@@ -1,6 +1,7 @@
 import { tx } from '../../i18n';
 import type { GameDefinition } from '../types';
 import PubQuiz from './PubQuiz';
+import PubQuizSolo from './PubQuizSolo';
 
 const pubQuiz: GameDefinition = {
   id: 'pub-quiz',
@@ -9,7 +10,7 @@ const pubQuiz: GameDefinition = {
   tagline: tx('One phone asks, everyone else has a buzzer.'),
   color: 'var(--c-yellow)',
   categories: ['party', 'teams'],
-  minPlayers: 2,
+  minPlayers: 1,
   minutes: [15, 45],
   table: 'full',
   explains: true,
@@ -20,7 +21,9 @@ const pubQuiz: GameDefinition = {
     tx('The quizmaster reads the question out. Whoever buzzes first answers.'),
     tx('Right: a point and the next question. Wrong: the buzzers open again, but nobody buzzes twice on a question before everyone else has buzzed once.'),
     tx('Nobody knows? The quizmaster moves on. The most points at the end win.'),
+    tx('Alone? Start it on one phone: it asks, you look at the answer and say honestly if you knew it.'),
   ],
+  component: PubQuizSolo,
   online: PubQuiz,
 };
 

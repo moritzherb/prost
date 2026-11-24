@@ -17893,6 +17893,30 @@ html[data-look] .play-screen > .top-bar .round-btn {
   opacity: 0.5;
 }
 
+/* Taking someone out: a small ✕ at the end of their chip, with a full-size place to tap. */
+.crew-sheet-remove {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-right: -6px;
+  border-radius: 50%;
+  background: var(--fill-2, rgba(128, 128, 128, 0.25));
+  color: var(--muted);
+}
+
+.crew-sheet-remove::after {
+  content: '';
+  position: absolute;
+  inset: -11px;
+}
+
+.crew-sheet-remove svg {
+  width: 12px;
+  height: 12px;
+}
+
 /* ---------- Number Flip in 3D: the box drawn by box3d.ts, the felt's writing laid over its front ---------- */
 
 .nf-stage {
@@ -17909,6 +17933,12 @@ html[data-look] .play-screen > .top-bar .round-btn {
 
 .nf-stage.size-12 .nf-canvas-host {
   aspect-ratio: 2.1;
+}
+
+/* The square box, seen more from above. */
+.nf-stage.square .nf-canvas-host {
+  aspect-ratio: 1.1;
+  max-height: 56dvh;
 }
 
 .nf-canvas {
@@ -18590,13 +18620,18 @@ html.table-phone .game-bar .top-bar-side.right {
   border-radius: calc(var(--cw) * 0.12);
 }
 
-/* A pile as it lies: the cards under the top one peek out a little askew (solo/SoloCard.tsx). */
+/* A pile as it lies: every card where it was dropped, a little off the middle and askew (lie() in solo/SoloCard.tsx). */
 .sol-under {
   position: absolute;
   left: 0;
   top: 0;
-  rotate: var(--r);
-  translate: var(--x) var(--y);
+}
+
+.sol-under,
+.btd-top,
+.acc-top {
+  rotate: var(--r, 0deg);
+  translate: var(--x, 0px) var(--y, 0px);
 }
 
 .btd-top,
@@ -18607,7 +18642,35 @@ html.table-phone .game-bar .top-bar-side.right {
 
 /* Picked: only the top card comes up, ringed; the pile under it stays where it lies. */
 .btd-place.picked .btd-top {
-  translate: 0 -8px;
+  translate: var(--x, 0px) calc(var(--y, 0px) - 8px);
+}
+
+/* A wrong guess: the whole place turns over, edge on at the end of .turning, face down in .down. */
+.btd-place.turning {
+  animation: btd-turn-away 0.2s ease-in 0.78s forwards;
+}
+
+.btd-place.down {
+  animation: btd-turn-down 0.24s var(--spring);
+}
+
+@keyframes btd-turn-away {
+  to {
+    transform: perspective(600px) rotateY(90deg);
+  }
+}
+
+@keyframes btd-turn-down {
+  from {
+    transform: perspective(600px) rotateY(-90deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btd-place.turning,
+  .btd-place.down {
+    animation: none;
+  }
 }
 
 .btd-place.picked .btd-top .pcard-front {
@@ -18697,7 +18760,7 @@ html.table-phone .game-bar .top-bar-side.right {
 }
 
 .acc-pile.picked .acc-top {
-  translate: 0 -6px;
+  translate: var(--x, 0px) calc(var(--y, 0px) - 6px);
 }
 
 .acc-pile.picked .acc-top .pcard-front {
@@ -19406,6 +19469,11 @@ html.table-phone .game-bar .top-bar-side.right {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+}
+
+/* Alone: one button to look, where the two to judge then are. */
+.pq-judge > .pq-show {
+  grid-column: 1 / -1;
 }
 
 .pq-buzz-status {

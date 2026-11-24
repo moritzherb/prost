@@ -15,6 +15,7 @@ import { isNative, toNative, watchScreens } from './lib/native';
 import { BOOT_GROUND, SPLASH_MS, fadeBoot } from './lib/launch';
 import { coverTop } from './lib/themeColor';
 import { watchForUpdates } from './lib/update';
+import { wakeAudio } from './lib/fx';
 import ErrorBoundary from './components/ErrorBoundary';
 import { RoomProvider } from './net/RoomProvider';
 import { AppProvider } from './state/AppState';
@@ -40,6 +41,9 @@ const fingersUp = (e: TouchEvent) => {
   if (e.touches.length < 2) document.removeEventListener('touchmove', noPinch);
 };
 document.addEventListener('touchend', fingersUp, { passive: true });
+// The sound woken by every tap (see wakeAudio): before the tap's own handler plays anything.
+document.addEventListener('touchend', wakeAudio, { passive: true, capture: true });
+document.addEventListener('mousedown', wakeAudio, { passive: true, capture: true });
 document.addEventListener('touchcancel', fingersUp, { passive: true });
 
 /**

@@ -4,6 +4,17 @@
  * [topic, level, German question, German answer, English question, English answer].
  */
 
+import { MORE_1 } from './more1';
+import { MORE_2 } from './more2';
+import { MORE_3 } from './more3';
+import { MORE_4 } from './more4';
+import { MORE_5 } from './more5';
+import { MORE_6 } from './more6';
+import { MORE_7 } from './more7';
+import { MORE_8 } from './more8';
+import { MORE_9 } from './more9';
+import { MORE_10 } from './more10';
+
 export type Topic =
   | 'general'
   | 'film'
@@ -342,5 +353,15 @@ export const QUESTIONS: Question[] = ([] as Row[])
       ['decades', 3, 'Aus welchem Jahrzehnt: Mauerfall, Game Boy, Tetris?', 'Die 1980er', 'Which decade: the fall of the Berlin Wall, the Game Boy, Tetris?', 'The 1980s'],
       ['decades', 4, 'In welchem Jahr erschien „Bohemian Rhapsody“?', '1975', 'In which year was “Bohemian Rhapsody” released?', '1975'],
     ],
+    MORE_1,
+    MORE_2,
+    MORE_3,
+    MORE_4,
+    MORE_5,
+    MORE_6,
+    MORE_7,
+    MORE_8,
+    MORE_9,
+    MORE_10,
   )
   .map(([topic, level, deQ, deA, enQ, enA]) => ({ topic, level, q: { de: deQ, en: enQ }, a: { de: deA, en: enA } }));

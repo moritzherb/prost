@@ -4,6 +4,10 @@
  * looks down on all of it from in front and a little above, so every flap is seen the same way, and
  * one light from the top left throws the shadows. Drawn only while something moves.
  *
+ * The square box (2 to 4 players) has a row on each side instead, set like a pinwheel round the felt
+ * in the middle, each painted in its player's colour, and turns so whoever's on has their row in
+ * front.
+ *
  * Units are centimetres; x to the right, y up, z towards you.
  */
 
@@ -28,6 +32,8 @@ export const FALL_MS = 640;
 export const STAGGER = 90;
 /** A throw of the dice, from the hand to lying still (ms). */
 export const THROW_MS = 1050;
+/** The square box turning to the next player (ms). */
+export const TURN_MS = 900;
 /** No move left: one flap's shiver, and the next one after it (ms). */
 export const SHIVER_MS = 900;
 export const SHIVER_STAGGER = 40;
@@ -49,6 +55,8 @@ const STUCK_RED = new THREE.Color('#ff453a');
 
 const easeOut = (t: number) => 1 - (1 - t) ** 3;
 const easeIn = (t: number) => t * t;
+const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+const UP = new THREE.Vector3(0, 1, 0);
 const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
 
 /**
@@ -155,7 +163,8 @@ const FLAP_BACK: Cell = [CELL_W, 2 * CELL_H, CELL_W, CELL_H];
 const FLAP_TOP: Cell = [2 * CELL_W, 2 * CELL_H, CELL_W, 64];
 const FLAP_BOTTOM: Cell = [3 * CELL_W, 2 * CELL_H, CELL_W, 64];
 
-function flapAtlas(size: number) {
+/** The flaps' faces: bare maple with the numbers burnt in, or painted `paint` with white ones. */
+function flapAtlas(size: number, paint?: string) {
   const maple = plankCanvas({ w: 1024, h: 300, scale: 1, upright: true, ...MAPLE, seed: 23 });
   const c = document.createElement('canvas');
   [c.width, c.height] = ATLAS;
@@ -173,6 +182,17 @@ function flapAtlas(size: number) {
       g.fillRect(x, y, w, h);
       g.globalCompositeOperation = 'source-over';
     }
+    if (paint) {
+      // Paint over the wood, its grain still showing through.
+      g.globalCompositeOperation = 'color';
+      g.fillStyle = paint;
+      g.fillRect(x, y, w, h);
+      g.globalCompositeOperation = 'source-over';
+      g.globalAlpha = 0.8;
+      g.fillStyle = paint;
+      g.fillRect(x, y, w, h);
+      g.globalAlpha = 1;
+    }
   };
   for (let n = 1; n <= size; n++) {
     const cell = flapCell(n);
@@ -182,9 +202,15 @@ function flapAtlas(size: number) {
     g.font = `800 ${n > 9 ? 107 : 143}px ${appFont('display')}`;
     g.textAlign = 'center';
     g.textBaseline = 'middle';
-    g.shadowColor = 'rgba(58,33,14,0.6)';
+    g.shadowColor = paint ? 'rgba(0,0,0,0.35)' : 'rgba(58,33,14,0.6)';
     g.shadowBlur = 3;
-    g.fillStyle = '#3a210e';
+    g.fillStyle = paint ? '#fbf8f1' : '#3a210e';
+    if (paint) {
+      // White on paint: a dark rim keeps it readable on light colours too.
+      g.lineWidth = 6;
+      g.strokeStyle = 'rgba(0,0,0,0.3)';
+      g.strokeText(String(n), x + w / 2, y + h * 0.52);
+    }
     g.fillText(String(n), x + w / 2, y + h * 0.52);
     g.shadowColor = 'transparent';
   }
@@ -204,6 +230,8 @@ interface Flap {
   lift: number;
   down: boolean;
   shade: number;
+  /** 1: falls away from you (the box's back row); −1: towards its player (the square box's rows). */
+  dir: number;
 }
 
 interface Anim {
@@ -218,7 +246,16 @@ export class Box3D {
   private scene = new THREE.Scene();
   // A long lens: the flaps at the back nearly as big as the front of the box.
   private camera = new THREE.PerspectiveCamera(18, 1, 1, 500);
+  /** Everything of the box (not the lights): the square one turns as a whole. */
+  private root = new THREE.Group();
+  /** The rows of flaps: one, or one a side (front, right, back, left) for the square box. */
+  private rows: Flap[][] = [];
+  /** The row being played now. */
   private flaps: Flap[] = [];
+  private atlas!: THREE.Texture;
+  private paints = new Map<string, THREE.Texture>();
+  private rowPaint: (string | null)[] = [];
+  private turned = false;
   private dice: THREE.Mesh[] = [];
   private diceMat!: THREE.MeshStandardMaterial;
   private anims: Anim[] = [];
@@ -227,8 +264,10 @@ export class Box3D {
   private disposables: { dispose: () => void }[] = [];
   private width: number;
   private depth: number;
-  private feltZ: number;
+  /** Where the dice may lie: the felt, clear of its edges. */
+  private felt: { x0: number; x1: number; z0: number; z1: number };
   private innerW: number;
+  private w = 0;
   private raycaster = new THREE.Raycaster();
   private lastRoll = -1;
   private disposed = false;
@@ -239,6 +278,7 @@ export class Box3D {
     private size: 9 | 12,
     /** A flap tapped in the picture (settable: a box built ahead gets its game later). */
     public onTap: (n: number) => void,
+    readonly square = false,
   ) {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     this.renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
@@ -247,16 +287,28 @@ export class Box3D {
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
 
     this.innerW = size * FW + (size - 1) * FG + 0.6;
-    this.width = this.innerW + 2 * WALL;
-    this.depth = WALL + SLOT + RAIL_D + FELT_D + WALL;
-    const zBack = -this.depth / 2;
-    const zInnerBack = zBack + WALL;
-    const zHinge = zInnerBack + SLOT - 0.6;
-    const zRail = zInnerBack + SLOT + RAIL_D / 2;
-    this.feltZ = zInnerBack + SLOT + RAIL_D + FELT_D / 2;
-
-    this.buildBox(zBack, zInnerBack, zRail);
-    this.buildFlaps(zHinge);
+    this.scene.add(this.root);
+    this.atlas = canvasTexture(flapAtlas(this.size), this.renderer);
+    if (square) {
+      // Inside the walls: a row's length and the band (slot and rail) of the next one across.
+      const inside = this.innerW + SLOT + RAIL_D;
+      this.width = this.depth = inside + 2 * WALL;
+      const f = inside / 2 - SLOT - RAIL_D;
+      this.felt = { x0: -f, x1: f, z0: -f, z1: f };
+      this.buildSquare(inside);
+    } else {
+      this.width = this.innerW + 2 * WALL;
+      this.depth = WALL + SLOT + RAIL_D + FELT_D + WALL;
+      const zBack = -this.depth / 2;
+      const zInnerBack = zBack + WALL;
+      const zHinge = zInnerBack + SLOT - 0.6;
+      const zRail = zInnerBack + SLOT + RAIL_D / 2;
+      const feltZ = zInnerBack + SLOT + RAIL_D + FELT_D / 2;
+      this.felt = { x0: -this.innerW / 2, x1: this.innerW / 2, z0: feltZ - FELT_D / 2, z1: feltZ + FELT_D / 2 };
+      this.buildBox(zBack, zInnerBack, zRail, feltZ);
+      this.rows = [this.buildRow(this.root, 0, zHinge)];
+    }
+    this.flaps = this.rows[0];
     this.buildDice();
     this.buildLights();
 
@@ -271,21 +323,40 @@ export class Box3D {
     return m;
   }
 
-  private buildBox(zBack: number, zInnerBack: number, zRail: number) {
+  private add(geo: THREE.BufferGeometry, mat: THREE.Material, x: number, y: number, z: number, parent: THREE.Object3D = this.root) {
+    const m = new THREE.Mesh(geo, mat);
+    m.position.set(x, y, z);
+    m.castShadow = true;
+    m.receiveShadow = true;
+    parent.add(m);
+    this.disposables.push(geo);
+    return m;
+  }
+
+  /** Walnut along a board and along an upright one, and the dark floor of a slot. */
+  private woods() {
     const walnut = plankCanvas({ w: 512, h: 128, scale: 1, ...WALNUT, seed: 7 });
     const walnutUp = plankCanvas({ w: 128, h: 512, scale: 1, upright: true, ...WALNUT, seed: 11 });
-    const wood = this.material(walnut ? canvasTexture(walnut, this.renderer) : null, walnut ? '#ffffff' : '#7d4b26', 0.55);
-    const woodUp = this.material(walnutUp ? canvasTexture(walnutUp, this.renderer) : null, walnutUp ? '#ffffff' : '#7d4b26', 0.55);
-    const slotFloor = this.material(null, '#2a170a', 0.9);
-    const add = (geo: THREE.BufferGeometry, mat: THREE.Material | THREE.Material[], x: number, y: number, z: number) => {
-      const m = new THREE.Mesh(geo, mat);
-      m.position.set(x, y, z);
-      m.castShadow = true;
-      m.receiveShadow = true;
-      this.scene.add(m);
-      this.disposables.push(geo);
-      return m;
+    return {
+      wood: this.material(walnut ? canvasTexture(walnut, this.renderer) : null, walnut ? '#ffffff' : '#7d4b26', 0.55),
+      woodUp: this.material(walnutUp ? canvasTexture(walnutUp, this.renderer) : null, walnutUp ? '#ffffff' : '#7d4b26', 0.55),
+      slotFloor: this.material(null, '#2a170a', 0.9),
     };
+  }
+
+  private feltMaterial(repeat: number) {
+    const felt = this.feltCanvas();
+    const m = this.material(felt ? canvasTexture(felt, this.renderer) : null, felt ? '#ffffff' : '#22603f', 1);
+    if (m.map) {
+      m.map.wrapS = m.map.wrapT = THREE.RepeatWrapping;
+      m.map.repeat.set(repeat, repeat * 0.67);
+    }
+    return m;
+  }
+
+  private buildBox(zBack: number, zInnerBack: number, zRail: number, feltZ: number) {
+    const { wood, woodUp, slotFloor } = this.woods();
+    const add = this.add.bind(this);
     const W = this.width;
     const D = this.depth;
     // The floor under everything.
@@ -300,14 +371,40 @@ export class Box3D {
     add(new THREE.BoxGeometry(this.innerW, 0.05, SLOT), slotFloor, 0, 0.025, zInnerBack + SLOT / 2);
     add(new THREE.BoxGeometry(this.innerW, RAIL_H, RAIL_D), wood, 0, RAIL_H / 2, zRail);
     // The felt.
-    const felt = this.feltCanvas();
-    const feltMat = this.material(felt ? canvasTexture(felt, this.renderer) : null, felt ? '#ffffff' : '#22603f', 1);
-    if (feltMat.map) {
-      feltMat.map.wrapS = feltMat.map.wrapT = THREE.RepeatWrapping;
-      feltMat.map.repeat.set(3, 2);
-    }
-    const feltMesh = add(new THREE.BoxGeometry(this.innerW, 0.08, FELT_D), feltMat, 0, 0.04, this.feltZ);
+    const feltMesh = add(new THREE.BoxGeometry(this.innerW, 0.08, FELT_D), this.feltMaterial(3), 0, 0.04, feltZ);
     feltMesh.castShadow = false;
+  }
+
+  /**
+   * The square box: a tray with four walls, and on each side a band of slot and rail with its row,
+   * turned a quarter from the one before. Each band runs from one corner to the next band, which
+   * closes its end (a pinwheel); the felt fills the middle.
+   */
+  private buildSquare(inside: number) {
+    const { wood, woodUp, slotFloor } = this.woods();
+    const W = this.width;
+    this.add(new THREE.BoxGeometry(W, 0.6, W), wood, 0, -0.3, 0);
+    const wall = new THREE.BoxGeometry(W, WALL_H, WALL);
+    this.add(wall, wood, 0, WALL_H / 2, -W / 2 + WALL / 2);
+    this.add(wall.clone(), wood, 0, WALL_H / 2, W / 2 - WALL / 2);
+    const side = new THREE.BoxGeometry(WALL, WALL_H, W - 2 * WALL);
+    this.add(side, woodUp, -W / 2 + WALL / 2, WALL_H / 2, 0);
+    this.add(side.clone(), woodUp, W / 2 - WALL / 2, WALL_H / 2, 0);
+    const f = this.felt.x1 * 2;
+    this.add(new THREE.BoxGeometry(f, 0.08, f), this.feltMaterial(2.4), 0, 0.04, 0).castShadow = false;
+    // Each band in its own turned frame: x along the row (1 on the left as its player sees it), z out
+    // towards its player. The flaps stand by the rail, their numbers to the player over the slot (the
+    // wall in front would hide them), and fall out into it.
+    const cx = -(SLOT + RAIL_D) / 2;
+    for (let s = 0; s < 4; s++) {
+      const band = new THREE.Group();
+      band.rotation.y = (s * Math.PI) / 2;
+      this.root.add(band);
+      this.add(new THREE.BoxGeometry(this.innerW, 0.05, SLOT), slotFloor, cx, 0.025, inside / 2 - SLOT / 2, band);
+      this.add(new THREE.BoxGeometry(this.innerW, RAIL_H, RAIL_D), wood, cx, RAIL_H / 2, inside / 2 - SLOT - RAIL_D / 2, band);
+      this.rows.push(this.buildRow(band, cx, inside / 2 - SLOT + 0.6, -1));
+      this.rowPaint.push(null);
+    }
   }
 
   private feltCanvas() {
@@ -332,20 +429,20 @@ export class Box3D {
     return c;
   }
 
-  private buildFlaps(zHinge: number) {
-    // The rod they hang on.
+  /** A row of flaps on its brass rod, centred at x = `cx`, hinged at z = `zHinge` in `parent`, falling `dir`. */
+  private buildRow(parent: THREE.Object3D, cx: number, zHinge: number, dir = 1) {
     const rodGeo = new THREE.CylinderGeometry(0.13, 0.13, this.innerW, 16);
     const brass = new THREE.MeshStandardMaterial({ color: '#c99b45', roughness: 0.35, metalness: 0.85 });
     this.disposables.push(rodGeo, brass);
     const rod = new THREE.Mesh(rodGeo, brass);
     rod.rotation.z = Math.PI / 2;
-    rod.position.set(0, ROD_Y, zHinge);
+    rod.position.set(cx, ROD_Y, zHinge);
     rod.castShadow = true;
-    this.scene.add(rod);
+    parent.add(rod);
 
     // All their faces on one picture, so a flap is drawn in one go (one material, not six).
-    const atlas = canvasTexture(flapAtlas(this.size), this.renderer);
-    const x0 = -this.innerW / 2 + 0.3 + FW / 2;
+    const x0 = cx - this.innerW / 2 + 0.3 + FW / 2;
+    const row: Flap[] = [];
     for (let i = 0; i < this.size; i++) {
       const n = i + 1;
       const geo = new THREE.BoxGeometry(FW, FH, FT);
@@ -354,7 +451,7 @@ export class Box3D {
       const c = flapCell(n);
       mapFaces(geo, [FLAP_SIDE, FLAP_SIDE, FLAP_TOP, FLAP_BOTTOM, c, FLAP_BACK], ATLAS);
       this.disposables.push(geo);
-      const mat = this.material(atlas);
+      const mat = this.material(this.atlas);
       const mesh = new THREE.Mesh(geo, mat);
       mesh.castShadow = true;
       mesh.receiveShadow = true;
@@ -362,9 +459,10 @@ export class Box3D {
       const pivot = new THREE.Group();
       pivot.position.set(x0 + i * (FW + FG), ROD_Y, zHinge);
       pivot.add(mesh);
-      this.scene.add(pivot);
-      this.flaps.push({ n, pivot, mesh, mat, angle: 0, lift: 0, down: false, shade: 1 });
+      parent.add(pivot);
+      row.push({ n, pivot, mesh, mat, angle: 0, lift: 0, down: false, shade: 1, dir });
     }
+    return row;
   }
 
   private buildDice() {
@@ -386,8 +484,8 @@ export class Box3D {
     for (let i = 0; i < 2; i++) {
       const die = new THREE.Mesh(geo, this.diceMat);
       die.castShadow = true;
-      die.position.set(i ? 1.5 : -1.5, DIE / 2 + 0.08, this.feltZ);
-      this.scene.add(die);
+      die.position.set(i ? 1.5 : -1.5, DIE / 2 + 0.08, (this.felt.z0 + this.felt.z1) / 2);
+      this.root.add(die);
       this.dice.push(die);
     }
   }
@@ -399,7 +497,8 @@ export class Box3D {
     sun.target.position.set(0, 0, 0);
     sun.castShadow = true;
     sun.shadow.mapSize.set(1024, 1024);
-    const r = Math.max(this.width, this.depth) * 0.62;
+    // Room for the square box's corners as it turns.
+    const r = Math.max(this.width, this.depth) * (this.square ? 0.75 : 0.62);
     Object.assign(sun.shadow.camera, { left: -r, right: r, top: r, bottom: -r, near: 1, far: 70 });
     sun.shadow.bias = -0.0004;
     sun.shadow.normalBias = 0.03;
@@ -409,18 +508,29 @@ export class Box3D {
 
   /* ---------- Size and camera ---------- */
 
-  /** Fits the camera so the whole box (flaps standing included) fills the canvas. */
+  /** The canvas's size: the camera fits the box to it. */
   resize(w: number, h: number) {
     if (!w || !h || this.disposed) return;
+    this.w = w;
     this.renderer.setSize(w, h, false);
+    this.camera.aspect = w / h;
+    this.fit();
+    this.render();
+  }
+
+  /**
+   * Fits the camera so the whole box (flaps standing included) fills the canvas, as it's turned
+   * now: the square box is seen more from above, and moves back a little while it turns, corner on.
+   */
+  private fit() {
+    if (!this.w) return;
     const cam = this.camera;
-    cam.aspect = w / h;
-    const elev = (39 * Math.PI) / 180;
-    const target = new THREE.Vector3(0, 1.2, 0.6);
+    const elev = ((this.square ? 54 : 39) * Math.PI) / 180;
+    const target = new THREE.Vector3(0, 1.2, this.square ? 0 : 0.6);
     const corners: THREE.Vector3[] = [];
     for (const x of [-this.width / 2, this.width / 2])
       for (const y of [-0.6, FH + 0.5])
-        for (const z of [-this.depth / 2, this.depth / 2]) corners.push(new THREE.Vector3(x, y, z));
+        for (const z of [-this.depth / 2, this.depth / 2]) corners.push(new THREE.Vector3(x, y, z).applyAxisAngle(UP, this.root.rotation.y));
     const place = (dist: number) => {
       cam.position.set(target.x, target.y + Math.sin(elev) * dist, target.z + Math.cos(elev) * dist);
       cam.lookAt(target);
@@ -453,7 +563,67 @@ export class Box3D {
       if (Math.abs(off) < 0.005) break;
       target.z -= off * 6;
     }
+  }
+
+  /**
+   * The square box turned so side `quarters` (counted on, a lap more each round) faces you: at once
+   * the first time, after that the way round it always goes.
+   */
+  setTurn(quarters: number) {
+    const to = (-quarters * Math.PI) / 2;
+    const from = this.root.rotation.y;
+    if (!this.turned || this.reduced()) {
+      this.turned = true;
+      this.root.rotation.y = to;
+      this.fit();
+      this.render();
+      return;
+    }
+    if (from === to) return;
+    this.animate(TURN_MS, 0, (u) => {
+      this.root.rotation.y = from + (to - from) * easeInOut(u);
+      this.fit();
+    });
+  }
+
+  private reduced() {
+    return typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  /**
+   * The square box's other rows: each side's colour (null: nobody's, bare and shut) and the flaps
+   * its player left standing. `live` is the side being played; its row follows setFlaps.
+   */
+  setSides(sides: ({ color: string; open: number[] } | null)[], live: number) {
+    this.rows.forEach((row, s) => {
+      const side = sides[s] ?? null;
+      const paint = side?.color ?? null;
+      if (paint !== this.rowPaint[s]) {
+        this.rowPaint[s] = paint;
+        const map = paint ? this.paint(paint) : this.atlas;
+        for (const f of row) f.mat.map = map;
+      }
+      if (s === live) return;
+      for (const f of row) {
+        f.mat.emissive.setScalar(0);
+        const up = !!side?.open.includes(f.n);
+        if (up === !f.down) continue;
+        f.down = !up;
+        this.setFlap(f, up ? 0 : -Math.PI / 2, 0, up ? 1 : 0.6);
+      }
+    });
+    this.flaps = this.rows[live] ?? this.rows[0];
     this.render();
+  }
+
+  /** The flaps' picture painted in a colour, made once a colour. */
+  private paint(color: string) {
+    let tex = this.paints.get(color);
+    if (!tex) {
+      tex = canvasTexture(flapAtlas(this.size, color), this.renderer);
+      this.paints.set(color, tex);
+    }
+    return tex;
   }
 
   /* ---------- State ---------- */
@@ -521,7 +691,7 @@ export class Box3D {
   private setFlap(f: Flap, angle: number, lift: number, shade: number) {
     f.angle = angle;
     f.lift = lift;
-    f.pivot.rotation.x = angle;
+    f.pivot.rotation.x = angle * f.dir;
     f.pivot.position.y = ROD_Y + lift;
     if (shade !== f.shade) {
       f.shade = shade;
@@ -550,10 +720,10 @@ export class Box3D {
     };
     // Anywhere on the felt, clear of the walls (the front one hides what lies right behind it) and
     // of each other.
-    const xMin = -this.innerW / 2 + 1.9;
-    const xMax = this.innerW / 2 - 1.9;
-    const zMin = this.feltZ - FELT_D / 2 + 1.7;
-    const zMax = this.feltZ + FELT_D / 2 - 2.2;
+    const xMin = this.felt.x0 + 1.9;
+    const xMax = this.felt.x1 - 1.9;
+    const zMin = this.felt.z0 + 1.7;
+    const zMax = this.felt.z1 - 2.2;
     const spots: THREE.Vector3[] = [];
     values.forEach((_, i) => {
       const spot = new THREE.Vector3();
@@ -583,8 +753,12 @@ export class Box3D {
     poses.forEach((p, i) => {
       const die = this.dice[i];
       const back = poses.length > 1 && i === leftmost ? 1 : 0;
-      // From the hand, outside the box on the left, in over the wall along its own lane.
-      const from = new THREE.Vector3(-this.width / 2 - DIE * (1 + back * 1.2), DIE / 2 + 4.2, p.pos.z + (p.rnd(i + 24) - 0.5) * 1.2);
+      // From the hand, outside the box on the left, in over the wall along its own lane; into the
+      // square box from in front, high over the row there.
+      const angle = this.root.rotation.y;
+      const from = this.square
+        ? new THREE.Vector3(p.pos.clone().applyAxisAngle(UP, angle).x * 0.4 + (back ? -1.6 : 1.6), DIE / 2 + 10, this.width / 2 + 2).applyAxisAngle(UP, -angle)
+        : new THREE.Vector3(-this.width / 2 - DIE * (1 + back * 1.2), DIE / 2 + 4.2, p.pos.z + (p.rnd(i + 24) - 0.5) * 1.2);
       // It rolls the way it goes, about as far as it travels, a little skew.
       const way = new THREE.Vector3(p.pos.x - from.x, 0, p.pos.z - from.z);
       const axis = new THREE.Vector3(way.z, 0, -way.x)
@@ -674,6 +848,8 @@ export class Box3D {
       for (const x of Array.isArray(m) ? m : m ? [m] : []) x.map?.dispose();
     });
     for (const d of this.disposables) d.dispose();
+    this.atlas.dispose();
+    for (const tex of this.paints.values()) tex.dispose();
     this.renderer.dispose();
     // Phones allow only a few of these at a time: give it back now, not when it's collected.
     this.renderer.forceContextLoss();
