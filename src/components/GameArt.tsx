@@ -19,6 +19,15 @@ const lin = (id: string, from: string, to: string) => (
   </linearGradient>
 );
 
+/** The same, laid over the whole picture (64 × 64): every shape filled with it is one material,
+ *  with no seam where two of them meet. */
+const linU = (id: string, from: string, to: string, x1 = 10, y1 = 6, x2 = 54, y2 = 58) => (
+  <linearGradient id={id} gradientUnits="userSpaceOnUse" x1={x1} y1={y1} x2={x2} y2={y2}>
+    <stop offset="0" stopColor={from} />
+    <stop offset="1" stopColor={to} />
+  </linearGradient>
+);
+
 /** A round thing lit from the top left. */
 const rad = (id: string, from: string, to: string) => (
   <radialGradient id={id} cx="0.36" cy="0.3" r="0.85">
@@ -103,25 +112,33 @@ const ART: Record<string, Art> = {
     </>
   ),
   klatschen: () => {
-    // One hand, fingers up: palm, four fingers (their grooves), the thumb on the inner side.
-    const hand = (
-      <>
-        <rect x="16" y="26" width="18" height="24" rx="8" fill="url(#ga-skin)" />
-        <rect x="16" y="10" width="4.6" height="22" rx="2.3" fill="url(#ga-skin)" />
-        <rect x="20.6" y="7" width="4.6" height="24" rx="2.3" fill="url(#ga-skin)" />
-        <rect x="25.2" y="8" width="4.6" height="23" rx="2.3" fill="url(#ga-skin)" />
-        <rect x="29.6" y="11.5" width="4.4" height="20" rx="2.2" fill="url(#ga-skin)" />
-        <rect x="31" y="30" width="5" height="14" rx="2.5" fill="url(#ga-skin)" transform="rotate(-32 33.5 37)" />
-        <path d="M20.6 16v12M25.2 14v14M29.8 16v12" stroke="#c97a46" strokeWidth="0.9" opacity="0.55" />
-        <rect x="16" y="50" width="18" height="6" rx="3" fill="#7fb2ff" />
-      </>
+    // One hand, palm on, fingers up and together, the thumb out to the side: a single material
+    // (one gradient over the picture), so its parts don't show seams.
+    const hand = (fill: string) => (
+      <g fill={fill}>
+        <rect x="14" y="24" width="20" height="26" rx="9" />
+        <rect x="14" y="10" width="5.4" height="26" rx="2.7" />
+        <rect x="19" y="6.5" width="5.4" height="28" rx="2.7" />
+        <rect x="24" y="7.5" width="5.4" height="27" rx="2.7" />
+        <rect x="28.8" y="11" width="5.2" height="24" rx="2.6" />
+        <rect x="31" y="27" width="6" height="16" rx="3" transform="rotate(-38 34 35)" />
+      </g>
     );
     return (
       <>
-        <defs>{lin('ga-skin', '#ffdcb8', '#e8a06a')}</defs>
-        <g transform="rotate(16 25 56) translate(-6 0)">{hand}</g>
-        <g transform="translate(64 0) scale(-1 1) rotate(16 25 56) translate(-6 0)">{hand}</g>
-        <path d="M32 2.5v6M23.5 5.5l3 5M40.5 5.5l-3 5" stroke="#ffcb2e" strokeWidth="2.8" strokeLinecap="round" />
+        <defs>
+          {linU('ga-skin-b', '#f6c08f', '#c7784a')}
+          {linU('ga-skin-f', '#ffe1c2', '#e59a62')}
+        </defs>
+        {/* The hand behind, darker; the one in front, lit. */}
+        {/* Palm to palm: the one behind leans right, the one in front leans left over it. */}
+        <g transform="translate(32 36) scale(1.16) translate(-32 -36)">
+          <g transform="translate(3 6) rotate(13 24 50)">{hand('url(#ga-skin-b)')}</g>
+          <g transform="translate(61 6) scale(-1 1) rotate(13 24 50)">{hand('url(#ga-skin-f)')}</g>
+        </g>
+        <g fill="none" stroke="#ffd23f" strokeWidth="3.2" strokeLinecap="round">
+          <path d="M12 8l3.5 4.5M52 8l-3.5 4.5M5 21h5M59 21h-5" />
+        </g>
       </>
     );
   },
@@ -143,68 +160,81 @@ const ART: Record<string, Art> = {
       </text>
     </>
   ),
-  'five-thousand': () => (
-    <>
-      <defs>
-        {lin('ga-die', '#ffffff', '#dcd6c8')}
-        {lin('ga-die-s', '#cfc8b6', '#a79e88')}
-      </defs>
-      <g transform="rotate(-14 22 38)">
-        <rect x="9" y="27" width="26" height="26" rx="6" fill="url(#ga-die-s)" />
-        <rect x="9" y="24" width="26" height="26" rx="6" fill="url(#ga-die)" />
-        <g fill="#d62d20">
-          <circle cx="16" cy="31" r="2.4" />
-          <circle cx="28" cy="31" r="2.4" />
-          <circle cx="22" cy="37" r="2.4" />
-          <circle cx="16" cy="43" r="2.4" />
-          <circle cx="28" cy="43" r="2.4" />
-        </g>
+  'five-thousand': () => {
+    // Poker dice, as the game's: one shows the Ace, one the King.
+    const die = (x: number, y: number, turn: number, letter: string, color: string) => (
+      <g transform={`rotate(${turn} ${x + 13} ${y + 13})`}>
+        <rect x={x} y={y + 3} width="26" height="26" rx="6.5" fill="url(#ga-die-s)" />
+        <rect x={x} y={y} width="26" height="26" rx="6.5" fill="url(#ga-die)" />
+        <text x={x + 13} y={y + 20.5} textAnchor="middle" fontFamily={FONT} fontWeight="900" fontSize="19" fill={color}>
+          {letter}
+        </text>
       </g>
-      <g transform="rotate(16 44 22)">
-        <rect x="31" y="12" width="24" height="24" rx="6" fill="url(#ga-die-s)" />
-        <rect x="31" y="9" width="24" height="24" rx="6" fill="url(#ga-die)" />
-        <g fill="#1d1d1b">
-          <circle cx="37.5" cy="15.5" r="2.2" />
-          <circle cx="43" cy="21" r="2.2" />
-          <circle cx="48.5" cy="26.5" r="2.2" />
-        </g>
+    );
+    return (
+      <>
+        <defs>
+          {lin('ga-die', '#ffffff', '#dfd9cb')}
+          {lin('ga-die-s', '#c9c1ad', '#9d937b')}
+        </defs>
+        {die(32, 10, 14, 'K', '#1d1d1b')}
+        {die(7, 25, -12, 'A', '#d62d20')}
+      </>
+    );
+  },
+  maexchen: () => {
+    const die = (x: number, y: number, turn: number, pips: [number, number][]) => (
+      <g transform={`rotate(${turn} ${x + 9} ${y + 9})`}>
+        <rect x={x} y={y + 2} width="18" height="18" rx="4.5" fill="#b9b19d" />
+        <rect x={x} y={y} width="18" height="18" rx="4.5" fill="url(#ga-die)" />
+        {pips.map(([px, py], i) => (
+          <circle key={i} cx={x + px} cy={y + py} r="2.1" fill="#d62d20" />
+        ))}
       </g>
-    </>
-  ),
-  maexchen: () => (
-    <>
-      <defs>
-        {lin('ga-leather', '#b97a45', '#5a3518')}
-        {lin('ga-die', '#ffffff', '#dcd6c8')}
-      </defs>
-      <ellipse cx="30" cy="56" rx="20" ry="4" fill="#000" opacity="0.2" />
-      <path d="M17 12h26l6 42H11z" fill="url(#ga-leather)" />
-      <rect x="14" y="9" width="32" height="6" rx="3" fill="#6b3f1b" />
-      <path d="M12.4 46h35.2l1 8H11.4z" fill="#4a2b12" />
-      <Gloss d="M20 16h5l-4 34h-5z" o={0.22} />
-      <g transform="rotate(12 50 48)">
-        <rect x="41" y="40" width="16" height="16" rx="4" fill="url(#ga-die)" />
-        <circle cx="45.5" cy="44.5" r="1.8" fill="#d62d20" />
-        <circle cx="52.5" cy="51.5" r="1.8" fill="#d62d20" />
-      </g>
-    </>
-  ),
+    );
+    return (
+      <>
+        <defs>
+          {lin('ga-leather', '#c48650', '#5f3818')}
+          {lin('ga-die', '#ffffff', '#dfd9cb')}
+        </defs>
+        {/* The cup upside down: its closed bottom on top, the rim below. */}
+        <path d="M17 9.5a3 3 0 0 1 3-3h20a3 3 0 0 1 3 3L47 41H13z" fill="url(#ga-leather)" />
+        <rect x="10.5" y="38" width="39" height="8" rx="4" fill="#4d2c11" />
+        <Gloss d="M20.5 9.5h4.5l-3 29h-4.5z" o={0.22} />
+        {/* Mäxchen: a two and a one. */}
+        {die(13, 41, -10, [
+          [5, 5],
+          [13, 13],
+        ])}
+        {die(34, 40, 12, [[9, 9]])}
+      </>
+    );
+  },
   schweinerei: () => (
     <>
       <defs>
-        {rad('ga-pig', '#ffd3de', '#ee7d9a')}
-        {rad('ga-snout', '#ffa9bd', '#e2607f')}
+        {rad('ga-pig', '#ffd6e0', '#f0849f')}
+        {rad('ga-snout', '#ffb3c6', '#e66a8a')}
+        {lin('ga-ear', '#f7a1b6', '#d85c7c')}
       </defs>
-      <path d="M13 22l2-14 12 8zM51 22l-2-14-12 8z" fill="#ee8aa3" />
-      <circle cx="32" cy="34" r="22" fill="url(#ga-pig)" />
-      <ellipse cx="32" cy="41" rx="11" ry="8" fill="url(#ga-snout)" />
-      <ellipse cx="28" cy="41" rx="2.2" ry="3.2" fill="#9c3550" />
-      <ellipse cx="36" cy="41" rx="2.2" ry="3.2" fill="#9c3550" />
-      <circle cx="23" cy="29" r="3" fill="#2b1d22" />
-      <circle cx="41" cy="29" r="3" fill="#2b1d22" />
-      <circle cx="24" cy="28" r="1" fill="#fff" />
-      <circle cx="42" cy="28" r="1" fill="#fff" />
-      <Gloss d="M17 26c2-7 7-11 14-12-6 3-9.5 7-11 13z" o={0.5} />
+      {/* Ears, folded forward a little, pink inside. */}
+      <path d="M11 24C8 15 10 8 14 6c5 2 11 7 13 12z" fill="url(#ga-ear)" />
+      <path d="M53 24c3-9 1-16-3-18-5 2-11 7-13 12z" fill="url(#ga-ear)" />
+      <path d="M14 20c-1-5 0-9 2-10 3 1.5 6 4 7.5 7z" fill="#ffc4d3" />
+      <path d="M50 20c1-5 0-9-2-10-3 1.5-6 4-7.5 7z" fill="#ffc4d3" />
+      <ellipse cx="32" cy="35" rx="22" ry="20" fill="url(#ga-pig)" />
+      <ellipse cx="18.5" cy="40" rx="4.5" ry="3" fill="#ff8fab" opacity="0.6" />
+      <ellipse cx="45.5" cy="40" rx="4.5" ry="3" fill="#ff8fab" opacity="0.6" />
+      <ellipse cx="32" cy="41" rx="10" ry="7.5" fill="url(#ga-snout)" />
+      <ellipse cx="28.2" cy="41" rx="2" ry="3" fill="#a8385a" />
+      <ellipse cx="35.8" cy="41" rx="2" ry="3" fill="#a8385a" />
+      <ellipse cx="30" cy="36.5" rx="4" ry="1.6" fill="#fff" opacity="0.45" />
+      <circle cx="23" cy="30" r="3.2" fill="#2b1d22" />
+      <circle cx="41" cy="30" r="3.2" fill="#2b1d22" />
+      <circle cx="24.1" cy="28.9" r="1.1" fill="#fff" />
+      <circle cx="42.1" cy="28.9" r="1.1" fill="#fff" />
+      <Gloss d="M15 27c2-7 8-11.5 15-12.5-6 3-10 7-11.5 13.5z" o={0.5} />
     </>
   ),
   speed: () => (
@@ -239,13 +269,18 @@ const ART: Record<string, Art> = {
       <defs>
         {lin('ga-shirt', '#ffffff', '#d9dde4')}
         {lin('ga-tie', '#ff6b6b', '#b4161e')}
+        {/* The tie's stripes stay on the tie. */}
+        <clipPath id="ga-tie-clip">
+          <path d="M29.5 30h5l6 22-8.5 8-8.5-8z" />
+        </clipPath>
       </defs>
       <path d="M8 10l24 14 24-14v48H8z" fill="url(#ga-shirt)" />
-      <path d="M32 24L14 6l-6 10 14 16zM32 24L50 6l6 10-14 16z" fill="#fff" />
-      <path d="M32 24L14 6l-6 10 14 16zM32 24L50 6l6 10-14 16z" fill="#000" opacity="0.06" />
+      <path d="M32 24L14 6l-6 10 14 16zM32 24L50 6l6 10-14 16z" fill="#f4f5f7" />
       <path d="M28 23h8l-1.5 7h-5z" fill="#c81e28" />
       <path d="M29.5 30h5l6 22-8.5 8-8.5-8z" fill="url(#ga-tie)" />
-      <path d="M27 40l11-6M25.5 47l13.5-8M28 54l11-7" stroke="#7d0f15" strokeWidth="1.6" opacity="0.45" />
+      <g clipPath="url(#ga-tie-clip)" stroke="#7d0f15" strokeWidth="2" opacity="0.4">
+        <path d="M20 42l24-14M20 50l24-14M20 58l24-14" />
+      </g>
       <Gloss d="M30.5 31h2l-4 19-2.5-2.5z" o={0.35} />
     </>
   ),
@@ -257,14 +292,15 @@ const ART: Record<string, Art> = {
         {lin('ga-j3', '#ffe27a', '#e0a100')}
         {rad('ga-bell', '#fff3b0', '#d29b00')}
       </defs>
-      <path d="M14 46C8 32 8 18 4 12c10 2 18 16 20 30z" fill="url(#ga-j1)" />
-      <path d="M50 46c6-14 6-28 10-34-10 2-18 16-20 30z" fill="url(#ga-j2)" />
-      <path d="M22 44c0-16 4-30 10-38 6 8 10 22 10 38z" fill="url(#ga-j3)" />
-      <rect x="11" y="42" width="42" height="11" rx="5.5" fill="#5b3cc4" />
-      <path d="M14 46h36" stroke="#fff" strokeWidth="1.5" opacity="0.3" strokeLinecap="round" />
-      <circle cx="4.5" cy="11" r="3.6" fill="url(#ga-bell)" />
-      <circle cx="59.5" cy="11" r="3.6" fill="url(#ga-bell)" />
-      <circle cx="32" cy="5" r="3.6" fill="url(#ga-bell)" />
+      {/* The fool's cap, mirrored exactly about the middle: three points, a bell on each. */}
+      <path d="M15 50C10 37 9 25 5 18c10 2 17 14 19 30z" fill="url(#ga-j1)" />
+      <path d="M49 50c5-13 6-25 10-32-10 2-17 14-19 30z" fill="url(#ga-j2)" />
+      <path d="M22 49c0-15 4-28 10-36 6 8 10 21 10 36z" fill="url(#ga-j3)" />
+      <rect x="12" y="46" width="40" height="11" rx="5.5" fill="#5b3cc4" />
+      <path d="M16 50h32" stroke="#fff" strokeWidth="1.6" opacity="0.3" strokeLinecap="round" />
+      <circle cx="5" cy="17" r="3.8" fill="url(#ga-bell)" />
+      <circle cx="59" cy="17" r="3.8" fill="url(#ga-bell)" />
+      <circle cx="32" cy="11" r="3.8" fill="url(#ga-bell)" />
     </>
   ),
   'horse-race': () => (
@@ -285,20 +321,13 @@ const ART: Record<string, Art> = {
   ),
   trash: () => (
     <>
-      <defs>
-        {lin('ga-bin', '#e8ebf0', '#8d95a3')}
-        {paper}
-      </defs>
-      <g transform="rotate(-14 30 20)">
-        <Card x={26} y={4} w={18} h={25} r={3}>
-          <path d={heart(35, 12, 9)} fill="#d62d20" />
-        </Card>
-      </g>
+      <defs>{lin('ga-bin', '#e8ebf0', '#8d95a3')}</defs>
       <path d="M14 22h36l-4 36H18z" fill="url(#ga-bin)" />
-      <path d="M22 28l1.5 24M32 28v24M42 28l-1.5 24" stroke="#6f7785" strokeWidth="2.2" strokeLinecap="round" opacity="0.6" />
+      <path d="M22 28l1.5 24M32 28v24M42 28l-1.5 24" stroke="#6f7785" strokeWidth="2.4" strokeLinecap="round" opacity="0.6" />
+      {/* The lid, tipped up a little. */}
       <g transform="rotate(-10 32 18)">
         <rect x="11" y="15" width="42" height="7" rx="3.5" fill="#a8afbb" />
-        <rect x="26" y="11" width="12" height="5" rx="2.5" fill="#7d8594" />
+        <rect x="26" y="10.5" width="12" height="5.5" rx="2.75" fill="#7d8594" />
       </g>
       <Gloss d="M16 24h4l2.5 32h-3z" o={0.45} />
     </>
@@ -334,20 +363,26 @@ const ART: Record<string, Art> = {
     <>
       <defs>
         {lin('ga-gold', '#ffe58a', '#d99a00')}
-        {lin('ga-tiara', '#ffd1e8', '#d65a9c')}
+        {lin('ga-silver', '#ffffff', '#b8bfcc')}
+        {rad('ga-pink', '#ffd0e6', '#e0448f')}
       </defs>
-      <g transform="rotate(-12 22 34)">
-        <path d="M6 42l3-20 8 9 6-14 6 14 8-9 3 20z" fill="url(#ga-gold)" />
-        <rect x="6" y="40" width="34" height="7" rx="2.5" fill="#e3a600" />
-        <circle cx="23" cy="43.5" r="2" fill="#e5484d" />
-        <Gloss d="M9.5 24l2 14h-3z" o={0.5} />
+      {/* The King's crown, gold, behind on the left. */}
+      <g transform="rotate(-10 22 36)">
+        <path d="M5 44l3-22 8 9 6-15 6 15 8-9 3 22z" fill="url(#ga-gold)" />
+        <rect x="5" y="41" width="34" height="8" rx="2.5" fill="#d99a00" />
+        <circle cx="22" cy="45" r="2.3" fill="#e5484d" />
+        <circle cx="12.5" cy="45" r="1.6" fill="#3b82f6" />
+        <circle cx="31.5" cy="45" r="1.6" fill="#22a06b" />
+        <Gloss d="M8.5 25l2 14.5h-3.2z" o={0.5} />
       </g>
-      <g transform="rotate(12 44 38)">
-        <path d="M28 46c2-10 8-16 16-16s14 6 16 16c-5-3-10-4.5-16-4.5S33 43 28 46z" fill="url(#ga-tiara)" />
-        <path d="M44 22l3.5 8h-7z" fill="url(#ga-tiara)" />
-        <circle cx="44" cy="35" r="3" fill="#7cc8ff" />
-        <circle cx="35" cy="39" r="1.8" fill="#fff" />
-        <circle cx="53" cy="39" r="1.8" fill="#fff" />
+      {/* The Princess's tiara, silver with pink stones, in front on the right. */}
+      <g transform="rotate(8 44 44)">
+        <path d="M24 54c3-9 11-15 20-15s17 6 20 15c-6-3-13-4.5-20-4.5S30 51 24 54z" fill="url(#ga-silver)" />
+        <path d="M33 45.5c1-5 4-8 7-10l4-10 4 10c3 2 6 5 7 10-3.5-1.5-7.5-2.3-11-2.3S36.5 44 33 45.5z" fill="url(#ga-silver)" />
+        <circle cx="44" cy="37" r="3.6" fill="url(#ga-pink)" />
+        <circle cx="35" cy="47.5" r="2" fill="url(#ga-pink)" />
+        <circle cx="53" cy="47.5" r="2" fill="url(#ga-pink)" />
+        <circle cx="44" cy="25.5" r="1.8" fill="url(#ga-pink)" />
       </g>
     </>
   ),
@@ -372,41 +407,57 @@ const ART: Record<string, Art> = {
   party: () => (
     <>
       <defs>
-        {rad('ga-pawn', '#ff8f8f', '#b3171f')}
-        {lin('ga-die', '#ffffff', '#dcd6c8')}
+        {/* The game's own pawn (party/pawns.ts): lit across, from the left. */}
+        <linearGradient id="ga-pawn" gradientUnits="userSpaceOnUse" x1="17" y1="0" x2="47" y2="0">
+          <stop offset="0" stopColor="#1b4aae" />
+          <stop offset="0.3" stopColor="#6d98f0" />
+          <stop offset="0.55" stopColor="#2463e8" />
+          <stop offset="1" stopColor="#14378a" />
+        </linearGradient>
+        <radialGradient id="ga-pawn-head" cx="0.4" cy="0.32" r="0.7">
+          <stop offset="0" stopColor="#9dbcf7" />
+          <stop offset="0.45" stopColor="#2463e8" />
+          <stop offset="1" stopColor="#163f9c" />
+        </radialGradient>
       </defs>
-      <ellipse cx="27" cy="56" rx="16" ry="4" fill="#000" opacity="0.2" />
-      <path d="M17 54c0-10 4-18 10-22-4-2-6-5-6-9a6 6 0 0 1 12 0c0 4-2 7-6 9 6 4 10 12 10 22z" fill="url(#ga-pawn)" />
-      <circle cx="27" cy="16" r="9" fill="url(#ga-pawn)" />
-      <ellipse cx="27" cy="54" rx="13" ry="4" fill="#a1141c" />
-      <circle cx="24" cy="12.5" r="3" fill="#fff" opacity="0.55" />
-      <Gloss d="M21 50c0-7 2-12 5-15-2 4-3 9-2.5 15z" o={0.35} />
-      <g transform="rotate(14 48 46)">
-        <rect x="39" y="37" width="18" height="18" rx="4.5" fill="url(#ga-die)" />
-        <circle cx="44" cy="42" r="1.8" fill="#1d1d1b" />
-        <circle cx="48" cy="46" r="1.8" fill="#1d1d1b" />
-        <circle cx="52" cy="50" r="1.8" fill="#1d1d1b" />
-      </g>
+      <ellipse cx="32" cy="56.5" rx="15.5" ry="4.2" fill="#163f9c" />
+      <rect x="16.5" y="52.3" width="31" height="4.2" fill="url(#ga-pawn)" />
+      <ellipse cx="32" cy="52.3" rx="15.5" ry="4.2" fill="#4a7fee" />
+      <path d="M18 52.3c.5-11 8.3-16.2 9.6-25.5h8.8c1.3 9.3 9.1 14.5 9.6 25.5a14 3.6 0 0 1-28 0z" fill="url(#ga-pawn)" />
+      <ellipse cx="32" cy="26.8" rx="8.3" ry="2.6" fill="url(#ga-pawn)" />
+      <circle cx="32" cy="17.5" r="8.6" fill="url(#ga-pawn-head)" />
     </>
   ),
   'rat-screw': () => (
     <>
       <defs>
-        {rad('ga-rat', '#e4e7ec', '#8a909b')}
-        {rad('ga-ear', '#ffc2cf', '#e17d96')}
+        {lin('ga-sand', '#ffd98a', '#c98d32')}
+        {lin('ga-sand-d', '#d9a24a', '#9a6420')}
+        {lin('ga-rat', '#d3d7de', '#7f8591')}
+        {lin('ga-steel', '#f4f6f9', '#8e96a4')}
       </defs>
-      <circle cx="15" cy="17" r="11" fill="url(#ga-rat)" />
-      <circle cx="49" cy="17" r="11" fill="url(#ga-rat)" />
-      <circle cx="15" cy="17" r="6.5" fill="url(#ga-ear)" />
-      <circle cx="49" cy="17" r="6.5" fill="url(#ga-ear)" />
-      <path d="M32 58c-11 0-19-10-19-22 0-9 8-15 19-15s19 6 19 15c0 12-8 22-19 22z" fill="url(#ga-rat)" />
-      <circle cx="25" cy="35" r="3" fill="#1d1d1b" />
-      <circle cx="39" cy="35" r="3" fill="#1d1d1b" />
-      <circle cx="26" cy="34" r="1" fill="#fff" />
-      <circle cx="40" cy="34" r="1" fill="#fff" />
-      <ellipse cx="32" cy="47" rx="4" ry="3" fill="#e56b8a" />
-      <path d="M27 47H12M27 50l-13 4M37 47h15M37 50l13 4" stroke="#5f6570" strokeWidth="1.3" strokeLinecap="round" />
-      <Gloss d="M17 33c1-6 5-10 11-11-4 3-7 6-8.5 11z" o={0.45} />
+      {/* Egyptian: the pyramid behind, its shaded side on the right. */}
+      <path d="M32 6L6 46h26z" fill="url(#ga-sand)" />
+      <path d="M32 6l26 40H32z" fill="url(#ga-sand-d)" />
+      <path d="M16 31h11M12 37.5h17M21 24.5h8" stroke="#a8702a" strokeWidth="1.4" opacity="0.4" strokeLinecap="round" />
+      {/* The rat, sitting in front, facing right. */}
+      <path d="M14 55c-6 0-9-3-6-6 2-2 5-1 7 0" fill="none" stroke="#c98fa0" strokeWidth="2.2" strokeLinecap="round" />
+      <ellipse cx="24" cy="49" rx="12" ry="9" fill="url(#ga-rat)" />
+      <path d="M30 42c5-3 11-2 15 3l-4 4c-3 2-8 2-11 0z" fill="url(#ga-rat)" />
+      <circle cx="31" cy="39.5" r="4.6" fill="url(#ga-rat)" />
+      <circle cx="31" cy="39.5" r="2.6" fill="#f2a5b8" />
+      <circle cx="38.5" cy="44.5" r="1.5" fill="#1d1d1b" />
+      <circle cx="45" cy="46.5" r="1.6" fill="#e56b8a" />
+      <ellipse cx="21" cy="57.5" rx="3" ry="1.4" fill="#e9a3b5" />
+      <ellipse cx="30" cy="57.5" rx="3" ry="1.4" fill="#e9a3b5" />
+      {/* The screw, standing on the right. */}
+      <g transform="rotate(14 52 46)">
+        <rect x="49" y="40" width="6" height="18" rx="1" fill="url(#ga-steel)" />
+        <path d="M49 43.5l6-2M49 47.5l6-2M49 51.5l6-2M49 55.5l6-2" stroke="#6a7280" strokeWidth="1.4" />
+        <path d="M49 58l3 4 3-4z" fill="#8e96a4" />
+        <ellipse cx="52" cy="40" rx="6.5" ry="2.8" fill="url(#ga-steel)" />
+        <path d="M48.5 40h7" stroke="#5d6472" strokeWidth="1.5" strokeLinecap="round" />
+      </g>
     </>
   ),
   'color-clash': () => {
@@ -500,23 +551,36 @@ const ART: Record<string, Art> = {
     <>
       <defs>
         {lin('ga-acc', '#ff7b72', '#a8141c')}
-        {lin('ga-bellows', '#ffe6c7', '#c9a777')}
+        {linU('ga-fold-a', '#fff2dc', '#d8b98a', 0, 10, 0, 56)}
+        {linU('ga-fold-b', '#d4ad74', '#8f6a3d', 0, 10, 0, 56)}
       </defs>
-      <path d="M18 12l4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4h24l4-4-4-4 4-4-4-4 4-4-4-4 4-4-4-4 4-4-4-4z" fill="url(#ga-bellows)" />
-      <path d="M18 12l4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4M46 12l-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4 4" fill="none" stroke="#9c7a4c" strokeWidth="1.4" />
-      <rect x="4" y="8" width="16" height="48" rx="4" fill="url(#ga-acc)" />
-      <rect x="44" y="8" width="16" height="48" rx="4" fill="url(#ga-acc)" />
-      <g fill="#fff">
-        {[0, 1, 2, 3, 4, 5].map((i) => (
-          <rect key={i} x="47" y={12 + i * 7} width="10" height="5" rx="1.2" />
-        ))}
+      <g transform="rotate(-8 32 32)">
+        {/* The bellows: pleats in turn lit and in shade, wider in the middle as it's pulled open. */}
+        {[0, 1, 2, 3, 4, 5].map((i) => {
+          const x = 18 + i * 4.7;
+          return (
+            <g key={i}>
+              <path d={`M${x} ${12 - (i === 2 || i === 3 ? 2 : 0)}h2.35v${44 + (i === 2 || i === 3 ? 4 : 0)}H${x}z`} fill="url(#ga-fold-a)" />
+              <path d={`M${x + 2.35} ${12 - (i === 2 || i === 3 ? 2 : 0)}h2.35v${44 + (i === 2 || i === 3 ? 4 : 0)}h-2.35z`} fill="url(#ga-fold-b)" />
+            </g>
+          );
+        })}
+        {/* The two ends: the treble side with its keys (right), the bass side with its buttons. */}
+        <rect x="4" y="9" width="15" height="48" rx="4" fill="url(#ga-acc)" />
+        <rect x="45" y="9" width="15" height="48" rx="4" fill="url(#ga-acc)" />
+        <rect x="48" y="12" width="9" height="42" rx="2" fill="#fbf7ee" />
+        <g fill="#1d1d1b">
+          {[0, 1, 2, 4, 5].map((i) => (
+            <rect key={i} x="52.5" y={15 + i * 7} width="4.5" height="4" rx="1" />
+          ))}
+        </g>
+        <g fill="#ffe27a">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <circle key={i} cx="11.5" cy={15 + i * 8.5} r="2.4" />
+          ))}
+        </g>
+        <Gloss d="M6 11h3.5v44H6z" o={0.3} />
       </g>
-      <g fill="#ffe27a">
-        {[0, 1, 2, 3].map((i) => (
-          <circle key={i} cx="12" cy={16 + i * 10} r="2.4" />
-        ))}
-      </g>
-      <Gloss d="M6 10h4v44H6z" o={0.3} />
     </>
   ),
   vierer: () => (
