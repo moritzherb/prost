@@ -12,6 +12,8 @@ import { alive, guess, newGame, over, won, type Game, type Guess } from './logic
 
 /** When a wrong place is edge on, half way through turning over (.btd-place.turning: delay + duration). */
 const TURN_MS = 1200;
+/** The same when it is the last place (.turning.last): the red moment is shorter, the end is near. */
+const TURN_LAST_MS = 760;
 
 /** Beat the Deck: higher or lower on one of nine cards, through the whole deck. */
 export default function BeatTheDeck({ exit }: GameProps) {
@@ -24,15 +26,15 @@ export default function BeatTheDeck({ exit }: GameProps) {
   const showing = g.last && !g.last.right && turned !== g ? g.last.place : null;
   useEffect(() => {
     if (!g.last || g.last.right) return;
-    const id = window.setTimeout(() => setTurned(g), TURN_MS);
+    const id = window.setTimeout(() => setTurned(g), over(g) ? TURN_LAST_MS : TURN_MS);
     return () => window.clearTimeout(id);
   }, [g]);
-  // The end comes a second after the last card has landed (its flight takes 420 ms), or the last
-  // place has turned over: a beat to take it in, not straight on top of it.
+  // The end comes a beat after the last card has landed (its flight takes 420 ms), or the last
+  // place has turned over (its turn ends 320 ms after TURN_MS).
   const [endOf, setEndOf] = useState<Game | null>(null);
   useEffect(() => {
     if (!over(g) || showing != null) return;
-    const id = window.setTimeout(() => setEndOf(g), g.last?.right ? 1420 : 1000);
+    const id = window.setTimeout(() => setEndOf(g), g.last?.right ? 720 : 450);
     return () => window.clearTimeout(id);
   }, [g, showing]);
   // The card drawn flies from the pile onto the place it was guessed for.
@@ -47,9 +49,9 @@ export default function BeatTheDeck({ exit }: GameProps) {
   }, [g]);
   const done = endOf === g;
   useEffect(() => {
-    // A moment after the end screen is up: the confetti starting in the same frame made it stutter.
+    // A moment after the end screen is up, once its own entrance has run: both together stuttered.
     if (!done || !won(g)) return;
-    const id = window.setTimeout(celebrate, 250);
+    const id = window.setTimeout(celebrate, 450);
     return () => window.clearTimeout(id);
   }, [done, g]);
 
@@ -100,7 +102,7 @@ export default function BeatTheDeck({ exit }: GameProps) {
             <button
               key={i}
               type="button"
-              className={`btd-place${pick === i ? ' picked' : ''}${showing === i ? ' turning' : p.dead ? ' down' : ''}`}
+              className={`btd-place${pick === i ? ' picked' : ''}${showing === i ? (over(g) ? ' turning last' : ' turning') : p.dead ? ' down' : ''}`}
               disabled={p.dead}
               onClick={() => setPick(pick === i ? null : i)}
             >
