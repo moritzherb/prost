@@ -17935,6 +17935,12 @@ html[data-look] .play-screen > .top-bar .round-btn {
   aspect-ratio: 2.1;
 }
 
+/* The square box, seen more from above. */
+.nf-stage.square .nf-canvas-host {
+  aspect-ratio: 1.1;
+  max-height: 56dvh;
+}
+
 .nf-canvas {
   display: block;
   width: 100%;
