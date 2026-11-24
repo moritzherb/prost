@@ -2,18 +2,22 @@ import { useEffect, useState } from 'react';
 import BigButton from '../../components/BigButton';
 import { getLang, t } from '../../i18n';
 import { celebrate, sfx } from '../../lib/fx';
+import { useCrewButton, useTurnBubble } from '../../lib/turn';
 import { useApp } from '../../state/AppState';
 import SoloEnd from '../solo/SoloEnd';
 import type { GameProps } from '../types';
 import { buzz, judge, newQuiz, skip, type Quiz } from './logic';
-import { Board, COUNTS, LEVELS, TOPIC_NAME, VerdictFlash } from './PubQuiz';
+import { Board, COUNTS, End, LEVELS, TOPIC_NAME, VerdictFlash } from './PubQuiz';
 import { QUESTIONS, type Level } from './questions';
 
 /** How long a verdict shows (.pq-verdict in global.css): the buttons stay locked until it is gone. */
 const VERDICT_MS = 1700;
 
-/** Pub Quiz alone, on one phone: it asks, you think of the answer, look, and say honestly if you knew it. */
-export default function PubQuizSolo({ exit }: GameProps) {
+/**
+ * Pub Quiz on one phone: it asks, you think of the answer, look, and say honestly if you knew it.
+ * With a crew, the questions go round: each one is for whoever is on, and each scores their own.
+ */
+export default function PubQuizSolo({ players, exit }: GameProps) {
   const known = useApp().knows('pub-quiz');
   const [levels, setLevels] = useState<Level[]>([1, 2]);
   const [count, setCount] = useState(20);
@@ -25,16 +29,22 @@ export default function PubQuizSolo({ exit }: GameProps) {
     const id = window.setTimeout(() => setLocked(false), VERDICT_MS);
     return () => window.clearTimeout(id);
   }, [locked]);
+  const group = players.length > 1;
+  useCrewButton(q ? null : 'crew');
+  // Whose question it is, with a crew.
+  const on = q && group ? q.sides[q.at % q.sides.length] : null;
+  useTurnBubble(on && q?.phase !== 'over' ? players.find((p) => p.id === on.id) : null);
   const over = q?.phase === 'over';
   const score = q?.scores.me ?? 0;
   const won = !!q && score * 2 >= q.deck.length;
   useEffect(() => {
-    if (over && won) celebrate();
-  }, [over, won]);
+    if (over && (won || group)) celebrate();
+  }, [over, won, group]);
 
   const start = () => {
     const pool = QUESTIONS.filter((x) => levels.includes(x.level)).length;
-    setQ(newQuiz([{ id: 'me', name: t('You'), color: 'var(--accent)', members: ['me'] }], levels, Math.min(count, pool)));
+    const sides = group ? players.map((p) => ({ id: p.id, name: p.name, color: p.color, members: [p.id] })) : [{ id: 'me', name: t('You'), color: 'var(--accent)', members: ['me'] }];
+    setQ(newQuiz(sides, levels, Math.min(count, pool)));
     setShown(false);
     setLocked(false);
   };
@@ -44,7 +54,7 @@ export default function PubQuizSolo({ exit }: GameProps) {
     return (
       <div className="bd">
         <div className="bd-head">
-          <span className="kicker">{t('Alone against the quiz')}</span>
+          <span className="kicker">{group ? t('One phone, turn by turn') : t('Alone against the quiz')}</span>
           <h2 className="bd-title big">{t('Pub Quiz')}</h2>
           {!known && <p className="lead">{t('Think of the answer, then look, and say honestly if you knew it.')}</p>}
         </div>
@@ -72,6 +82,7 @@ export default function PubQuizSolo({ exit }: GameProps) {
     );
   }
 
+  if (over && group) return <End q={q} onNew={() => setQ(null)} />;
   if (over)
     return (
       <SoloEnd
@@ -89,7 +100,7 @@ export default function PubQuizSolo({ exit }: GameProps) {
   const next = (knew: boolean) => {
     setQ((x) => {
       if (!x) return x;
-      const judged = judge(buzz(x, 'me'), knew);
+      const judged = judge(buzz(x, on?.id ?? 'me'), knew);
       // Not known: no second try alone, on to the next one (the cross still shows).
       return knew ? judged : { ...skip(judged), verdict: judged.verdict };
     });
@@ -99,7 +110,7 @@ export default function PubQuizSolo({ exit }: GameProps) {
   return (
     <div className="pq fill">
       <VerdictFlash q={q} />
-      <Board q={q} />
+      <Board q={q} mine={on?.id} />
       <div className="pq-card" key={q.at}>
         <span className="pq-meta">
           {t('Question {n} of {m}', { n: q.at + 1, m: q.deck.length })} · {t(TOPIC_NAME[item.topic])}

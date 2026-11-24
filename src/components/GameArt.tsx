@@ -187,8 +187,10 @@ const ART: Record<string, Art> = {
   ),
   'five-thousand': () => {
     // Poker dice, as the game's: one shows the Ace, one the King.
-    const die = (x: number, y: number, turn: number, letter: string, color: string) => (
+    const die = (x: number, y: number, turn: number, letter: string, color: string, front = false) => (
       <g transform={`rotate(${turn} ${x + 13} ${y + 13})`}>
+        {/* The front one throws a soft shadow up onto the other: two dice, not one lump. */}
+        {front && <rect x={x + 2} y={y - 2.5} width="26" height="28" rx="7" fill="#3d3628" opacity="0.28" filter="url(#ga-die-blur)" />}
         <rect x={x} y={y + 3} width="26" height="26" rx="6.5" fill="url(#ga-die-s)" />
         <rect x={x} y={y} width="26" height="26" rx="6.5" fill="url(#ga-die)" />
         <text x={x + 13} y={y + 20.5} textAnchor="middle" fontFamily={FONT} fontWeight="900" fontSize="19" fill={color}>
@@ -201,9 +203,12 @@ const ART: Record<string, Art> = {
         <defs>
           {lin('ga-die', '#ffffff', '#dfd9cb')}
           {lin('ga-die-s', '#c9c1ad', '#9d937b')}
+          <filter id="ga-die-blur" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="1.4" />
+          </filter>
         </defs>
-        {die(32, 10, 14, 'K', '#1d1d1b')}
-        {die(7, 25, -12, 'A', '#d62d20')}
+        {die(34, 8, 14, 'K', '#1d1d1b')}
+        {die(5, 27, -12, 'A', '#d62d20', true)}
       </>
     );
   },
@@ -435,32 +440,30 @@ const ART: Record<string, Art> = {
   party: () => (
     <>
       <defs>
-        {/* The game's own white pawn, drawn as pawns.ts draws it (h = 60 here): lit from the left. */}
+        {/* The game's own white pawn (party/pawns.ts outline), as an icon: no outlines, lit from the left. */}
         <linearGradient id="ga-pawn" gradientUnits="userSpaceOnUse" x1="-18" y1="0" x2="18" y2="0">
-          <stop offset="0" stopColor="#b5b3ac" />
-          <stop offset="0.3" stopColor="#f7f5f0" />
-          <stop offset="0.55" stopColor="#f1eee6" />
-          <stop offset="1" stopColor="#857f7e" />
+          <stop offset="0" stopColor="#dcd5c8" />
+          <stop offset="0.3" stopColor="#ffffff" />
+          <stop offset="0.62" stopColor="#efe9df" />
+          <stop offset="1" stopColor="#b9b0a1" />
         </linearGradient>
-        <linearGradient id="ga-pawn-collar" gradientUnits="userSpaceOnUse" x1="-10.8" y1="0" x2="10.8" y2="0">
-          <stop offset="0" stopColor="#b5b3ac" />
-          <stop offset="0.3" stopColor="#f7f5f0" />
-          <stop offset="0.55" stopColor="#f1eee6" />
-          <stop offset="1" stopColor="#857f7e" />
-        </linearGradient>
-        <radialGradient id="ga-pawn-head" gradientUnits="userSpaceOnUse" cx="0" cy="-48" r="10.8" fx="-3.6" fy="-51.6">
-          <stop offset="0" stopColor="#f9f8f5" />
-          <stop offset="0.45" stopColor="#f1eee6" />
-          <stop offset="1" stopColor="#918f8a" />
+        <radialGradient id="ga-pawn-head" gradientUnits="userSpaceOnUse" cx="-3.2" cy="-51.5" r="13">
+          <stop offset="0" stopColor="#ffffff" />
+          <stop offset="0.55" stopColor="#f0eae0" />
+          <stop offset="1" stopColor="#bdb4a5" />
         </radialGradient>
       </defs>
-      <g transform="translate(32 60)" stroke="rgba(0,0,0,0.35)" strokeWidth="0.84">
-        <ellipse cx="0" cy="-3" rx="18" ry="4.8" fill="#918f8a" stroke="none" />
-        <rect x="-18" y="-7.8" width="36" height="4.8" fill="url(#ga-pawn)" stroke="none" />
-        <ellipse cx="0" cy="-7.8" rx="18" ry="4.8" fill="#f3f1eb" />
+      <ellipse cx="32" cy="60" rx="19" ry="3.6" fill="#000" opacity="0.2" />
+      <g transform="translate(32 59)">
+        <ellipse cx="0" cy="-3" rx="18" ry="4.8" fill="#b4ab9b" />
+        <rect x="-18" y="-7.8" width="36" height="4.8" fill="url(#ga-pawn)" />
+        <ellipse cx="0" cy="-7.8" rx="18" ry="4.8" fill="#f6f2eb" />
         <path d="M-16.2 -7.8C-15 -20.4 -6 -26.4 -5.1 -37.2L5.1 -37.2C6 -26.4 15 -20.4 16.2 -7.8A16.2 4.2 0 0 1 -16.2 -7.8z" fill="url(#ga-pawn)" />
-        <ellipse cx="0" cy="-37.2" rx="9.6" ry="3" fill="url(#ga-pawn-collar)" />
+        {/* The shadow the collar throws on the body, then the collar. */}
+        <ellipse cx="0" cy="-35.6" rx="7.6" ry="2.4" fill="#a99f8f" opacity="0.55" />
+        <ellipse cx="0" cy="-37.6" rx="9.6" ry="3" fill="url(#ga-pawn)" />
         <circle cx="0" cy="-48" r="9.9" fill="url(#ga-pawn-head)" />
+        <Gloss d="M-10.8 -12c1.4-9 6.2-14.6 7.3-22.6h1.6c-1.8 8.4-5.4 13.6-6.2 22.8z" o={0.55} />
       </g>
     </>
   ),
