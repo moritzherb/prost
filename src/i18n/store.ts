@@ -26,13 +26,13 @@ export const STORE: Record<string, { en: string; de: string }> = {
     en: 'Sips are counted in the games that know who drinks (President and Beggar, so far).',
     de: 'Schlucke zählen in den Spielen, die wissen, wer trinkt (bisher Präsident und Bettler).',
   },
-  'All four Jacks. Empty your glass!': { en: 'All four Jacks. Drink 3!', de: 'Alle vier Buben. Trink 3!' },
+  'All four Jacks. Empty your glass': { en: 'All four Jacks. Drink 3!', de: 'Alle vier Buben. Trink 3!' },
   'Whoever ends up with all four Jacks is the Asshole. The game is over.': {
     en: 'Whoever ends up with all four Jacks is the Beggar. The game is over.',
     de: 'Wer alle vier Buben auf der Hand hat, ist der Bettler. Das Spiel ist aus.',
   },
-  'You’re the Asshole!': { en: 'You’re the Beggar!', de: 'Du bist der Bettler!' },
-  '{name} is the Asshole!': { en: '{name} is the Beggar!', de: '{name} ist der Bettler!' },
+  'You’re the Asshole': { en: 'You’re the Beggar!', de: 'Du bist der Bettler!' },
+  '{name} is the Asshole': { en: '{name} is the Beggar!', de: '{name} ist der Bettler!' },
   'Ended up the Asshole': { en: 'Ended up the Beggar', de: 'Bettler geworden' },
   'The first round, whoever holds the 7 of clubs starts. After that the Asshole starts.': {
     en: 'The first round, whoever holds the 7 of clubs starts. After that the Beggar starts.',
@@ -66,8 +66,8 @@ export const STORE: Record<string, { en: string; de: string }> = {
     en: '31 in one suit = Thirty-One and three aces = Fire: the round ends at once.',
     de: '31 in einer Farbe = Einunddreißig und drei Asse = Feuer: Die Runde ist sofort vorbei.',
   },
-  'Pants down from you!': { en: 'Thirty-One from you!', de: 'Einunddreißig von dir!' },
-  'Pants down from {name}!': { en: 'Thirty-One from {name}!', de: 'Einunddreißig von {name}!' },
+  'Pants down from you': { en: 'Thirty-One from you!', de: 'Einunddreißig von dir!' },
+  'Pants down from {name}': { en: 'Thirty-One from {name}!', de: 'Einunddreißig von {name}!' },
 
   /* ---------- Kings Cup: no cup to mix and down, the Kings are toasts ---------- */
   'An empty cup in the middle': { en: 'Something to drink (water works too)', de: 'Was zu trinken (Wasser geht auch)' },
@@ -102,9 +102,9 @@ export const STORE: Record<string, { en: string; de: string }> = {
     en: 'Draw a card each round the table and do what it says. Whoever draws the 4th clap glass claps 3, and the game is over.',
     de: 'Reihum zieht jeder eine Karte und macht, was draufsteht. Wer das 4. Klatschglas zieht, klatscht 3, und das Spiel ist vorbei.',
   },
-  'You clap the whole glass in the middle. Down in one!': { en: 'You clap 3. The game is over.', de: 'Du klatschst 3. Das Spiel ist vorbei.' },
-  '{name} claps the glass!': { en: '{name} claps 3!', de: '{name} klatscht 3!' },
-  'All the way down. Cheers!': { en: 'Cheers!', de: 'Prost!' },
+  'You clap the whole glass in the middle. Down in one': { en: 'You clap 3. The game is over.', de: 'Du klatschst 3. Das Spiel ist vorbei.' },
+  '{name} claps the glass': { en: '{name} claps 3!', de: '{name} klatscht 3!' },
+  'All the way down. Cheers': { en: 'Cheers!', de: 'Prost!' },
   'Pour a splash from your glass into the one in the middle. Whoever draws the 4th one claps the whole glass.': {
     en: 'Clap 2. Whoever draws the 4th one claps 3 and ends the game.',
     de: 'Klatsch 2. Wer das 4. zieht, klatscht 3 und beendet das Spiel.',

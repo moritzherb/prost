@@ -60,7 +60,7 @@ export default function BeatTheDeck({ exit }: GameProps) {
       <SoloEnd
         game="beat-the-deck"
         won={won(g)}
-        title={won(g) ? t('You beat the deck!') : t('The deck wins')}
+        title={won(g) ? t('You beat the deck') : t('The deck wins')}
         lead={won(g) ? t('{n} of 9 places still open.', { n: alive(g) }) : t('{n} cards were left in the pile.', { n: g.deck.length })}
         onAgain={() => {
           setG(newGame());

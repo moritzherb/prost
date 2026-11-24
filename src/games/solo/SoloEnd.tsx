@@ -8,7 +8,7 @@ export default function SoloEnd({ game, won, title, lead, kicker, onAgain, exit 
     <div className="bd">
       {won && <Finished game={game} />}
       <div className="bd-head center">
-        <span className="kicker">{kicker ?? (won ? t('Solved!') : t('Game over'))}</span>
+        <span className="kicker">{kicker ?? (won ? t('Solved') : t('Game over'))}</span>
         <h2 className="bd-title big">{title}</h2>
         {lead && <p className="lead">{lead}</p>}
       </div>

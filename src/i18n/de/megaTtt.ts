@@ -30,7 +30,7 @@ const megaTtt: Record<string, string> = {
   'Start over?': 'Neu anfangen?',
   'The board is cleared and X starts again.': 'Das Brett wird geleert und X fängt wieder an.',
   '{name} takes {place}': '{name} holt {place}',
-  '{name} wins!': '{name} gewinnt!',
+  '{name} wins': '{name} gewinnt',
   'Three in a row in a small board wins it: a big X or O, and nobody plays there any more. Full without three in a row, it’s nobody’s.': 'Drei in einer Reihe auf einem kleinen Feld gewinnen es: ein großes X oder O, dort spielt niemand mehr. Voll ohne drei in einer Reihe gehört es niemandem.',
   'Three small boards in a row win the game. The loser starts the next one.': 'Drei kleine Felder in einer Reihe gewinnen das Spiel. Wer verliert, beginnt das nächste.',
 };

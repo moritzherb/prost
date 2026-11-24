@@ -13,14 +13,14 @@ const colorClash: Record<string, string> = {
   Burden: 'Last',
   Overload: 'Überladung',
   Draw: 'Ziehen',
-  'Last card!': 'Letzte Karte!',
+  'Last card': 'Letzte Karte',
   'Which colour?': 'Welche Farbe?',
   'Your hand': 'Deine Hand',
   'Top card; the colour is {color}': 'Oberste Karte; die Farbe ist {color}',
   'Play the card you drew, or keep it': 'Spiel die gezogene Karte oder behalt sie',
-  'You’re out of cards: you win!': 'Keine Karten mehr: Du gewinnst!',
-  '{name} is out of cards and wins!': '{name} hat keine Karten mehr und gewinnt!',
-  '{name}: last card!': '{name}: Letzte Karte!',
+  'You’re out of cards: you win': 'Keine Karten mehr: Du gewinnst',
+  '{name} is out of cards and wins': '{name} hat keine Karten mehr und gewinnt',
+  '{name}: last card': '{name}: Letzte Karte',
   'Everyone joins the same room on their own phone. 108 cards in four colours (Crimson, Azure, Amber, Jade), seven each; one card starts the pile.':
     'Alle sind mit ihrem eigenen Handy im selben Raum. 108 Karten in vier Farben (Karmin, Azur, Bernstein, Jade), je sieben auf die Hand; eine Karte beginnt den Stapel.',
   'In turn, play a card of the active colour, the same number or the same action. Or draw one: if it fits, you may play it at once.':

@@ -18756,7 +18756,7 @@ html.table-phone .game-bar .top-bar-side.right {
     box-shadow: 0 0 0 0 var(--good);
   }
   25% {
-    box-shadow: 0 0 0 4px var(--good), 0 0 18px 2px color-mix(in srgb, var(--good) 60%, transparent);
+    box-shadow: 0 0 0 4px var(--good);
   }
   100% {
     box-shadow: 0 0 0 0 transparent;
@@ -18768,7 +18768,7 @@ html.table-phone .game-bar .top-bar-side.right {
     box-shadow: 0 0 0 0 var(--bad);
   }
   30% {
-    box-shadow: 0 0 0 4px var(--bad), 0 0 18px 2px color-mix(in srgb, var(--bad) 60%, transparent);
+    box-shadow: 0 0 0 4px var(--bad);
   }
   100% {
     box-shadow: 0 0 0 4px var(--bad);
@@ -19155,7 +19155,7 @@ html.table-phone .game-bar .top-bar-side.right {
 
 /* A card that costs points (a Queen in the Queens round, the King of clubs in its round) glows. */
 .vr-trick-card.hot .pcard-front {
-  box-shadow: 0 0 0 3px #ffd54a, 0 0 22px 4px rgba(255, 213, 74, 0.55);
+  box-shadow: 0 0 0 3px #ffd54a;
 }
 
 .vr-trick-card.bottom { translate: 0 calc(var(--cw) * 0.55); }
@@ -19633,23 +19633,6 @@ html.table-phone .game-bar .top-bar-side.right {
     inset 0 -4px 10px rgba(0, 0, 0, 0.32);
 }
 
-/* You buzzed first: the whole screen glows in your colour, the buzzer rings, the line says so. */
-.pq.answering::before {
-  content: '';
-  position: absolute;
-  inset: -40px calc(-1 * var(--gutter)) -40px;
-  z-index: -1;
-  background: radial-gradient(ellipse 70% 55% at 50% 62%, color-mix(in srgb, var(--chip) 38%, transparent), transparent 75%);
-  animation: pq-glow 1.4s ease-in-out infinite alternate;
-  pointer-events: none;
-}
-
-@keyframes pq-glow {
-  from {
-    opacity: 0.55;
-  }
-}
-
 .pq-buzzer.mine::after {
   content: '';
   position: absolute;
@@ -19688,9 +19671,7 @@ html.table-phone .game-bar .top-bar-side.right {
   justify-content: center;
   gap: 10px;
   padding-bottom: 8vh;
-  background:
-    radial-gradient(circle at 50% 44%, color-mix(in srgb, var(--mark) 24%, transparent), transparent 55%),
-    color-mix(in srgb, var(--bg) 62%, transparent);
+  background: color-mix(in srgb, var(--bg) 62%, transparent);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   pointer-events: none;

@@ -189,7 +189,7 @@ function Table({
     let text = '';
     for (const e of fresh) {
       if (e.k === 'lose' && e.by === me) {
-        text = t('You’re the Asshole!');
+        text = t('You’re the Asshole');
         recordLoss('arschloch');
       } else if (e.k === 'lose') celebrate();
     }
@@ -266,7 +266,7 @@ function Table({
   let headline: string;
   if (hiding) headline = t('Turning it over…');
   else if (!myTurn) headline = t('{name}’s turn', { name: seats[g.turn]?.name ?? '' });
-  else if (o.mustCall) headline = t('Nothing to play: turn it over!');
+  else if (o.mustCall) headline = t('Nothing to play: turn it over');
   else if (o.draw) headline = o.call ? t('Believe it and draw, or turn it over') : t('Draw a card from the circle');
   else if (o.call) headline = t('Believe it and play, or turn it over');
   else headline = t('Lay a card down and say what it is');
@@ -362,7 +362,7 @@ function Table({
             )}
             {o.call && (
               <BigButton variant="danger" className={o.play ? 'as-pass' : ''} onClick={() => act((x) => call(x, me))}>
-                {t('Liar!')}
+                {t('Liar')}
               </BigButton>
             )}
           </div>
@@ -495,7 +495,7 @@ function Reveal({ e, seats, onClose }: { e: Extract<Entry, { k: 'call' }>; seats
           </svg>
         </span>
       </span>
-      <span className="ar-reveal-stamp">{e.lied ? t('Lie!') : t('True!')}</span>
+      <span className="ar-reveal-stamp">{e.lied ? t('Lie') : t('True')}</span>
       <span className="ar-reveal-text">
         {t('Said {claim}', { claim: rank(e.claim) })} · {t('{name} takes the pile', { name: seats[e.taker]?.name ?? '' })}
       </span>
@@ -530,8 +530,8 @@ function Over({
         <span className="ar-over-avatar" style={{ '--chip': loser?.color } as CSSProperties}>
           <Avatar name={loser?.name ?? ''} color={loser?.color} photo={loser ? photoOf(loser.id) : undefined} />
         </span>
-        <h2 className="bd-title big">{g.loser === me ? t('You’re the Asshole!') : t('{name} is the Asshole!', { name: loser?.name ?? '' })}</h2>
-        <p className="lead">{t('All four Jacks. Empty your glass!')}</p>
+        <h2 className="bd-title big">{g.loser === me ? t('You’re the Asshole') : t('{name} is the Asshole', { name: loser?.name ?? '' })}</h2>
+        <p className="lead">{t('All four Jacks. Empty your glass')}</p>
         {reveal && <p className="fine-print">{reveal.lied ? t('Caught lying, and the pile held the last Jack.') : t('Turned over the truth, and the pile held the last Jack.')}</p>}
       </div>
       <div className="ar-jacks">

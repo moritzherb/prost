@@ -133,7 +133,7 @@ function Table({
     const queens = lt.plays.filter((p) => p.card.value === QUEEN).length;
     const king = lt.plays.some((p) => same(p.card, KING_OF_CLUBS));
     const pts = lt.kind === 'queens' ? queens * POINTS.queen : lt.kind === 'king' ? (king ? POINTS.king : 0) : lt.kind === 'tricks' ? POINTS.trick : 0;
-    const what = lt.kind === 'queens' && queens ? (queens === 1 ? t('A Queen!') : t('{n} Queens!', { n: queens })) : lt.kind === 'king' && king ? t('The King of clubs!') : null;
+    const what = lt.kind === 'queens' && queens ? (queens === 1 ? t('A Queen') : t('{n} Queens', { n: queens })) : lt.kind === 'king' && king ? t('The King of clubs') : null;
     setGain(pts ? { seat: lt.by, pts, what, key: g.seq } : null);
     if (what) {
       sfx.boo();
@@ -167,7 +167,7 @@ function Table({
         <Finished game="vierer" />
         <div className="bd-head center">
           <span className="kicker">{t('Game over')}</span>
-          <h2 className="bd-title big">{won.includes(me) ? t('You win!') : t('{name} wins!', { name: won.map((i) => seats[i].name).join(' & ') })}</h2>
+          <h2 className="bd-title big">{won.includes(me) ? t('You win') : t('{name} wins', { name: won.map((i) => seats[i].name).join(' & ') })}</h2>
         </div>
         <ol className="vr-results">
           {order.map(({ s, i }, k) => (

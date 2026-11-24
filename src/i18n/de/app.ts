@@ -118,8 +118,8 @@ const app: Record<string, string> = {
   'Joining {code}…': 'Trete {code} bei…',
   'This takes a few seconds.': 'Dauert nur ein paar Sekunden.',
   Cancel: 'Abbrechen',
-  'prost! room': 'prost!-Raum',
-  'Join my prost! room: {code}': 'Komm in meinen prost!-Raum: {code}',
+  'prost. room': 'prost!-Raum',
+  'Join my prost. room: {code}': 'Komm in meinen prost!-Raum: {code}',
   'Your room': 'Dein Raum',
   Room: 'Raum',
   'Connection lost. Reconnecting to the host…': 'Verbindung weg. Verbinde neu mit dem Host…',
@@ -199,7 +199,7 @@ const app: Record<string, string> = {
   'One moment…': 'Einen Moment…',
   'Write it down or send it to yourself. Whoever has it can bring your data onto their phone.':
     'Schreib ihn dir auf oder schick ihn dir selbst. Wer ihn hat, kann deine Daten auf sein Handy holen.',
-  'My prost! backup code: {code}': 'Mein prost!-Backup-Code: {code}',
+  'My prost. backup code: {code}': 'Mein prost!-Backup-Code: {code}',
   'Type the 12-letter backup code. Everything on this phone is replaced by the backup.':
     'Gib den 12-stelligen Backup-Code ein. Alles auf diesem Handy wird durch das Backup ersetzt.',
   'Deleted. What’s on this phone stays.': 'Gelöscht. Was auf diesem Handy ist, bleibt.',
@@ -226,7 +226,7 @@ const app: Record<string, string> = {
   Back: 'Zurück',
   Close: 'Schließen',
   'Got it': 'Alles klar',
-  '{name} says cheers!': '{name} sagt Prost!',
+  '{name} says cheers': '{name} sagt Prost',
   left: 'übrig',
   '{n} card left in the deck': 'Noch {n} Karte im Stapel',
   '{n} cards left in the deck': 'Noch {n} Karten im Stapel',
@@ -350,11 +350,11 @@ const app: Record<string, string> = {
   Gold: 'Gold',
   Night: 'Nacht',
   'Lime on dark': 'Limette auf Dunkel',
-  'Let’s play prost! together:': 'Lass uns zusammen prost! spielen:',
+  'Let’s play prost. together:': 'Lass uns zusammen prost. spielen:',
   'Phone, wallpaper, order': 'Handy, Hintergrund, Reihenfolge',
   'Invite friends': 'Freunde einladen',
-  'Send them prost!': 'Schick ihnen prost!',
-  'Rate prost!': 'prost! bewerten',
+  'Send them prost': 'Schick ihnen prost',
+  'Rate prost': 'prost. bewerten',
   'A few stars help a lot': 'Ein paar Sterne helfen viel',
   'App icon': 'App-Symbol',
   'Prost uses your system´s language: {lang}.': 'Prost verwendet die Systemsprache: {lang}.',
@@ -380,7 +380,7 @@ const app: Record<string, string> = {
   'Phone, Wallpaper, Order': 'Handy, Hintergrund, Reihenfolge',
   'Privacy, Terms of use, Imprint': 'Datenschutz, Nutzungsbedingungen, Impressum',
   'Every sip can be water or an anti-alcoholic drink. No pressure, ever.': 'Jeder Schluck kann auch Wasser oder ein alkoholfreies Getränk sein. Ganz ohne Druck.',
-  'Never drink and drive! Plan your ride home.': 'Nie alkoholisiert fahren! Plane deinen Heimweg.',
+  'Never drink and drive. Plan your ride home.': 'Nie alkoholisiert fahren. Plane deinen Heimweg.',
 };
 
 export default app;

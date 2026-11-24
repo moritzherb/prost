@@ -278,12 +278,12 @@ function MaexchenTable({
         {r.phase === 'pass' && claim && (
           <>
             {mustLift ? (
-              <span className="mx-slot mx-must">{t('Mäxchen! Nothing beats it: lift the cup.')}</span>
+              <span className="mx-slot mx-must">{t('Mäxchen. Nothing beats it: lift the cup.')}</span>
             ) : (
               <BigButton onClick={doBelieve}>{t('Believe it and shake')}</BigButton>
             )}
             <BigButton variant="danger" onClick={doReveal}>
-              {t('Lift the cup!')}
+              {t('Lift the cup')}
             </BigButton>
           </>
         )}

@@ -273,7 +273,7 @@ function Master({ q, act, onNew }: { q: Quiz; act: (next: (q: Quiz) => Quiz) => 
         {by ? (
           <>
             <p key={q.seq} className="pq-buzzed" style={{ '--chip': by.color } as CSSProperties}>
-              {t('{name} buzzed!', { name: by.name })}
+              {t('{name} buzzed', { name: by.name })}
             </p>
             <div className="pq-judge">
               <BigButton variant="danger" onClick={() => act((x) => judge(x, false))}>
@@ -307,7 +307,7 @@ function Buzzer({ q, myId, act }: { q: Quiz; myId: string; act: (next: (q: Quiz)
       <VerdictFlash q={q} />
       <Board q={q} mine={side?.id} />
       <p key={mine ? q.seq : 'status'} className={`pq-buzz-status${mine ? ' mine' : ''}`}>
-        {by ? (mine ? t('You buzzed: answer now!') : t('{name} buzzed!', { name: by.name })) : can ? t('Buzz when you know it') : side ? t('Wait until everyone else has buzzed') : t('You’re watching this quiz.')}
+        {by ? (mine ? t('You buzzed: answer now') : t('{name} buzzed', { name: by.name })) : can ? t('Buzz when you know it') : side ? t('Wait until everyone else has buzzed') : t('You’re watching this quiz.')}
       </p>
       <div className="pq-buzz-room">
         <button
@@ -339,7 +339,7 @@ export function End({ q, onNew }: { q: Quiz; onNew?: () => void }) {
       <Finished game="pub-quiz" />
       <div className="bd-head center">
         <span className="kicker">{t('Quiz over')}</span>
-        <h2 className="bd-title big">{t('{name} wins!', { name: winners.map((s) => s.name).join(' & ') })}</h2>
+        <h2 className="bd-title big">{t('{name} wins', { name: winners.map((s) => s.name).join(' & ') })}</h2>
       </div>
       <ol className="vr-results">
         {order.map((s) => (

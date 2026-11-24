@@ -375,7 +375,7 @@ export function Countdown({ onDone }: { onDone: () => void }) {
   }, [n]);
   return (
     <span key={n} className="pt-count pop-in" aria-live="assertive">
-      {n || t('Now!')}
+      {n || t('Now')}
     </span>
   );
 }

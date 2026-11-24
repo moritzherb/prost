@@ -330,7 +330,7 @@ export default function Speed() {
         <Finished game="speed" />
         <div className="bd-head center">
           <span className="kicker">{t('Game over')}</span>
-          <h2 className="bd-title big">{won ? t('You win!') : t('{name} wins!', { name: match.seats[g.winner ?? 0].name })}</h2>
+          <h2 className="bd-title big">{won ? t('You win') : t('{name} wins', { name: match.seats[g.winner ?? 0].name })}</h2>
         </div>
         <div className="sticky-action stack">
           {isHost ? (
@@ -444,12 +444,12 @@ function MyHalf({
   const extra = side.hand.length - HAND_MAX;
   return (
     <section className="sp-mine">
-      {extra > 0 && <p className="sp-warn">{extra === 1 ? t('Too many cards! Put 1 back.') : t('Too many cards! Put {n} back.', { n: extra })}</p>}
+      {extra > 0 && <p className="sp-warn">{extra === 1 ? t('Too many cards. Put 1 back.') : t('Too many cards. Put {n} back.', { n: extra })}</p>}
 
       <div className={`sp-hand${side.hand.length > HAND_MAX ? ' crowded' : ''}${locked ? ' locked' : ''}`}>
         {locked && (
           <span className="sp-locked" role="status">
-            {t('Too fast! Wait a moment')}
+            {t('Too fast. Wait a moment')}
           </span>
         )}
         {side.hand.map((c, i) => {
@@ -522,7 +522,7 @@ function Middle({ g, count, children }: { g: Game; count: number | null; childre
       <span key={`s1-${shuffles}`} className={`sp-stack${g.stacks[1].length ? '' : ' empty'}${shuffles ? ' shuffled' : ''}`}>{g.stacks[1].length || ''}</span>
       {nobody && (
         <span className="sp-stuck">
-          <span className="sp-stuck-title">{t('Nobody can play!')}</span>
+          <span className="sp-stuck-title">{t('Nobody can play')}</span>
           <span className="sp-stuck-sub">{t('Two new cards are coming…')}</span>
         </span>
       )}

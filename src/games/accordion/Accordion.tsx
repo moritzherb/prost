@@ -58,7 +58,7 @@ export default function Accordion({ exit }: GameProps) {
       <SoloEnd
         game="accordion"
         won={won(g)}
-        title={won(g) ? t('One pile left: solved!') : t('{n} piles left', { n })}
+        title={won(g) ? t('One pile left: solved') : t('{n} piles left', { n })}
         lead={best != null ? t('Your best: {n} piles', { n: best }) : undefined}
         onAgain={() => {
           setG(deal(newGame()));

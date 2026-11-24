@@ -26,12 +26,12 @@ const horseRace: Record<string, string> = {
   'Random for the rest': 'Zufällig für den Rest',
   'Track length': 'Länge der Bahn',
   rows: 'Reihen',
-  'And they’re off!': 'Und los geht’s!',
+  'And they’re off': 'Und los geht’s',
   'Everyone needs a horse': 'Jeder braucht ein Pferd',
 
   // The race
   'First past row {n} wins': 'Wer zuerst über Reihe {n} kommt, gewinnt',
-  'Row {row}: side card!': 'Reihe {row}: Seitenkarte!',
+  'Row {row}: side card': 'Reihe {row}: Seitenkarte',
   '{suit} moves up': '{suit} zieht vor',
   '{names} give out {n} sips': '{n} Schlucke verteilen: {names}',
   '{names} give out {n} sip': '{n} Schluck verteilen: {names}',
@@ -43,10 +43,10 @@ const horseRace: Record<string, string> = {
 
   // Finish
   'Photo finish': 'Zielfoto',
-  '{suit} wins!': '{suit} gewinnt!',
+  '{suit} wins': '{suit} gewinnt',
   '{names} bet right and give out double.': 'Richtig gesetzt, das Doppelte verteilen: {names}.',
   'Give out': 'Verteilen',
-  'Nobody bet on it. Everyone drinks!': 'Keiner hat darauf gesetzt. Alle trinken!',
+  'Nobody bet on it. Everyone drinks': 'Keiner hat darauf gesetzt. Alle trinken',
   'Drink up': 'Trinken',
   'Winners give out twice their stake, everyone else drinks theirs.':
     'Die Gewinner verteilen das Doppelte ihres Einsatzes, alle anderen trinken ihren Einsatz.',
@@ -54,7 +54,7 @@ const horseRace: Record<string, string> = {
   // An Ace nobody bet on crosses the line: the race goes on.
   'An Ace nobody bet on doesn’t win: it’s through, and the race goes on until an Ace somebody bet on crosses the line.':
     'Ein Ass, auf das keiner gesetzt hat, gewinnt nicht: Es ist durch, und das Rennen geht weiter, bis ein Ass ins Ziel kommt, auf das jemand gesetzt hat.',
-  '{suit} is through!': '{suit} ist durch!',
+  '{suit} is through': '{suit} ist durch',
   '{suit} is through already': '{suit} ist schon durch',
   'Nobody bet on it, so the race goes on.': 'Keiner hat drauf gesetzt, also geht das Rennen weiter.',
   '{suit} is through. Nobody bet on it, so the race goes on.': '{suit} ist durch. Keiner hat drauf gesetzt, also geht das Rennen weiter.',

@@ -176,12 +176,12 @@ export default function Pyramid({ seats, deck, onDone }: Props) {
       <div className="bd">
         <div className="bd-head">
           <span className="kicker">{t('Pyramid done')}</span>
-          <h2 className="bd-title big">{tie ? t('It’s a tie!') : t('{name} drives the bus', { name: loserNames[0] })}</h2>
+          <h2 className="bd-title big">{tie ? t('It’s a tie') : t('{name} drives the bus', { name: loserNames[0] })}</h2>
           <p className="lead">
             {tie
               ? game.hands[losers[0]].length === 1
-                ? t('{names} have {n} card left each. Tiebreaker!', { names: loserNames.join(' & '), n: 1 })
-                : t('{names} have {n} cards left each. Tiebreaker!', { names: loserNames.join(' & '), n: game.hands[losers[0]].length })
+                ? t('{names} have {n} card left each. Tiebreaker', { names: loserNames.join(' & '), n: 1 })
+                : t('{names} have {n} cards left each. Tiebreaker', { names: loserNames.join(' & '), n: game.hands[losers[0]].length })
               : t('Most cards left: {n}.', { n: game.hands[losers[0]].length })}
           </p>
         </div>

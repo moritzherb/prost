@@ -3,7 +3,7 @@ const voteGames: Record<string, string> = {
   // Both
   'reads it out': 'liest vor',
   Next: 'Weiter',
-  'All cards played!': 'Alle Karten gespielt!',
+  'All cards played': 'Alle Karten gespielt',
   Mixed: 'Gemischt',
 
   // Princess/King Treatment

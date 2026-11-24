@@ -154,7 +154,7 @@ export default function KingsCup({ players, exit }: GameProps) {
         <div className="bd-head">
           <span className="kicker">{t('Game over')}</span>
         <Finished game="kings-cup" />
-          <h2 className="bd-title big">{t('Deck’s empty!')}</h2>
+          <h2 className="bd-title big">{t('Deck’s empty')}</h2>
           <p className="lead">
             {s.cupBy ? t('{name} drank the King’s Cup', { name: byId(s.cupBy)?.name ?? '' }) : t('{n} cards drawn.', { n: 52 - left })}
           </p>

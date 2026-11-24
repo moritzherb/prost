@@ -79,13 +79,13 @@ export default function Tiebreak({ tied, onDone }: Props) {
   // The line under the flipped card: what it did, or how it ended.
   let line: string;
   if (pending) line = '';
-  else if (ended.kind === 'driver') line = t('{name} drives the bus!', { name: byId(ended.id).name });
-  else if (ended.kind === 'redo') line = t('Still tied!');
+  else if (ended.kind === 'driver') line = t('{name} drives the bus', { name: byId(ended.id).name });
+  else if (ended.kind === 'redo') line = t('Still tied');
   else if (!last) line = t('Ready?');
   else if (!justSafe.length) line = t('{rank}. Nobody’s safe.', { rank: rankLabel(last.value) });
   else {
     const names = justSafe.map((id) => byId(id).name).join(' & ');
-    line = justSafe.length > 1 ? t('{rank}! {names} are safe.', { rank: rankLabel(last.value), names }) : t('{rank}! {names} is safe.', { rank: rankLabel(last.value), names });
+    line = justSafe.length > 1 ? t('{rank}. {names} are safe.', { rank: rankLabel(last.value), names }) : t('{rank}. {names} is safe.', { rank: rankLabel(last.value), names });
   }
 
   // One screen, nothing moves: how it ends pops up over the table instead of pushing it down.
@@ -137,9 +137,9 @@ export default function Tiebreak({ tied, onDone }: Props) {
         <span className="fine-print">{t('{n} flipped', { n: tb.flipped.length })}</span>
       </div>
 
-      {ended.kind === 'driver' && <Verdict tone="same" icon="bus" title={t('{name} drives the bus!', { name: byId(ended.id).name })} />}
+      {ended.kind === 'driver' && <Verdict tone="same" icon="bus" title={t('{name} drives the bus', { name: byId(ended.id).name })} />}
       {ended.kind === 'redo' && (
-        <Verdict tone="correct" icon="again" title={t('Still tied!')} sub={t('{names} go again with new cards.', { names: ended.ids.map((id) => byId(id).name).join(' & ') })} />
+        <Verdict tone="correct" icon="again" title={t('Still tied')} sub={t('{names} go again with new cards.', { names: ended.ids.map((id) => byId(id).name).join(' & ') })} />
       )}
 
       <div className="sticky-action">

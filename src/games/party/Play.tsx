@@ -165,7 +165,7 @@ export default function Play({ board, players: crew, pawns, exit, onAgain }: Pro
     if (p.jailed) {
       if (v === 6) {
         commit(setPawn(gRef.current, id, { jailed: false }));
-        setPhase({ kind: 'note', icon: 'unlock', title: t('A 6! Out of prison'), text: t('Roll again to move on.'), then: 'again' });
+        setPhase({ kind: 'note', icon: 'unlock', title: t('A 6. Out of prison'), text: t('Roll again to move on.'), then: 'again' });
       } else setPhase({ kind: 'note', icon: 'chain', title: t('No 6: still locked up'), then: 'next' });
       return;
     }
@@ -174,7 +174,7 @@ export default function Play({ board, players: crew, pawns, exit, onAgain }: Pro
       if (need.includes(v)) {
         commit(setPawn(gRef.current, id, { gate: false, crossed: true }));
         await scene.current?.cross(id);
-        setPhase({ kind: 'note', icon: 'bridge', title: t('Over you go!'), text: t('Roll again to move on.'), then: 'again' });
+        setPhase({ kind: 'note', icon: 'bridge', title: t('Over you go'), text: t('Roll again to move on.'), then: 'again' });
       } else setPhase({ kind: 'note', icon: 'beer', title: t('Not this time: drink 1 and wait.'), then: 'next' });
       return;
     }
@@ -241,7 +241,7 @@ export default function Play({ board, players: crew, pawns, exit, onAgain }: Pro
             <PawnIcon pawn={pawns[winner.id]} size={120} />
           </span>
           <span className="kicker">{t('Game over')}</span>
-          <h2 className="bd-title big">{t('{name} wins!', { name: winner.name })}</h2>
+          <h2 className="bd-title big">{t('{name} wins', { name: winner.name })}</h2>
         </div>
         <section className="panel">
           <div className="ftd-tally">

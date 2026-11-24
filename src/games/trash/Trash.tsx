@@ -246,7 +246,7 @@ export function TrashTable({
         : kind === 'swap'
           ? t('Swap it for your Jack, or drag it onto the discard pile')
           : kind === 'wild'
-            ? t('Jack! Drag it onto any face-down slot')
+            ? t('Jack. Drag it onto any face-down slot')
             : t('Drag the card onto its slot');
 
   const over = g.phase === 'round-over' || g.phase === 'game-over';
@@ -337,7 +337,7 @@ export function TrashTable({
           <div className="tr-over-card">
             <span className="kicker">{g.phase === 'game-over' ? t('Game over') : t('Round {n}', { n: g.round })}</span>
             <h2 className="bd-title big">
-              {g.phase === 'game-over' ? t('{name} wins the game!', { name: two[g.winner].name }) : t('{name} wins the round!', { name: two[g.winner].name })}
+              {g.phase === 'game-over' ? t('{name} wins the game', { name: two[g.winner].name }) : t('{name} wins the round', { name: two[g.winner].name })}
             </h2>
             {g.phase === 'round-over' && (
               <p className="lead">

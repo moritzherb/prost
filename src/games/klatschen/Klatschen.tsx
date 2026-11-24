@@ -86,8 +86,8 @@ export default function Klatschen({ players, exit }: GameProps) {
           <span className="kl-end-glass" aria-hidden>
             <Glass level={4} />
           </span>
-          <h2 className="bd-title big">{loser ? t('{name} claps the glass!', { name: loser.name }) : t('Deck’s empty!')}</h2>
-          <p className="lead">{t('All the way down. Cheers!')}</p>
+          <h2 className="bd-title big">{loser ? t('{name} claps the glass', { name: loser.name }) : t('Deck’s empty')}</h2>
+          <p className="lead">{t('All the way down. Cheers')}</p>
         </div>
         <div className="sticky-action stack">
           <BigButton onClick={() => setS(fresh())}>{t('Play again')}</BigButton>
@@ -223,7 +223,7 @@ function Table({
           )}
           <span className="kl-stack-left">{t('{n} left', { n: left })}</span>
         </button>
-        {!s.current && !slapping && <span className="kl-slap-hint">{known ? t('Slap it!') : t('Slap the stack!')}</span>}
+        {!s.current && !slapping && <span className="kl-slap-hint">{known ? t('Slap it') : t('Slap the stack')}</span>}
         {slapping && (
           <span className="kl-hand" aria-hidden>
             <Glyph name="hand" />
@@ -284,9 +284,9 @@ function Reveal({ card, finale, glass }: { card: TaskCard; finale: boolean; glas
         <span className="kl-card-emoji">
           <Glyph name={card.icon} />
         </span>
-        <span className="kl-card-title">{finale ? t('The 4th clap glass!') : t(card.title)}</span>
+        <span className="kl-card-title">{finale ? t('The 4th clap glass') : t(card.title)}</span>
         <span className="kl-card-text">
-          {finale ? t('You clap the whole glass in the middle. Down in one!') : isGlass ? `${t(card.text)} (${glass}/4)` : t(card.text)}
+          {finale ? t('You clap the whole glass in the middle. Down in one') : isGlass ? `${t(card.text)} (${glass}/4)` : t(card.text)}
         </span>
       </span>
     </div>

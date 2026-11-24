@@ -384,7 +384,7 @@ function Table({ view, myId, act, connected }: { view: PlayerView; myId: string;
 
   let headline: string;
   if (dealerPhase) headline = myTurn ? t('You’re dealing. Keep these cards?') : t('{name} deals and checks their cards…', { name: dealer?.name ?? '' });
-  else if (myTurn) headline = stopper ? t('Last turn! Swap one or all.') : t('Your turn!');
+  else if (myTurn) headline = stopper ? t('Last turn. Swap one or all.') : t('Your turn');
   else headline = t('{name} is swapping…', { name: turnSeat?.name ?? '' });
 
   return (
@@ -705,22 +705,22 @@ function Reveal({ view, myId, isHost, onNext, onNewGame }: { view: PlayerView; m
   const title = over
     ? winner
       ? winner.id === myId
-        ? t('You win!')
-        : t('{name} wins!', { name: winner.name })
-      : t('Nobody survived!')
+        ? t('You win')
+        : t('{name} wins', { name: winner.name })
+      : t('Nobody survived')
     : r.endedBy === 'feuer'
       ? byMe
-        ? t('Fire from you!')
-        : t('Fire from {name}!', { name: byName })
+        ? t('Fire from you')
+        : t('Fire from {name}', { name: byName })
       : r.endedBy === 'hose'
         ? byMe
-          ? t('Pants down from you!')
-          : t('Pants down from {name}!', { name: byName })
-        : t('Cards on the table!');
+          ? t('Pants down from you')
+          : t('Pants down from {name}', { name: byName })
+        : t('Cards on the table');
 
   const losers = r.losers.map(name).join(' & ');
   const lead = r.decider
-    ? t('Tie at the end! {names} stay in on one life and play a decider round.', { names: losers })
+    ? t('Tie at the end. {names} stay in on one life and play a decider round.', { names: losers })
     : r.losers.length !== 1
       ? t('{names} lose a life.', { names: losers })
       : r.losers[0] === myId
@@ -757,7 +757,7 @@ function Reveal({ view, myId, isHost, onNext, onNewGame }: { view: PlayerView; m
                     t('Out')
                   ) : r.extraLife.includes(id) ? (
                     <>
-                      {t('Extra life!')} <Hearts n={1} />
+                      {t('Extra life')} <Hearts n={1} />
                     </>
                   ) : lost ? (
                     <>

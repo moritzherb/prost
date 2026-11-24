@@ -192,11 +192,11 @@ function Lobby() {
     const url = joinLink(code);
     try {
       if (isNative) {
-        toNative({ type: 'share', title: t('prost! room'), text: t('Join my prost! room: {code}', { code }), url });
+        toNative({ type: 'share', title: t('prost. room'), text: t('Join my prost. room: {code}', { code }), url });
         return;
       }
       if (navigator.share) {
-        await navigator.share({ title: t('prost! room'), text: t('Join my prost! room: {code}', { code }), url });
+        await navigator.share({ title: t('prost. room'), text: t('Join my prost. room: {code}', { code }), url });
         return;
       }
       await navigator.clipboard.writeText(url);

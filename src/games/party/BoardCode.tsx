@@ -16,7 +16,7 @@ export function ShareBoardSheet({ board, onClose }: { board: Board | null; onClo
       {value && (
         <>
           <p className="lead">{t('Friends load it in Party with this code:')}</p>
-          <CodeCard code={value} text={t('My prost! Party board “{name}”. Code: {code}', { name: board?.name ?? '', code: value })} />
+          <CodeCard code={value} text={t('My prost. Party board “{name}”. Code: {code}', { name: board?.name ?? '', code: value })} />
         </>
       )}
     </Sheet>

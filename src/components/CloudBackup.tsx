@@ -52,7 +52,7 @@ function BackupSheet({ open, onClose }: { open: boolean; onClose: () => void }) 
       {value && (
         <>
           <p className="lead">{t('Write it down or send it to yourself. Whoever has it can bring your data onto their phone.')}</p>
-          <CodeCard code={groupCode(value)} text={t('My prost! backup code: {code}', { code: groupCode(value) })} />
+          <CodeCard code={groupCode(value)} text={t('My prost. backup code: {code}', { code: groupCode(value) })} />
         </>
       )}
     </Sheet>

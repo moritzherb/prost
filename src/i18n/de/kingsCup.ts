@@ -52,7 +52,7 @@ const kingsCup: Record<string, string> = {
   clubs: 'Kreuz',
   'Game over': 'Spiel vorbei',
   '{name} drank the King’s Cup': '{name} hat den King’s Cup geext',
-  'Deck’s empty!': 'Stapel leer!',
+  'Deck’s empty': 'Stapel leer',
   '{n} cards drawn.': '{n} Karten gezogen.',
   'Play again': 'Nochmal spielen',
   'Back to games': 'Zurück zu den Spielen',
