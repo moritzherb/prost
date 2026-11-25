@@ -108,7 +108,7 @@ function shrinkIntoIcon(icon: HTMLElement | null) {
       { clipPath: end, opacity: 1, offset: 0.75, easing: 'ease-out' },
       { clipPath: end, opacity: 0 },
     ],
-    { duration: 420, fill: 'forwards' },
+    { duration: 320, fill: 'forwards' },
   );
   const gone = () => card.remove();
   anim.onfinish = gone;
