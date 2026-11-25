@@ -51,7 +51,7 @@ export const UncleanIcon = () => (
 /** Start over: an arrow going round, its tip a good way off the other end of the ring. */
 export const ResetIcon = () => (
   <Icon>
-    <path d="M4.3 14.1A8 8 0 1 0 9.9 4.3M13.6 5.8 9.9 4.3 12.4 1.1" />
+    <path d="M4.1 13.1A8 8 0 1 0 6.9 5.9M10.9 5.7 6.9 5.9 7.8 2" />
   </Icon>
 );
 export const SettingsIcon = () => (
