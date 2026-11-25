@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef } from 'react';
+import { createContext, useContext, useEffect, useLayoutEffect, useRef } from 'react';
 import { buzz } from './fx';
 
 /** Who's on, as the bar over a game shows them on a clean table. */
@@ -29,7 +29,9 @@ export const EndedContext = createContext<(on: boolean) => void>(() => {});
 
 export function useEnded(on = true) {
   const set = useContext(EndedContext);
-  useEffect(() => {
+  // Before the first paint: the bar and the screen's room change in the same frame the end screen comes,
+  // not a few frames after it (when the end screen had already been drawn once with the rules button).
+  useLayoutEffect(() => {
     set(on);
     return () => set(false);
   }, [set, on]);
