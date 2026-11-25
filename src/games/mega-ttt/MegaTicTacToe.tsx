@@ -122,7 +122,7 @@ function Match({ pair, onSwap }: { pair: [Player, Player]; onSwap: () => void })
 
   return (
     <div className={`bd mt-play turn-${g.turn === 'X' ? 'x' : 'o'}${g.winner ? ' over' : ''}${known ? ' known' : ''}`}>
-      {g.winner && <Finished game="mega-ttt" players={pair} />}
+      {g.winner && <Finished game="mega-ttt" players={pair} end />}
       <div className="mt-players">
         {(['X', 'O'] as Mark[]).map((m) => {
           const p = who(m);

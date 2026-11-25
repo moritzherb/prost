@@ -188,7 +188,7 @@ export default function HorseRace({ players, exit }: GameProps) {
     );
     return (
       <div className="bd hs-finish">
-        <Finished game="horse-race" />
+        <Finished game="horse-race" end />
         <div className="bd-head center">
           <span className="kicker">{t('Photo finish')}</span>
           <span className="hs-finish-card">

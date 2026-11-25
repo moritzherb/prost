@@ -524,7 +524,7 @@ function Over({
   const reveal = [...g.log].reverse().find((e): e is Extract<Entry, { k: 'call' }> => e.k === 'call');
   return (
     <div className="bd ar-over">
-      <Finished game="arschloch" />
+      <Finished game="arschloch" end />
       <div className="bd-head center">
         <span className="kicker">{t('Game over')}</span>
         <span className="ar-over-avatar" style={{ '--chip': loser?.color } as CSSProperties}>

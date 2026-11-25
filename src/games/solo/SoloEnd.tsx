@@ -1,9 +1,11 @@
 import BigButton from '../../components/BigButton';
 import Finished from '../../components/Finished';
 import { t } from '../../i18n';
+import { useEnded } from '../../lib/turn';
 
 /** The end of a patience game: how it went, and again or out. */
 export default function SoloEnd({ game, won, title, lead, kicker, onAgain, exit }: { game: string; won: boolean; title: string; lead?: string; kicker?: string; onAgain: () => void; exit: () => void }) {
+  useEnded();
   return (
     <div className="bd">
       {won && <Finished game={game} />}

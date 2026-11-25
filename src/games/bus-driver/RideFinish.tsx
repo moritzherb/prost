@@ -51,7 +51,7 @@ export default function RideFinish({ driver, stats, onPlayAgain, onExit }: { dri
           <span className="stat-value">{stats.drawn}</span>
         </div>
       </div>
-      <Finished game="bus-driver" />
+      <Finished game="bus-driver" end />
       <div className="sticky-action stack">
         <BigButton onClick={onPlayAgain}>{t('Play again')}</BigButton>
         <BigButton variant="glass" onClick={onExit}>

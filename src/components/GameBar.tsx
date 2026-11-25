@@ -21,6 +21,7 @@ export default function GameBar({
   game,
   turn,
   playing,
+  ended = false,
   onExit,
   onRules,
   onCrew,
@@ -28,6 +29,8 @@ export default function GameBar({
   game: GameDefinition;
   turn: TurnPlayer | null;
   playing: boolean;
+  /** The end screen: neither the rules nor the clean-table switch. */
+  ended?: boolean;
   onExit: () => void;
   onRules: () => void;
   /** The crew, to add someone mid-game (one-phone games; a room has its own). */
@@ -67,7 +70,9 @@ export default function GameBar({
       onBack={onExit}
       icon="close"
       right={
-        clean ? (
+        ended ? (
+          crew
+        ) : clean ? (
           <>
             {crew}
             {switchable ? toggle : rules}

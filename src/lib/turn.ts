@@ -22,6 +22,20 @@ export function usePlaying(on: boolean) {
 }
 
 /**
+ * Whether the game shows its end screen: the bar then has neither the clean-table switch nor the
+ * rules (nothing left to look up or clear away). Set by Finished (`end`) or a game's end screen.
+ */
+export const EndedContext = createContext<(on: boolean) => void>(() => {});
+
+export function useEnded(on = true) {
+  const set = useContext(EndedContext);
+  useEffect(() => {
+    set(on);
+    return () => set(false);
+  }, [set, on]);
+}
+
+/**
  * The crew button in the bar: only on a game's setup menu (who deals, the stakes, the mode …), to
  * add someone before it starts; never while it's being played. 'crew': the players on this phone;
  * 'room': a room game whose players are the phones in the room (its code to join).

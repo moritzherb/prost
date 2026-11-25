@@ -1,11 +1,18 @@
 import { createContext, useContext, useEffect, useRef } from 'react';
 import { load } from '../lib/storage';
 import { crewKey, recordFinished } from '../lib/stats';
+import { useEnded } from '../lib/turn';
 import type { Profile } from '../net/protocol';
 import type { Player } from '../state/AppState';
 
 /** The crew playing a one-phone game on this phone (none in a room game, where each phone counts itself). */
 export const CrewContext = createContext<Player[] | null>(null);
+
+/** On an end screen that has no stats to count (or counts them itself): the bar drops its rules and clean-table buttons. */
+export function EndMark() {
+  useEnded();
+  return null;
+}
 
 /**
  * Put this on a game's end screen: once it shows, the game counts as played in the profile's
@@ -13,7 +20,8 @@ export const CrewContext = createContext<Player[] | null>(null);
  * their first finished round on, for as long as the game stays open.) `players`: who actually
  * played, when the game picks some of the crew.
  */
-export default function Finished({ game, players }: { game: string; players?: Player[] }) {
+export default function Finished({ game, players, end = false }: { game: string; players?: Player[]; /** On a real end screen: the bar drops its rules and clean-table buttons. */ end?: boolean }) {
+  useEnded(end);
   const crew = useContext(CrewContext);
   const who = players ?? crew;
   // Who it was when the end showed (someone leaving the room afterwards doesn't count it again).

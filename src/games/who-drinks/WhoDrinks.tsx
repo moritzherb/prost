@@ -3,6 +3,7 @@ import BigButton from '../../components/BigButton';
 import { t } from '../../i18n';
 import { buzz, celebrate, sfx } from '../../lib/fx';
 import { randomInt } from '../../lib/random';
+import { useCrewButton } from '../../lib/turn';
 import type { GameProps } from '../types';
 import { spinFate } from './fates';
 import Finished from '../../components/Finished';
@@ -17,6 +18,9 @@ export default function WhoDrinks({ players }: GameProps) {
   const [spun, setSpun] = useState(false);
   const [spinning, setSpinning] = useState(false);
   const timer = useRef<number>(undefined);
+
+  // Someone joins the table mid-game: the crew button beside the rules.
+  useCrewButton('crew');
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 

@@ -450,7 +450,7 @@ export function End({ q, onNew }: { q: Quiz; onNew?: () => void }) {
   const winners = order.filter((s) => q.scores[s.id] === top);
   return (
     <div className="bd">
-      <Finished game="pub-quiz" />
+      <Finished game="pub-quiz" end />
       <div className="bd-head center">
         <span className="kicker">{t('Quiz over')}</span>
         <h2 className="bd-title big">{t('{name} wins', { name: winners.map((s) => s.name).join(' & ') })}</h2>

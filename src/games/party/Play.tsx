@@ -235,7 +235,7 @@ export default function Play({ board, players: crew, pawns, exit, onAgain }: Pro
     const winner = byId(g.winner);
     return (
       <div className="bd pt-over">
-        <Finished game="party" />
+        <Finished game="party" end />
         <div className="bd-head center">
           <span className="pt-over-pawn">
             <PawnIcon pawn={pawns[winner.id]} size={120} />

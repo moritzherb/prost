@@ -255,7 +255,7 @@ export function FiveThousandTable({
         </span>
       </div>
 
-      {g.phase === 'over' && <Finished game="five-thousand" />}
+      {g.phase === 'over' && <Finished game="five-thousand" end />}
       <Table
         key={`${g.current}-${turn.rolls}-${g.phase === 'roll' ? 'cup' : 'dice'}`}
         roll={g.phase === 'roll' || shaking ? EMPTY : turn.roll}

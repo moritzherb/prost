@@ -318,7 +318,7 @@ function TableView({ session, onAgain }: { session: Session; onAgain?: () => voi
       <Handover session={session}>
         {g.over ? (
           <>
-            <Finished game="fuck-the-dealer" />
+            <Finished game="fuck-the-dealer" end />
             <Tally session={session} />
             {onAgain && (
               <div className="sticky-action">
@@ -443,7 +443,7 @@ function DeckView({ session, act, onAgain }: { session: Session; act: (a: Act) =
       <Handover session={session}>
         {g.over ? (
           <>
-            <Finished game="fuck-the-dealer" />
+            <Finished game="fuck-the-dealer" end />
             <p className="lead center">{t('Game over. The table shows who drank what.')}</p>
             {onAgain && (
               <div className="sticky-action">
