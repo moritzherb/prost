@@ -129,6 +129,13 @@ export function launch(icon: Element | null, game: { id: string; color: string; 
   /** How much colour shows `t` ms in. */
   // The colour is there at once (no fade in) and only fades out, onto the game's own page.
   const amount = (t: number) => (t < fadeAt ? 1 : 1 - inOut((t - fadeAt) / FADE));
+  // The strip is given its colour at once and the phone blends to it over ~50 ms (measured on a screen
+  // recording: 40% in the first frame, 93% three frames on): the page's colour comes in the same way,
+  // not in one frame ahead of the strip.
+  const RISE = 70;
+  const rise = (t: number) => (t >= RISE ? 1 : 0.4 + 0.6 * (t / RISE));
+  // And going out the strip showed 40 ms ahead of the page with STRIP_LAG (60): this phone takes ~20.
+  const OUT_LAG = 20;
   const frame = (now: number) => {
     if (gone || !veil.isConnected) return done();
     if (!prev || now - start < GROW) shown = now - start;
@@ -139,7 +146,7 @@ export function launch(icon: Element | null, game: { id: string; color: string; 
     prev = now;
     const k = amount(t);
     const fading = t >= fadeAt;
-    fill.style.opacity = String(k);
+    fill.style.opacity = String(k * rise(t));
     if (!glide) emoji.style.transform = at(t < GROW ? k : 1);
     if (fading) {
       emoji.style.opacity = String(k);
@@ -147,7 +154,7 @@ export function launch(icon: Element | null, game: { id: string; color: string; 
     }
     // The phone shows the strip a little late (themeColor.ts STRIP_LAG): it is set that much ahead,
     // and both show the same at the same moment. Fading out, the page underneath is the game's now.
-    const ahead = t + STRIP_LAG;
+    const ahead = t + OUT_LAG;
     layer.set(mix(ahead >= fadeAt ? layer.under() : from, color, amount(ahead)));
     requestAnimationFrame(frame);
   };

@@ -82,8 +82,7 @@ const EMPHASIZED = 'cubic-bezier(0.05, 0.7, 0.1, 1)';
 
 /**
  * Back from a game on Android, its window goes back into the icon it came from: a card in the
- * icon's colour, the whole screen at first, shrinks onto the icon (its corners rounding to the
- * icon's) and gives way to it at the end. Clip-path and opacity only, on the compositor.
+ * icon's colour, the whole screen at first, shrinks onto the icon (a circle closing onto it) and gives way to it at the end. Clip-path and opacity only, on the compositor.
  */
 function shrinkIntoIcon(icon: HTMLElement | null) {
   if (!icon) return;
@@ -98,12 +97,16 @@ function shrinkIntoIcon(icon: HTMLElement | null) {
   card.setAttribute('aria-hidden', 'true');
   card.style.cssText = `position:fixed;inset:0;z-index:50;pointer-events:none;background:${look.getPropertyValue('--tile').trim() || look.backgroundColor}`;
   document.body.append(card);
-  const radius = Math.min(r.width / 2, parseFloat(look.borderTopLeftRadius) || r.width * 0.25);
+  // A circle that closes onto the icon (the icon is round here), from one that reaches the farthest corner.
+  const cx = r.left + r.width / 2;
+  const cy = r.top + r.height / 2;
+  const reach = Math.hypot(Math.max(cx, w - cx), Math.max(cy, h - cy));
+  const end = `circle(${r.width / 2}px at ${cx}px ${cy}px)`;
   const anim = card.animate(
     [
-      { clipPath: 'inset(0px round 28px)', opacity: 1, easing: EMPHASIZED },
-      { clipPath: `inset(${r.top}px ${w - r.right}px ${h - r.bottom}px ${r.left}px round ${radius}px)`, opacity: 1, offset: 0.75, easing: 'ease-out' },
-      { clipPath: `inset(${r.top}px ${w - r.right}px ${h - r.bottom}px ${r.left}px round ${radius}px)`, opacity: 0 },
+      { clipPath: `circle(${reach}px at ${cx}px ${cy}px)`, opacity: 1, easing: EMPHASIZED },
+      { clipPath: end, opacity: 1, offset: 0.75, easing: 'ease-out' },
+      { clipPath: end, opacity: 0 },
     ],
     { duration: 420, fill: 'forwards' },
   );
