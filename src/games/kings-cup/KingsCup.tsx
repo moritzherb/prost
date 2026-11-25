@@ -74,6 +74,33 @@ export default function KingsCup({ players, exit }: GameProps) {
   const from = useRef<Slot | null>(null);
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
+  // The circle (and the crown in its middle) stands in the middle of the screen, as far as the room
+  // between the pills above and the button below allows. Measured, then moved by a translate.
+  const stageRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const stage = stageRef.current;
+    const ring = ringRef.current;
+    if (!stage || !ring) return;
+    const centre = () => {
+      ring.style.translate = '';
+      const st = stage.getBoundingClientRect();
+      const r = ring.getBoundingClientRect();
+      const over = parseFloat(getComputedStyle(stage).getPropertyValue('--kc-over')) || 0;
+      const want = window.innerHeight / 2 - (r.top + r.height / 2);
+      const shift = Math.min(Math.max(want, st.top + over - r.top), st.bottom - r.bottom);
+      ring.style.translate = `0 ${Math.round(shift * 10) / 10}px`;
+    };
+    centre();
+    const watch = new ResizeObserver(centre);
+    watch.observe(stage);
+    window.addEventListener('resize', centre);
+    return () => {
+      watch.disconnect();
+      window.removeEventListener('resize', centre);
+    };
+  }, [s.over]);
+
   const player = players[s.turn % players.length];
   useTurnBubble(s.over ? null : player);
   const byId = (id: string) => players.find((p) => p.id === id);
@@ -185,7 +212,7 @@ export default function KingsCup({ players, exit }: GameProps) {
         <DeckCount left={left} />
       </div>
 
-      <div className="kc-stage">
+      <div className="kc-stage" ref={stageRef}>
         {/* Small pills in a strip that is always kept free above the circle: nothing ever moves. */}
         <div className="kc-chips">
           {questionMaster && (
@@ -241,7 +268,7 @@ export default function KingsCup({ players, exit }: GameProps) {
             )
           )}
         </div>
-        <div className={`kc-ring${s.current ? ' revealing' : ''}`}>
+        <div className={`kc-ring${s.current ? ' revealing' : ''}`} ref={ringRef}>
           <div className="kc-slots">
             {s.slots.map((slot, i) =>
               s.taken[i] ? null : (
