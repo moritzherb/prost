@@ -383,9 +383,9 @@ li {
   margin-bottom: calc(-18px - env(safe-area-inset-bottom));
 }
 
-/* Pub Quiz: its button stands where a game page's Start game button does (2px and the phone's bottom
+/* Pub Quiz and 10/10: their button stands where a game page's Start game button does (2px and the phone's bottom
    area above the edge): the screen's bottom room less 18px. */
-.screen.play-screen:not(.game-detail) .pq-judge:last-child {
+.screen.play-screen:not(.game-detail) :is(.pq-judge, .vt-next):last-child {
   margin-bottom: -18px;
 }
 
