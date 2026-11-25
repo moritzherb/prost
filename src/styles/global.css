@@ -379,7 +379,7 @@ li {
 }
 
 /* Games whose button row is their own box rather than a .sticky-action: the same, last in its column. */
-.screen.play-screen:not(.game-detail) :is(.bd-foot, .pq-judge, .vt-next):last-child {
+.screen.play-screen:not(.game-detail) :is(.bd-foot, .pq-judge):last-child {
   margin-bottom: calc(-18px - env(safe-area-inset-bottom));
 }
 
