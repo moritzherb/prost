@@ -441,18 +441,17 @@ export function navigate(to: string) {
 /** How far in from the side a touch counts as the phone's swipe-through-the-history gesture. */
 const EDGE = 18;
 
-/** When a touch last started at the very edge (the start of a swipe back), and whether home was reached by one. */
-let edgeAt = 0;
-let swipedBack = false;
+/** When the phone last stepped back through the history by itself (a swipe or the back button), 0 if never. */
+let swipedAt = 0;
 /**
  * Home was just reached by the phone's own swipe back (it has already moved the picture of home in
  * as you swiped): asked once by home when it shows, which then skips its own zoom, or it would stand
- * still and then pop. False for anything else (the back button, a game closing).
+ * still and then pop. False for anything else (a game closing, the app's own back buttons).
  */
 export function takeSwipedBack() {
   // (Stale after a few seconds: a swipe between other screens never asked.)
-  const was = swipedBack && Date.now() - edgeAt < 3000;
-  swipedBack = false;
+  const was = Date.now() - swipedAt < 3000;
+  swipedAt = 0;
   return was;
 }
 
@@ -464,14 +463,6 @@ if (typeof window !== 'undefined') {
   // handed to the phone at all, not even on a button (the Android home's icons reach the edge):
   // a tap there is passed on to the button by hand, and scrolling from the edge is done by hand.
   // Only text fields keep their own touch (the keyboard comes up from it).
-  document.addEventListener(
-    'touchstart',
-    (e) => {
-      const x = e.touches[0]?.clientX ?? 99;
-      if (x <= EDGE || x >= window.innerWidth - EDGE) edgeAt = Date.now();
-    },
-    { passive: true, capture: true },
-  );
   let edgeY: number | null = null;
   /** A tap started at the edge on something tappable: where, when, and how far it has moved. */
   let edgeTap: { el: HTMLElement; x: number; y: number; t: number; moved: number } | null = null;
@@ -551,7 +542,7 @@ if (typeof window !== 'undefined') {
     // (Onto a game's entry, or the top ones, it's always the app's own step: nothing lies behind a game.)
     if (!pendingGame && !pendingNav && history.state !== GAME_ROOT && history.state !== GAME_TOP && history.state !== HOME_TOP) {
       cameBack(true);
-      swipedBack = Date.now() - edgeAt < 1500;
+      swipedAt = Date.now();
       // Swiped back out of a screen (or the back button): a tick to say it's left.
       buzz();
     }
