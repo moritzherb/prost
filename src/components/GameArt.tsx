@@ -724,6 +724,34 @@ const NUDGE: Record<string, string> = {
   'princess-treatment': 'translate(-0.6 -0.5)',
 };
 
+/**
+ * What's still off on the rendered pictures on a round (Android) icon: the middle of each one's drawn
+ * parts (measured with getBBox, after NUDGE) moved to (32, 32). The 10/10 badge row is only half
+ * way (its pill stays near the middle).
+ */
+const CENTRE: Record<string, [number, number]> = {
+  'ten-but': [0, 2.5],
+  accordion: [-0.2, -1.5],
+  'kings-cup': [0, 2.2],
+  klatschen: [-2.3, -1.1],
+  maexchen: [-1, 1.8],
+  speed: [2.5, 0],
+  palace: [0, 2],
+  president: [0, -1.1],
+  'beat-the-deck': [-1, -1.4],
+  'rat-screw': [-1.2, -2.5],
+  'who-drinks': [-0.3, -1.7],
+  'color-clash': [0, -1],
+  'mega-ttt': [0, -1],
+  'number-flip': [0, -1],
+  'princess-treatment': [-0.5, 1.8],
+  'bus-driver': [0, 0.5],
+  'hose-runter': [0, 0.5],
+  'pub-quiz': [0, 0.5],
+  spellbound: [0, -1],
+  trash: [0.3, -0.5],
+};
+
 /** Whether a game has a picture of its own here. */
 export const hasArt = (id: string) => id in ART;
 
@@ -733,8 +761,8 @@ export default function GameArt({ id }: { id: string }) {
   if (!Draw) return null;
   return (
     <svg className="game-art" viewBox="0 0 64 64" aria-hidden="true">
-      {NUDGE[id] ? (
-        <g transform={NUDGE[id]}>
+      {NUDGE[id] || CENTRE[id] ? (
+        <g transform={[CENTRE[id] && `translate(${CENTRE[id][0]} ${CENTRE[id][1]})`, NUDGE[id]].filter(Boolean).join(' ')}>
           <Draw />
         </g>
       ) : (
