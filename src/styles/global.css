@@ -19471,9 +19471,31 @@ html.table-phone .game-bar .top-bar-side.right {
 }
 
 .pq-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   color: var(--muted);
   font-size: 0.8rem;
   font-weight: 700;
+}
+
+/* How hard it is: four dots, the first as many filled as the level. */
+.pq-level {
+  flex: none;
+  display: flex;
+  gap: 4px;
+}
+
+.pq-level i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.pq-level i.on {
+  background: var(--ink);
 }
 
 .pq-question {

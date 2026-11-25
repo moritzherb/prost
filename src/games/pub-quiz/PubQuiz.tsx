@@ -90,6 +90,17 @@ export function QuestionText({ text }: { text: string }) {
   );
 }
 
+/** How hard a question is: four small dots, as many filled as its level, named for screen readers. */
+export function LevelDots({ level }: { level: Level }) {
+  return (
+    <span className="pq-level" role="img" aria-label={t(LEVELS[level - 1].label)}>
+      {LEVELS.map((l) => (
+        <i key={l.id} className={l.id <= level ? 'on' : undefined} />
+      ))}
+    </span>
+  );
+}
+
 /** The categories of classic questions, in the order the setup shows them. */
 const CATEGORIES: Topic[] = ['general', 'film', 'sports', 'entertainment', 'history', 'geography', 'science', 'food', 'gaming', 'art', 'myth', 'trash', 'decades'];
 const KINDS: Kind[] = ['classic', ...TYPES];
@@ -335,9 +346,12 @@ function Master({ q, act, onNew }: { q: Quiz; act: (next: (q: Quiz) => Quiz) => 
       <VerdictFlash q={q} />
       <Board q={q} />
       <div className="pq-card" key={q.at}>
-        <span className="pq-meta">
-          {t('Question {n} of {m}', { n: q.at + 1, m: q.deck.length })} · {t(TOPIC_NAME[item.topic])}
-        </span>
+        <div className="pq-meta">
+          <span>
+            {t('Question {n} of {m}', { n: q.at + 1, m: q.deck.length })} · {t(TOPIC_NAME[item.topic])}
+          </span>
+          <LevelDots level={item.level} />
+        </div>
         <QuestionText text={item.q[lang]} />
         <p className="pq-answer">
           <span>{t('Answer')}</span> {item.a[lang]}
