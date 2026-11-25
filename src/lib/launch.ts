@@ -9,17 +9,19 @@
  */
 
 import { sfx } from './fx';
+import { bezier } from './tween';
 import { playIntro } from './intro';
 import { holdScreen } from './router';
 import { coverTop, mix, STRIP_LAG, topColor, topLayer, tone } from './themeColor';
 
 /** The emoji's glide to the middle (the colour is there at once), staying as the splash, fading out (ms). */
-const GROW = 420;
-const HOLD = 480;
-const FADE = 320;
+const IOS_TIMES = [420, 480, 320] as const;
+/** An Android phone: quicker, and Material's emphasized curve (the same numbers as home's way back). */
+const ANDROID_TIMES = [300, 220, 220] as const;
+const EMPHASIZED = bezier(0.05, 0.7, 0.1, 1);
 
 /** How long a splash shows before it fades (the start-up screen keeps to it too). */
-export const SPLASH_MS = GROW + HOLD;
+export const SPLASH_MS = IOS_TIMES[0] + IOS_TIMES[1];
 
 let last: string | null = null;
 /** The splash's colour on the strip under the clock, while one shows. */
@@ -33,6 +35,8 @@ let strip: ReturnType<typeof topLayer> | null = null;
 export function launch(icon: Element | null, game: { id: string; color: string; emoji: string }, go: () => void, glyphs: string[] = [game.emoji]) {
   last = game.id;
   sfx.open();
+  const android = typeof document !== 'undefined' && document.documentElement.dataset.os === 'android';
+  const [GROW, HOLD, FADE] = android ? ANDROID_TIMES : IOS_TIMES;
   const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!icon || reduce || typeof document === 'undefined') {
     go();
@@ -100,10 +104,22 @@ export function launch(icon: Element | null, game: { id: string; color: string; 
   if (typeof emoji.animate === 'function') {
     const N = 24;
     glide = emoji.animate(
-      Array.from({ length: N + 1 }, (_, i) => ({ transform: at(inOut(i / N)) })),
+      Array.from({ length: N + 1 }, (_, i) => ({ transform: at(android ? EMPHASIZED(i / N) : inOut(i / N)) })),
       { duration: GROW, easing: 'linear', fill: 'forwards' },
     );
     glide.startTime = start;
+  }
+  // On Android the veil's colour opens as a circle out of the tapped icon and fades, both as
+  // animations on the compositor: the page loading behind the splash can't make them stutter.
+  if (android && typeof veil.animate === 'function') {
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    const reach = Math.hypot(Math.max(cx, w - cx), Math.max(cy, h - cy));
+    veil.animate(
+      [{ clipPath: `circle(${r.width / 2}px at ${cx}px ${cy}px)` }, { clipPath: `circle(${reach}px at ${cx}px ${cy}px)` }],
+      { duration: GROW, easing: 'cubic-bezier(0.05, 0.7, 0.1, 1)', fill: 'both' },
+    );
+    veil.animate([{ opacity: 1 }, { opacity: 0 }], { duration: FADE, delay: GROW + HOLD, easing: 'linear', fill: 'both' });
   }
   const fadeAt = GROW + HOLD;
   /** The time between frames (ms), as it goes: 60 a second, 120, 30 when saving power. */
@@ -146,10 +162,10 @@ export function launch(icon: Element | null, game: { id: string; color: string; 
     prev = now;
     const k = amount(t);
     const fading = t >= fadeAt;
-    fill.style.opacity = String(k * rise(t));
+    if (!android) fill.style.opacity = String(k * rise(t));
     if (!glide) emoji.style.transform = at(t < GROW ? k : 1);
     if (fading) {
-      emoji.style.opacity = String(k);
+      if (!android) emoji.style.opacity = String(k);
       veil.style.pointerEvents = 'none';
     }
     // The phone shows the strip a little late (themeColor.ts STRIP_LAG): it is set that much ahead,
