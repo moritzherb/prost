@@ -1094,6 +1094,10 @@ li {
   display: flex;
   gap: 6px;
   overflow-x: auto;
+  /* Sideways only: a row a finger can also push up and down (its padding makes it a little taller than
+     its chips) feels loose; the page itself still scrolls up and down from here. */
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
   margin: 0 calc(-1 * var(--gutter));
   padding: 2px var(--gutter) 4px;
   scrollbar-width: none;

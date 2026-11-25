@@ -136,6 +136,16 @@ html[data-look='pop'][data-os='android'] .chip.active {
   box-shadow: none;
 }
 
+/* A person in a chip: Material's filter chip with an avatar has it 24dp in the 32dp chip, a little in from the edge. */
+html[data-look='pop'][data-os='android'] .person-chip {
+  padding: 0 12px 0 4px;
+}
+
+html[data-look='pop'][data-os='android'] .person-chip-avatar {
+  width: 24px;
+  height: 24px;
+}
+
 /* ---------- Segmented buttons (40dp, 1dp outline, full ends; single choice, so no check: it is
    optional there and would push the labels onto two lines) ---------- */
 
