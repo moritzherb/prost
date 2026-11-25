@@ -539,11 +539,11 @@ const ART: Record<string, Art> = {
       <path d="M32 6l26 40H32z" fill="url(#ga-sand-d)" />
       <path d="M16 31h11M12 37.5h17M21 24.5h8" stroke="#a8702a" strokeWidth="1.4" opacity="0.4" strokeLinecap="round" />
       {/* The rat, sitting in front, facing right. */}
-      <path d="M14 55c-6 0-9-3-6-6 2-2 5-1 7 0" fill="none" stroke="#c98fa0" strokeWidth="2.2" strokeLinecap="round" />
+      <path d="M12.6 52C8 54.4 3.2 53 3.4 48.6c.1-2.3 2-3.6 3.8-3.2" fill="none" stroke="#c98fa0" strokeWidth="1.9" strokeLinecap="round" />
+      <ellipse cx="32.6" cy="39.4" rx="5.4" ry="6" fill="#aeb4be" />
+      <ellipse cx="32.8" cy="39.8" rx="3" ry="3.7" fill="#f2a5b8" />
       <ellipse cx="24" cy="49" rx="12" ry="9" fill="url(#ga-rat)" />
       <path d="M30 42c5-3 11-2 15 3l-4 4c-3 2-8 2-11 0z" fill="url(#ga-rat)" />
-      <circle cx="31" cy="39.5" r="4.6" fill="url(#ga-rat)" />
-      <circle cx="31" cy="39.5" r="2.6" fill="#f2a5b8" />
       <circle cx="38.5" cy="44.5" r="1.5" fill="#1d1d1b" />
       <circle cx="45" cy="46.5" r="1.6" fill="#e56b8a" />
       <ellipse cx="21" cy="57.5" rx="3" ry="1.4" fill="#e9a3b5" />
