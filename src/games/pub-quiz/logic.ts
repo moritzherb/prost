@@ -1,5 +1,5 @@
 import { shuffle } from '../../lib/random';
-import { QUESTIONS, type Level } from './questions';
+import { QUESTIONS, type Level, type Question, type Topic } from './questions';
 
 /*
  * Pub Quiz: one phone is the quizmaster's (question, answer, scores), every other phone a buzzer.
@@ -33,8 +33,8 @@ export interface Quiz {
   seq: number;
 }
 
-export function newQuiz(sides: Side[], levels: Level[], count: number, pool = QUESTIONS): Quiz {
-  const fit = pool.map((q, i) => (levels.includes(q.level) ? i : -1)).filter((i) => i >= 0);
+export function newQuiz(sides: Side[], levels: Level[], count: number, pool = QUESTIONS, keep: (q: Question) => boolean = () => true): Quiz {
+  const fit = pool.map((q, i) => (levels.includes(q.level) && keep(q) ? i : -1)).filter((i) => i >= 0);
   const deck = shuffle(fit).slice(0, count);
   return {
     sides,
@@ -86,3 +86,11 @@ export const sideOf = (q: Quiz, playerId: string) => q.sides.find((s) => s.membe
 
 /** Best first. */
 export const ranking = (q: Quiz) => [...q.sides].sort((a, b) => q.scores[b.id] - q.scores[a.id]);
+
+/** The question types besides a classic question; any other topic is a category of classic ones. */
+export const TYPES = ['truefalse', 'estimate', 'first', 'lie', 'odd', 'words', 'plot', 'beforeafter', 'connect'] as const satisfies readonly Topic[];
+export type Kind = 'classic' | (typeof TYPES)[number];
+const isType = (t: Topic): t is (typeof TYPES)[number] => (TYPES as readonly Topic[]).includes(t);
+
+/** Whether a question is one of the picked kinds: a classic one only in a picked category. */
+export const picked = (cats: Topic[], kinds: Kind[]) => (q: Question) => (isType(q.topic) ? kinds.includes(q.topic) : kinds.includes('classic') && cats.includes(q.topic));

@@ -9,7 +9,7 @@ import { buzz as vibrate, celebrate, sfx } from '../../lib/fx';
 import { useCrewButton } from '../../lib/turn';
 import { useShared } from '../../net/shared';
 import { useApp } from '../../state/AppState';
-import { buzz, canBuzz, judge, newQuiz, ranking, sideOf, skip, type Quiz, type Side } from './logic';
+import { buzz, canBuzz, judge, newQuiz, picked, ranking, sideOf, skip, TYPES, type Kind, type Quiz, type Side } from './logic';
 import { QUESTIONS, type Level, type Topic } from './questions';
 
 interface Shared {
@@ -51,6 +51,40 @@ export const TOPIC_NAME: Record<Topic, string> = {
   connect: tx('Connections'),
   decades: tx('Decades'),
 };
+
+/** The categories of classic questions, in the order the setup shows them. */
+const CATEGORIES: Topic[] = ['general', 'film', 'sports', 'entertainment', 'history', 'geography', 'science', 'food', 'gaming', 'art', 'myth', 'trash', 'decades'];
+const KINDS: Kind[] = ['classic', ...TYPES];
+const KIND_NAME = (k: Kind) => (k === 'classic' ? tx('Classic questions') : TOPIC_NAME[k]);
+
+/**
+ * The setup's pick of questions: which categories (for classic questions) and which question types,
+ * as many of each as you like (at least one). Categories only count for classic questions, so they
+ * dim while classic questions are off.
+ */
+export function useQuestionPick() {
+  const [cats, setCats] = useState<Topic[]>(CATEGORIES);
+  const [kinds, setKinds] = useState<Kind[]>(KINDS);
+  const flip = <T,>(set: (f: (x: T[]) => T[]) => void, v: T) => set((x) => (x.includes(v) ? (x.length > 1 ? x.filter((y) => y !== v) : x) : [...x, v]));
+  const chips = <T extends string>(all: T[], on: T[], name: (v: T) => string, tap: (v: T) => void, off = false) => (
+    <div className="pq-chips">
+      {all.map((v) => (
+        <button key={v} type="button" className={`chip${on.includes(v) ? ' active' : ''}`} aria-pressed={on.includes(v)} disabled={off} onClick={() => tap(v)}>
+          {t(name(v))}
+        </button>
+      ))}
+    </div>
+  );
+  const view = (
+    <>
+      <h3 className="section-title">{t('Categories')}</h3>
+      {chips(CATEGORIES, cats, (v) => TOPIC_NAME[v], (v) => flip(setCats, v), !kinds.includes('classic'))}
+      <h3 className="section-title">{t('Question types')}</h3>
+      {chips(KINDS, kinds, KIND_NAME, (v) => flip(setKinds, v))}
+    </>
+  );
+  return { view, keep: picked(cats, kinds) };
+}
 
 /** Pub Quiz: this phone (the host's) asks; every other phone is a buzzer. */
 export default function PubQuiz() {
@@ -102,7 +136,8 @@ function Setup({ room, onStart }: { room: ReturnType<typeof useShared<Shared>>['
       )
     : players.map((p) => ({ id: p.id, name: p.name, color: p.color, members: [p.id] }));
   const toggle = (l: Level) => setLevels((x) => (x.includes(l) ? (x.length > 1 ? x.filter((y) => y !== l) : x) : [...x, l].sort()));
-  const pool = QUESTIONS.filter((q) => levels.includes(q.level)).length;
+  const { view: pickView, keep } = useQuestionPick();
+  const pool = QUESTIONS.filter((q) => levels.includes(q.level) && keep(q)).length;
   return (
     <div className="bd">
       <div className="bd-head">
@@ -110,6 +145,7 @@ function Setup({ room, onStart }: { room: ReturnType<typeof useShared<Shared>>['
         <h2 className="bd-title big">{t('Pub Quiz')}</h2>
         {!known && <p className="lead">{t('Read the question out. Whoever buzzes first answers; you say if it’s right.')}</p>}
       </div>
+      {pickView}
       <h3 className="section-title">{t('How hard?')}</h3>
       <div className="pq-chips">
         {LEVELS.map((l) => (
@@ -171,7 +207,7 @@ function Setup({ room, onStart }: { room: ReturnType<typeof useShared<Shared>>['
         </div>
       )}
       <div className="sticky-action">
-        <BigButton size="xl" disabled={sides.length < 1} onClick={() => onStart(newQuiz(sides, levels, Math.min(count, pool)))}>
+        <BigButton size="xl" disabled={sides.length < 1 || !pool} onClick={() => onStart(newQuiz(sides, levels, Math.min(count, pool), QUESTIONS, keep))}>
           {players.length ? t('Start the quiz') : t('Waiting for players…')}
         </BigButton>
       </div>

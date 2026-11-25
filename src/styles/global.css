@@ -19385,6 +19385,11 @@ html.table-phone .game-bar .top-bar-side.right {
   gap: 8px;
 }
 
+/* Categories while classic questions are off: they don't count then. */
+.pq-chips .chip:disabled {
+  opacity: 0.4;
+}
+
 .pq-board {
   display: flex;
   gap: 6px;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buzz, canBuzz, judge, newQuiz, skip, type Side } from './logic';
+import { buzz, canBuzz, judge, newQuiz, picked, skip, TYPES, type Side } from './logic';
 import { QUESTIONS } from './questions';
 
 const sides: Side[] = ['a', 'b', 'c'].map((id) => ({ id, name: id, color: '#fff', members: [id] }));
@@ -18,6 +18,16 @@ describe('Pub Quiz', () => {
     expect(q.deck).toHaveLength(10);
     expect(q.deck.every((i) => QUESTIONS[i].level === 1)).toBe(true);
     expect(new Set(q.deck).size).toBe(10);
+  });
+
+  it('only the categories and types picked; categories only for classic questions', () => {
+    const keep = picked(['film'], ['classic', 'lie']);
+    const q = newQuiz(sides, [1, 2, 3, 4], 1000, QUESTIONS, keep);
+    expect(q.deck.length).toBeGreaterThan(10);
+    expect(q.deck.every((i) => ['film', 'lie'].includes(QUESTIONS[i].topic))).toBe(true);
+    const types = newQuiz(sides, [1, 2, 3, 4], 1000, QUESTIONS, picked(['film'], ['plot']));
+    expect(types.deck.every((i) => QUESTIONS[i].topic === 'plot')).toBe(true);
+    expect((TYPES as readonly string[]).includes('film')).toBe(false);
   });
 
   it('first buzz answers; right scores and moves on', () => {
