@@ -49,8 +49,6 @@ const pubQuiz: Record<string, string> = {
   'Question types': 'Fragetypen',
   Categories: 'Kategorien',
   'Classic questions': 'Klassische Fragen',
-  '{n} of {m}': '{n} von {m}',
-  'Not used': 'Nicht genutzt',
   'Categories only count for classic questions.': 'Kategorien zählen nur für klassische Fragen.',
   '{n} questions': '{n} Fragen',
   'Everyone alone': 'Jeder für sich',
