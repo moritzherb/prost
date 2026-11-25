@@ -49,6 +49,23 @@ export function useCrewButton(kind: CrewButton) {
   useEffect(() => () => set(null), [set]);
 }
 
+/**
+ * A "start over" button in the bar, left of the rules: a game that has one hands in what it does (null:
+ * none, as on an end screen). Always the latest function runs; the bar is told only when there is one.
+ */
+export const ResetContext = createContext<(run: (() => void) | null) => void>(() => {});
+
+export function useResetButton(run: (() => void) | null) {
+  const set = useContext(ResetContext);
+  const latest = useRef(run);
+  latest.current = run;
+  const on = run != null;
+  useEffect(() => {
+    set(on ? () => latest.current?.() : null);
+    return () => set(null);
+  }, [set, on]);
+}
+
 /** Set by the game, shown by the bar around it (see GameBar). */
 export const TurnContext = createContext<(p: TurnPlayer | null) => void>(() => {});
 

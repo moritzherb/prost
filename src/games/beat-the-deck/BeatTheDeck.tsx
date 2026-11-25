@@ -2,7 +2,9 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import BigButton from '../../components/BigButton';
 import { t } from '../../i18n';
 import { rankLabel } from '../../lib/cards';
+import Alert from '../../components/Alert';
 import { buzz, celebrate, sfx } from '../../lib/fx';
+import { useResetButton } from '../../lib/turn';
 import type { GameProps } from '../types';
 import { flyIn } from '../../lib/cardFly';
 import Bump from '../../components/Bump';
@@ -19,6 +21,7 @@ const TURN_LAST_MS = 760;
 export default function BeatTheDeck({ exit }: GameProps) {
   const [g, setG] = useState(newGame);
   const [pick, setPick] = useState<number | null>(null);
+  const [asking, setAsking] = useState(false);
   // A wrong guess: the card lands, shows red a moment and the place lifts and turns over (.turning),
   // then lies face down (.down, the turn's second half). Worked out in the render, so the very
   // first frame already shows it face up; TURN_MS matches the CSS.
@@ -48,6 +51,8 @@ export default function BeatTheDeck({ exit }: GameProps) {
     if (el) flyIn(el, f.from, 420);
   }, [g]);
   const done = endOf === g;
+  // Start over, in the bar (asked first; not once the end shows, which has its own).
+  useResetButton(done ? null : () => g.last && setAsking(true));
   useEffect(() => {
     // A moment after the end screen is up, once its own entrance has run: both together stuttered.
     if (!done || !won(g)) return;
@@ -90,6 +95,19 @@ export default function BeatTheDeck({ exit }: GameProps) {
 
   return (
     <div className="sol bd-play fill">
+      {asking && (
+        <Alert
+          title={t('Start over?')}
+          text={t('The cards are shuffled and dealt again.')}
+          action={t('Restart')}
+          onConfirm={() => {
+            setAsking(false);
+            setG(newGame());
+            setPick(null);
+          }}
+          onCancel={() => setAsking(false)}
+        />
+      )}
       <p className="sol-status">
         {sel ? t('Higher or lower than {rank}?', { rank: rankLabel(sel.top.value) }) : t('Pick a card')}
       </p>

@@ -48,6 +48,12 @@ export const UncleanIcon = () => (
     <path d="M9 4v5H4M15 4v5h5M20 15h-5v5M4 15h5v5" />
   </Icon>
 );
+/** Start over: an arrow going round, back to where it began. */
+export const ResetIcon = () => (
+  <Icon>
+    <path d="M4 12a8 8 0 1 0 2.6-5.9L4 8.5M4 4v4.5h4.5" />
+  </Icon>
+);
 export const SettingsIcon = () => (
   <Icon>
     <path d="M4 7h10M18 7h2M4 17h2M10 17h10" />

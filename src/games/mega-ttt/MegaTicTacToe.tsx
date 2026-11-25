@@ -8,7 +8,7 @@ import { buzz, celebrate, sfx } from '../../lib/fx';
 import { useApp, type Player } from '../../state/AppState';
 import type { GameProps } from '../types';
 import { canPlay, newGame, play, playable, type Game, type Mark } from './logic';
-import { useCrewButton } from '../../lib/turn';
+import { useCrewButton, useResetButton } from '../../lib/turn';
 
 /** Where each small board lies, said the way players say it. */
 const PLACES = ['top left', 'top', 'top right', 'left', 'middle', 'right', 'bottom left', 'bottom', 'bottom right'] as const;
@@ -101,6 +101,9 @@ function Match({ pair, onSwap }: { pair: [Player, Player]; onSwap: () => void })
     setG(next);
   };
 
+  // Start over, in the bar (only once a mark is down; a game that is won has its own Play again).
+  useResetButton(g.winner ? null : () => g.moves > 0 && setAsking(true));
+
   const restart = (swap: boolean) => {
     setNote(null);
     setG(newGame());
@@ -190,14 +193,10 @@ function Match({ pair, onSwap }: { pair: [Player, Player]; onSwap: () => void })
         <p key={info} className={`mt-info${note && !g.winner ? ' note' : ''}`} aria-live="polite">
           {info}
         </p>
-        {g.winner ? (
+        {g.winner && (
           <BigButton size="xl" onClick={() => restart(g.winner === 'X')}>
             {t('Play again')}
           </BigButton>
-        ) : (
-          <button type="button" className="text-btn mt-restart" disabled={g.moves === 0} onClick={() => setAsking(true)}>
-            {t('Restart')}
-          </button>
         )}
       </div>
       {asking && (

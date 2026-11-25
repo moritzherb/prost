@@ -32,6 +32,7 @@ const solitaire: Record<string, string> = {
   '{n} of 9 places still open.': '{n} von 9 Plätzen noch offen.',
   '{n} cards were left in the pile.': '{n} Karten waren noch im Stapel.',
   'Higher or lower than {rank}?': 'Höher oder tiefer als {rank}?',
+  'The cards are shuffled and dealt again.': 'Die Karten werden neu gemischt und ausgelegt.',
 };
 
 export default solitaire;
