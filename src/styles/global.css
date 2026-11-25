@@ -371,23 +371,16 @@ li {
    to the end it stands exactly where it stood while scrolling (else it rose by that padding there).
    A sheet open after it (it is a child of the same box) doesn't count as something after it: the box
    mustn't change size when a sheet opens or closes, or a centred setup page jumps by half of it. */
-.screen:not(.game-detail, .play-screen) > .sticky-action:not(:has(~ :not(.sheet-backdrop, .boarding))),
-.screen:not(.game-detail, .play-screen) > .bd:not(:has(~ :not(.sheet-backdrop, .boarding))) > .sticky-action:not(:has(~ :not(.sheet-backdrop, .boarding))) {
+.screen:not(.game-detail) > .sticky-action:not(:has(~ :not(.sheet-backdrop, .boarding))),
+.screen:not(.game-detail) > .bd:not(:has(~ :not(.sheet-backdrop, .boarding))) > .sticky-action:not(:has(~ :not(.sheet-backdrop, .boarding))),
+/* The same in a game's own box (.fk, .who-drinks, .kc, …): its button stands where the setup's did. */
+.screen.play-screen:not(.game-detail) > :not(.sticky-action, .top-bar, .bd):not(:has(~ :not(.sheet-backdrop, .boarding))) > .sticky-action:not(:has(~ :not(.sheet-backdrop, .boarding))) {
   margin-bottom: calc(-20px - env(safe-area-inset-bottom));
 }
 
-/* Over a game the screen's own room at the bottom is a few pixels: whatever is last (the button, or
-   the two of them) stands low, as in Bus Driver, and the field above it gets the room. */
-.screen.play-screen:not(.game-detail) {
-  padding-bottom: 4px;
-}
-
-.screen.play-screen:not(.game-detail) .sticky-action {
-  padding-bottom: 0;
-}
-
-.screen.play-screen:not(.game-detail) .bd-foot {
-  padding-bottom: 0;
+/* Games whose button row is their own box rather than a .sticky-action: the same, last in its column. */
+.screen.play-screen:not(.game-detail) :is(.bd-foot, .pq-judge):last-child {
+  margin-bottom: calc(-18px - env(safe-area-inset-bottom));
 }
 
 /*
@@ -4618,7 +4611,7 @@ html[data-look='pop'] .sheet-dim {
    down to the bottom of the screen, so the circle is centred on all of it, while the spacer below
    never gets shorter than the button's room (the circle never slides under it). */
 .kc-stage:has(~ .sticky-action) {
-  --kc-under: calc(98px + 4px);
+  --kc-under: calc(98px + 20px + env(safe-area-inset-bottom));
   margin-bottom: calc(-1 * var(--kc-under));
 }
 
@@ -5269,7 +5262,7 @@ html[data-look='pop'] .sheet-dim {
   flex-direction: column;
   gap: 10px;
   padding-top: 8px;
-  margin-bottom: 0;
+  margin-bottom: calc(-14px - env(safe-area-inset-bottom));
 }
 
 .mx-slot {
@@ -5884,7 +5877,7 @@ html[data-look='pop'] .sheet-dim {
 /* The Next button reaches down into the screen's bottom padding (as on the other screens' last
    button) and sits closer to the table, so the table gets that room. */
 .kl > .sticky-action {
-  margin-bottom: 0;
+  margin-bottom: calc(-12px - env(safe-area-inset-bottom));
   padding-top: 6px;
 }
 
@@ -12995,7 +12988,7 @@ html[data-look='pop'] .sheet-dim {
 .pt-play {
   position: relative;
   min-height: 440px;
-  margin: 0 calc(-1 * var(--gutter)) -4px;
+  margin: 0 calc(-1 * var(--gutter)) calc(-20px - env(safe-area-inset-bottom));
   overflow: hidden;
 }
 
@@ -18698,10 +18691,9 @@ html.table-phone .game-bar .top-bar-side.right {
 .sol-foot {
   --cw: 56px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 14px;
   height: calc(56px * 1.4);
-  /* The deck and the button on one line along the bottom. */
 }
 
 .sol-foot .big-btn {
