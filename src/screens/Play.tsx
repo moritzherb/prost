@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import BigButton from '../components/BigButton';
 import CrewSheet from '../components/CrewSheet';
 import { CrewContext } from '../components/Finished';
@@ -8,7 +8,7 @@ import Sheet from '../components/Sheet';
 import type { GameDefinition } from '../games/types';
 import { t } from '../i18n';
 import { markPlayed } from '../lib/recent';
-import { CrewButtonContext, EndedContext, PlayingContext, TurnContext, type CrewButton, type TurnPlayer } from '../lib/turn';
+import { CrewButtonContext, EndedContext, PlayingContext, ResetContext, TurnContext, type CrewButton, type TurnPlayer } from '../lib/turn';
 import { navigate, paths } from '../lib/router';
 import { useWakeLock } from '../lib/wakeLock';
 import { useApp } from '../state/AppState';
@@ -27,6 +27,9 @@ export default function Play({ game }: { game: GameDefinition }) {
   const [playing, setPlaying] = useState<boolean | null>(null);
   // Whether it shows its end screen (no rules and no clean-table switch in the bar then).
   const [ended, setEnded] = useState(false);
+  // A game's "start over" (see useResetButton).
+  const [reset, setReset] = useState<{ run: () => void } | null>(null);
+  const setResetFn = useCallback((run: (() => void) | null) => setReset(run ? { run } : null), []);
   useWakeLock();
 
   const Game = game.component;
@@ -44,15 +47,17 @@ export default function Play({ game }: { game: GameDefinition }) {
 
   return (
     <main className={`screen play-screen${isClean(game, settings.clean) ? ' clean' : ''}${ended ? ' ended' : ''}`}>
-      <GameBar game={game} turn={turn} playing={playing ?? true} ended={ended} onExit={() => setConfirmExit(true)} onRules={() => setShowRules(true)} onCrew={crewButton ? () => setShowCrew(true) : undefined} />
+      <GameBar game={game} turn={turn} playing={playing ?? true} ended={ended} onReset={reset?.run} onExit={() => setConfirmExit(true)} onRules={() => setShowRules(true)} onCrew={crewButton ? () => setShowCrew(true) : undefined} />
 
       <CrewContext.Provider value={players}>
         <TurnContext.Provider value={setTurn}>
           <PlayingContext.Provider value={setPlaying}>
             <EndedContext.Provider value={setEnded}>
-              <CrewButtonContext.Provider value={setCrewButton}>
-                <Game players={players} exit={exit} />
-              </CrewButtonContext.Provider>
+              <ResetContext.Provider value={setResetFn}>
+                <CrewButtonContext.Provider value={setCrewButton}>
+                  <Game players={players} exit={exit} />
+                </CrewButtonContext.Provider>
+              </ResetContext.Provider>
             </EndedContext.Provider>
           </PlayingContext.Provider>
         </TurnContext.Provider>

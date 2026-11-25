@@ -4,7 +4,7 @@ import { t } from '../i18n';
 import type { TurnPlayer } from '../lib/turn';
 import { useApp } from '../state/AppState';
 import Avatar from './Avatar';
-import { CleanIcon, HelpIcon, PeopleIcon, UncleanIcon } from './Icons';
+import { CleanIcon, HelpIcon, PeopleIcon, ResetIcon, UncleanIcon } from './Icons';
 import TopBar, { RoundButton } from './TopBar';
 
 /** Whether a game shows with a clean table: always, never, or as the players' switch says. */
@@ -22,6 +22,7 @@ export default function GameBar({
   turn,
   playing,
   ended = false,
+  onReset,
   onExit,
   onRules,
   onCrew,
@@ -31,6 +32,8 @@ export default function GameBar({
   playing: boolean;
   /** The end screen: neither the rules nor the clean-table switch. */
   ended?: boolean;
+  /** Start over (a game that has it), left of the rules. */
+  onReset?: () => void;
   onExit: () => void;
   onRules: () => void;
   /** The crew, to add someone mid-game (one-phone games; a room has its own). */
@@ -47,6 +50,11 @@ export default function GameBar({
   const crew = onCrew && (
     <RoundButton label={t('The crew')} onClick={onCrew}>
       <PeopleIcon />
+    </RoundButton>
+  );
+  const reset = onReset && (
+    <RoundButton label={t('Restart')} onClick={onReset}>
+      <ResetIcon />
     </RoundButton>
   );
   const toggle = (
@@ -75,12 +83,14 @@ export default function GameBar({
         ) : clean ? (
           <>
             {crew}
+            {reset}
             {switchable ? toggle : rules}
           </>
         ) : (
           <>
             {crew}
             {switchable && toggle}
+            {reset}
             {rules}
           </>
         )
