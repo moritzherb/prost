@@ -1119,7 +1119,9 @@ html[data-look='pop'] .os-home.android {
 }
 
 .w-cookie-in .w-faces {
-  margin: 0 0 8px 7px;
+  /* The faces overlap by 7px each, which the row's own width doesn't count: half of it moves it back. */
+  margin: 0 0 8px;
+  transform: translateX(-3.5px);
 }
 
 .w-cookie-in .w-face {
