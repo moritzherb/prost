@@ -1670,7 +1670,7 @@ html[data-os='android'] .os-home.editing .os-grid.movable .app .app-icon {
 }
 
 /* Android's touch ripple (lib/ripple.ts): its buttons keep it inside their own shape. */
-html[data-os='android'] :is(.big-btn, .os-alert-btn, .la-menu-item, .seg-btn) {
+html[data-os='android'] :is(.os-alert-btn, .la-menu-item, .seg-btn) {
   position: relative;
   overflow: hidden;
   isolation: isolate;

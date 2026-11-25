@@ -572,7 +572,7 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
         flatBox()
       )}
 
-      <div className="nf-actions">
+      <div className="sticky-action nf-actions">
         {m.phase === 'handover' ? (
           <BigButton size="xl" onClick={nextTurn}>
             {t('Pass to {name}', { name: byId(m.order[m.turn + 1]).name })}

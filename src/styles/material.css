@@ -58,10 +58,18 @@ html[data-look='pop'][data-os='android'] .big-btn-glass {
 
 /* Disabled: on-surface at 12% for the container, 38% for the label (md.sys.state). */
 html[data-look='pop'][data-os='android'] .big-btn:disabled {
+  /* Switches at once: a colour fade left the ripple's light edge hanging at the left of the button. */
+  transition: none;
   opacity: 1;
   background: color-mix(in srgb, var(--ink) 12%, transparent);
   color: color-mix(in srgb, var(--ink) 38%, transparent);
 }
+
+/* Pressed: the whole button takes the 12% state layer at once, not a circle spreading over part of it. */
+html[data-look='pop'][data-os='android'] .big-btn:active:not(:disabled) {
+  background-image: linear-gradient(color-mix(in srgb, currentColor 12%, transparent), color-mix(in srgb, currentColor 12%, transparent));
+}
+
 
 /* ---------- Top app bar (small, centred: 64dp, title-large) and its icon buttons ---------- */
 

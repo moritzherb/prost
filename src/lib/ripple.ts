@@ -3,7 +3,7 @@
  * out from the finger. Only on the app's own press surfaces (buttons, alert and menu rows), only on
  * Android, transform and opacity only.
  */
-const HOSTS = '.big-btn, .os-alert-btn, .la-menu-item, .seg-btn';
+const HOSTS = '.os-alert-btn, .la-menu-item, .seg-btn';
 
 export function watchRipples() {
   if (typeof document === 'undefined') return;
