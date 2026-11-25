@@ -9,19 +9,17 @@
  */
 
 import { sfx } from './fx';
-import { bezier } from './tween';
 import { playIntro } from './intro';
 import { holdScreen } from './router';
 import { coverTop, mix, STRIP_LAG, topColor, topLayer, tone } from './themeColor';
 
 /** The emoji's glide to the middle (the colour is there at once), staying as the splash, fading out (ms). */
-const IOS_TIMES = [420, 480, 320] as const;
-/** An Android phone: quicker, and Material's emphasized curve (the same numbers as home's way back). */
-const ANDROID_TIMES = [300, 220, 220] as const;
-const EMPHASIZED = bezier(0.05, 0.7, 0.1, 1);
+const GROW = 420;
+const HOLD = 480;
+const FADE = 320;
 
 /** How long a splash shows before it fades (the start-up screen keeps to it too). */
-export const SPLASH_MS = IOS_TIMES[0] + IOS_TIMES[1];
+export const SPLASH_MS = GROW + HOLD;
 
 let last: string | null = null;
 /** The splash's colour on the strip under the clock, while one shows. */
@@ -35,8 +33,7 @@ let strip: ReturnType<typeof topLayer> | null = null;
 export function launch(icon: Element | null, game: { id: string; color: string; emoji: string }, go: () => void, glyphs: string[] = [game.emoji]) {
   last = game.id;
   sfx.open();
-  const android = typeof document !== 'undefined' && document.documentElement.dataset.os === 'android';
-  const [GROW, HOLD, FADE] = android ? ANDROID_TIMES : IOS_TIMES;
+
   const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!icon || reduce || typeof document === 'undefined') {
     go();
@@ -104,22 +101,10 @@ export function launch(icon: Element | null, game: { id: string; color: string; 
   if (typeof emoji.animate === 'function') {
     const N = 24;
     glide = emoji.animate(
-      Array.from({ length: N + 1 }, (_, i) => ({ transform: at(android ? EMPHASIZED(i / N) : inOut(i / N)) })),
+      Array.from({ length: N + 1 }, (_, i) => ({ transform: at(inOut(i / N)) })),
       { duration: GROW, easing: 'linear', fill: 'forwards' },
     );
     glide.startTime = start;
-  }
-  // On Android the veil's colour opens as a circle out of the tapped icon and fades, both as
-  // animations on the compositor: the page loading behind the splash can't make them stutter.
-  if (android && typeof veil.animate === 'function') {
-    const cx = r.left + r.width / 2;
-    const cy = r.top + r.height / 2;
-    const reach = Math.hypot(Math.max(cx, w - cx), Math.max(cy, h - cy));
-    veil.animate(
-      [{ clipPath: `circle(${r.width / 2}px at ${cx}px ${cy}px)` }, { clipPath: `circle(${reach}px at ${cx}px ${cy}px)` }],
-      { duration: GROW, easing: 'cubic-bezier(0.05, 0.7, 0.1, 1)', fill: 'both' },
-    );
-    veil.animate([{ opacity: 1 }, { opacity: 0 }], { duration: FADE, delay: GROW + HOLD, easing: 'linear', fill: 'both' });
   }
   const fadeAt = GROW + HOLD;
   /** The time between frames (ms), as it goes: 60 a second, 120, 30 when saving power. */
@@ -142,36 +127,38 @@ export function launch(icon: Element | null, game: { id: string; color: string; 
     layer.release();
     if (strip === layer) strip = null;
   };
-  /** How much colour shows `t` ms in. */
-  // The colour is there at once (no fade in) and only fades out, onto the game's own page.
-  const amount = (t: number) => (t < fadeAt ? 1 : 1 - inOut((t - fadeAt) / FADE));
-  // The strip is given its colour at once and the phone blends to it over ~50 ms (measured on a screen
-  // recording: 40% in the first frame, 93% three frames on): the page's colour comes in the same way,
-  // not in one frame ahead of the strip.
-  const RISE = 70;
-  const rise = (t: number) => (t >= RISE ? 1 : 0.4 + 0.6 * (t / RISE));
-  // And going out the strip showed 40 ms ahead of the page with STRIP_LAG (60): this phone takes ~20.
+  // The colour is there at once, and comes in the way the strip does (the phone blends the strip to
+  // the colour it is given over ~50 ms, measured on a screen recording: 40% in the first frame, 93%
+  // three frames on). Going out the strip showed 40 ms ahead of the page with STRIP_LAG (60): this
+  // phone takes ~20.
+  // Both the page's colour coming in and its fade out are animations on the compositor: the page
+  // loading behind the splash can't make them stutter. Only the strip is set from a script, each
+  // frame, from the fade's own clock.
   const OUT_LAG = 20;
+  if (typeof fill.animate === 'function') fill.animate([{ opacity: 0.4 }, { opacity: 1 }], { duration: 70, easing: 'linear' });
+  let fade: Animation | null = null;
   const frame = (now: number) => {
     if (gone || !veil.isConnected) return done();
     if (!prev || now - start < GROW) shown = now - start;
     else if (now > prev) shown += Math.min(now - prev, 2 * step);
-    const t = shown;
-    if (t >= fadeAt + FADE) return done();
     if (prev && now > prev) step += (Math.min(50, now - prev) - step) * 0.3;
     prev = now;
-    const k = amount(t);
-    const fading = t >= fadeAt;
-    if (!android) fill.style.opacity = String(k * rise(t));
-    if (!glide) emoji.style.transform = at(t < GROW ? k : 1);
-    if (fading) {
-      if (!android) emoji.style.opacity = String(k);
+    if (!glide) emoji.style.transform = at(1);
+    if (!fade && shown >= fadeAt) {
       veil.style.pointerEvents = 'none';
+      if (typeof veil.animate === 'function') {
+        const N = 16;
+        fade = veil.animate(
+          Array.from({ length: N + 1 }, (_, i) => ({ opacity: 1 - inOut(i / N) })),
+          { duration: FADE, easing: 'linear', fill: 'forwards' },
+        );
+        fade.onfinish = done;
+      } else return done();
     }
     // The phone shows the strip a little late (themeColor.ts STRIP_LAG): it is set that much ahead,
     // and both show the same at the same moment. Fading out, the page underneath is the game's now.
-    const ahead = t + OUT_LAG;
-    layer.set(mix(ahead >= fadeAt ? layer.under() : from, color, amount(ahead)));
+    if (fade) layer.set(mix(layer.under(), color, 1 - inOut((Number(fade.currentTime ?? 0) + OUT_LAG) / FADE)));
+    else layer.set(color);
     requestAnimationFrame(frame);
   };
   requestAnimationFrame(frame);
