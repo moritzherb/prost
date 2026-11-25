@@ -4350,7 +4350,7 @@ html[data-look='pop'] .sheet-dim {
   top: 50%;
   width: calc(36 * var(--qw));
   height: calc(36 * var(--qw));
-  transform: translate(-50%, -56%);
+  transform: translate(-50%, -50%);
   transition:
     opacity 0.3s var(--ease-out),
     transform 0.6s var(--spring);
