@@ -19395,7 +19395,9 @@ html.table-phone .game-bar .top-bar-side.right {
   gap: 6px;
   overflow-x: auto;
   scrollbar-width: none;
-  margin: 0 calc(-1 * var(--gutter));
+  /* The 2px of padding keep the chips' rings from being clipped; the bottom one is taken back so the
+     gap to the card is the same as the one between the card and the buttons. */
+  margin: 0 calc(-1 * var(--gutter)) -2px;
   padding: 2px var(--gutter);
 }
 
