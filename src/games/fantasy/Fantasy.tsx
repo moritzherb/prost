@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type 
 import { useCrewButton, useYourTurn } from '../../lib/turn';
 import Avatar from '../../components/Avatar';
 import BigButton from '../../components/BigButton';
+import { EndMark } from '../../components/Finished';
 import HandFan from '../../components/HandFan';
 import Tap from '../../components/Tap';
 import { t, tx } from '../../i18n';
@@ -258,6 +259,7 @@ function Table({
     const order = seats.map((s, i) => ({ s, i })).sort((a, b) => (g.phase === 'over' ? g.scores[b.i] - g.scores[a.i] : 0));
     return (
       <div className="bd">
+        {g.phase === 'over' && <EndMark />}
         <div className="bd-head center">
           <span className="kicker">{t('Round {n} of {m}', { n: g.round, m: g.rounds })}</span>
           <h2 className="bd-title big">{g.phase === 'over' ? t('{name} wins', { name: name(order[0].i) }) : t('Round over')}</h2>

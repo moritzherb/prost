@@ -186,7 +186,7 @@ export default function CardGame<C>(props: CardGameProps<C>) {
   if (s.over) {
     return (
       <div className="bd vt">
-        <Finished game={game} />
+        <Finished game={game} end />
         <div className="bd-head center">
           <span className="kicker">{t('Game over')}</span>
           <h2 className="bd-title big">{t('All cards played')}</h2>

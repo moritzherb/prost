@@ -335,7 +335,7 @@ export function TrashTable({
 
       {over && g.winner != null && (
         <div className="tr-over">
-            {g.phase === 'game-over' && <Finished game="trash" players={two} />}
+            {g.phase === 'game-over' && <Finished game="trash" players={two} end />}
           <div className="tr-over-card">
             <span className="kicker">{g.phase === 'game-over' ? t('Game over') : t('Round {n}', { n: g.round })}</span>
             <h2 className="bd-title big">

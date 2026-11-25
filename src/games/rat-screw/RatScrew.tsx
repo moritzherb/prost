@@ -2,6 +2,7 @@ import { useState, type CSSProperties } from 'react';
 import { useCrewButton, useYourTurn } from '../../lib/turn';
 import Avatar from '../../components/Avatar';
 import BigButton from '../../components/BigButton';
+import { EndMark } from '../../components/Finished';
 import { CardFace } from '../../components/PlayingCard';
 import Tap from '../../components/Tap';
 import { t, tx } from '../../i18n';
@@ -153,6 +154,7 @@ function Table({
   if (g.winner != null) {
     return (
       <div className="bd rs-over">
+        <EndMark />
         <div className="bd-head center">
           <h2 className="bd-title big">{g.winner === me ? t('You have every card') : t('{name} has every card', { name: name(g.winner) })}</h2>
         </div>

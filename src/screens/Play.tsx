@@ -8,7 +8,7 @@ import Sheet from '../components/Sheet';
 import type { GameDefinition } from '../games/types';
 import { t } from '../i18n';
 import { markPlayed } from '../lib/recent';
-import { CrewButtonContext, PlayingContext, TurnContext, type CrewButton, type TurnPlayer } from '../lib/turn';
+import { CrewButtonContext, EndedContext, PlayingContext, TurnContext, type CrewButton, type TurnPlayer } from '../lib/turn';
 import { navigate, paths } from '../lib/router';
 import { useWakeLock } from '../lib/wakeLock';
 import { useApp } from '../state/AppState';
@@ -25,6 +25,8 @@ export default function Play({ game }: { game: GameDefinition }) {
   const [turn, setTurn] = useState<TurnPlayer | null>(null);
   // Whether the game is past its setup screen (a game that doesn't say: always).
   const [playing, setPlaying] = useState<boolean | null>(null);
+  // Whether it shows its end screen (no rules and no clean-table switch in the bar then).
+  const [ended, setEnded] = useState(false);
   useWakeLock();
 
   const Game = game.component;
@@ -41,15 +43,17 @@ export default function Play({ game }: { game: GameDefinition }) {
   if (!playable) return null;
 
   return (
-    <main className={`screen play-screen${isClean(game, settings.clean) ? ' clean' : ''}`}>
-      <GameBar game={game} turn={turn} playing={playing ?? true} onExit={() => setConfirmExit(true)} onRules={() => setShowRules(true)} onCrew={crewButton ? () => setShowCrew(true) : undefined} />
+    <main className={`screen play-screen${isClean(game, settings.clean) ? ' clean' : ''}${ended ? ' ended' : ''}`}>
+      <GameBar game={game} turn={turn} playing={playing ?? true} ended={ended} onExit={() => setConfirmExit(true)} onRules={() => setShowRules(true)} onCrew={crewButton ? () => setShowCrew(true) : undefined} />
 
       <CrewContext.Provider value={players}>
         <TurnContext.Provider value={setTurn}>
           <PlayingContext.Provider value={setPlaying}>
-            <CrewButtonContext.Provider value={setCrewButton}>
-              <Game players={players} exit={exit} />
-            </CrewButtonContext.Provider>
+            <EndedContext.Provider value={setEnded}>
+              <CrewButtonContext.Provider value={setCrewButton}>
+                <Game players={players} exit={exit} />
+              </CrewButtonContext.Provider>
+            </EndedContext.Provider>
           </PlayingContext.Provider>
         </TurnContext.Provider>
       </CrewContext.Provider>

@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from
 import { useCrewButton, useYourTurn } from '../../lib/turn';
 import Avatar from '../../components/Avatar';
 import BigButton from '../../components/BigButton';
+import { EndMark } from '../../components/Finished';
 import HandFan, { SortButton } from '../../components/HandFan';
 import Sheet from '../../components/Sheet';
 import Tap from '../../components/Tap';
@@ -224,6 +225,7 @@ function Table({
   if (g.winner != null) {
     return (
       <div className="bd">
+        <EndMark />
         <div className="bd-head center">
           <h2 className="bd-title big">{g.winner === me ? t('You’re out of cards: you win') : t('{name} is out of cards and wins', { name: name(g.winner) })}</h2>
         </div>

@@ -685,7 +685,7 @@ function Finish({ g, players, onAgain, exit }: { g: Game; players: GameProps['pl
             })}
         </div>
       </section>
-      <Finished game="schweinerei" />
+      <Finished game="schweinerei" end />
       <div className="sticky-action stack">
         <BigButton onClick={onAgain}>{t('Play again')}</BigButton>
         <BigButton variant="glass" onClick={exit}>

@@ -327,7 +327,7 @@ export default function Speed() {
     const won = g.winner === me;
     return (
       <div className="bd">
-        <Finished game="speed" />
+        <Finished game="speed" end />
         <div className="bd-head center">
           <span className="kicker">{t('Game over')}</span>
           <h2 className="bd-title big">{won ? t('You win') : t('{name} wins', { name: match.seats[g.winner ?? 0].name })}</h2>

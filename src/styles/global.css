@@ -384,6 +384,44 @@ li {
 }
 
 /*
+ * An end screen: exactly the screen's height. The bar at the top and the buttons at the bottom stay
+ * put; only what's between them scrolls, and only when it's longer than its room (the page itself
+ * never moves, with the bar, as one that was a few pixels too tall did).
+ */
+.screen.play-screen.ended {
+  height: 100dvh;
+  min-height: 0;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+@media (display-mode: standalone) {
+  @supports (-webkit-touch-callout: none) {
+    .screen.play-screen.ended {
+      height: calc(var(--app-h, 100dvh) + env(safe-area-inset-top));
+    }
+  }
+}
+
+.screen.play-screen.ended > :not(.top-bar, .sheet-backdrop, .launch-veil) {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.screen.play-screen.ended > :not(.top-bar, .sheet-backdrop)::-webkit-scrollbar {
+  display: none;
+}
+
+/* Its button row stands on the screen's edge by its own padding (no room below to reach into). */
+.screen.play-screen.ended .sticky-action,
+.screen.play-screen.ended :is(.bd-foot, .pq-judge) {
+  margin-bottom: 0;
+}
+
+/*
  * A game's page (its rules, before it starts): exactly the screen's height. The back button at the
  * top and the start button at the bottom stay put; only the middle (the card, the numbers, the
  * rules) scrolls, and only when it's longer than its room (else it's still: no scroll, no bounce).

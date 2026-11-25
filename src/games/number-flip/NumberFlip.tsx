@@ -698,7 +698,7 @@ function RoundEnd({
 
   return (
     <div className="bd nf-end">
-      <Finished game="number-flip" players={m.order.map(byId)} />
+      <Finished game="number-flip" players={m.order.map(byId)} end />
       <div className="bd-head center">
         <span className="nf-end-kicker">{setup.mode === 'daily' ? t('Daily challenge · {date}', { date: today() }) : t(MODE_INFO[setup.mode].name)}</span>
         <h2 className="bd-title big">{title}</h2>

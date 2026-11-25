@@ -915,7 +915,7 @@ function Over({ view, isHost, onNewGame }: { view: PhoneView; isHost: boolean; o
     <div className="pl-over">
       <div className="pl-over-card">
         <span className="kicker">{t('Game over')}</span>
-      <Finished game="palace" />
+      <Finished game="palace" end />
         <h2 className="bd-title big">{w === view.me ? t('You win') : t('{name} wins', { name: nameOf(view, w) })}</h2>
         <ul className="pl-over-list">
           {order.map(({ s, i, left }) => (

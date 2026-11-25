@@ -730,7 +730,7 @@ function Reveal({ view, myId, isHost, onNext, onNewGame }: { view: PlayerView; m
   return (
     <div className="hr hr-reveal fill">
       <Seats view={view} myId={myId} />
-      {over && <Finished game="hose-runter" />}
+      {over && <Finished game="hose-runter" end />}
       <div className="bd-head center">
         <span className="kicker">{over ? t('Game over') : t('Round {round}', { round: view.round })}</span>
         <h2 className="bd-title big">{title}</h2>

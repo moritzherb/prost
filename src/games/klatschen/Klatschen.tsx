@@ -80,7 +80,7 @@ export default function Klatschen({ players, exit }: GameProps) {
     const loser = byPlayer(s.loser);
     return (
       <div className="bd">
-        <Finished game="klatschen" />
+        <Finished game="klatschen" end />
         <div className="bd-head center">
           <span className="kicker">{t('Game over')}</span>
           <span className="kl-end-glass" aria-hidden>

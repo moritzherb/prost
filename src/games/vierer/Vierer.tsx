@@ -164,7 +164,7 @@ function Table({
     const won = winners(g);
     return (
       <div className="bd">
-        <Finished game="vierer" />
+        <Finished game="vierer" end />
         <div className="bd-head center">
           <span className="kicker">{t('Game over')}</span>
           <h2 className="bd-title big">{won.includes(me) ? t('You win') : t('{name} wins', { name: won.map((i) => seats[i].name).join(' & ') })}</h2>
