@@ -56,7 +56,7 @@ export const TOPIC_NAME: Record<Topic, string> = {
 /** The lead-ins that only repeat the type shown on the card's top line (so they're left off the question). */
 const REPEATS = new Set(['True or false', 'Wahr oder falsch', 'Estimate', 'Schätzfrage', 'Schätzt', 'Odd one out', 'Was passt nicht', 'Badly explained', 'Schlecht erklärt']);
 /** A lead-in that is itself a question ("What comes next") gets its question mark. */
-const asked = (lead: string) => (/^(what|which|how|where|who|was|welche|wie|wo|wer|aus welchem)\b/i.test(lead) && !/[?]$/.test(lead) ? `${lead}?` : lead);
+const asked = (lead: string) => (/\b(what|which|how|where|who|when|odd one out|was|welche[rsmn]?|wie|wo|wer|wann)\b/i.test(lead) && !/[?]$/.test(lead) ? `${lead}?` : lead);
 const cap = (x: string) => x.charAt(0).toLocaleUpperCase() + x.slice(1);
 
 /**
@@ -69,7 +69,7 @@ const cap = (x: string) => x.charAt(0).toLocaleUpperCase() + x.slice(1);
 export function QuestionText({ text, topic }: { text: string; topic: Topic }) {
   const opts = text.match(/^(.*?)\s*A\)\s*(.*?)\s*B\)\s*(.*?)\s*C\)\s*(.*)$/s);
   const whole = opts ? opts[1].replace(/:\s*$/, '') : text;
-  const lead = !opts ? whole.match(/^([^:]{3,40}):\s+(.+)$/s) : null;
+  const lead = !opts ? whole.match(/^([^:„“”"]{3,40}):\s+(.+)$/s) : null;
   const subject = topic === 'lie' ? whole.split(/\s+[–-]\s+/).slice(1).join(' – ') : '';
   const body = subject || (lead ? lead[2] : whole);
   const line = lead && !REPEATS.has(lead[1]) ? asked(lead[1]) : null;
