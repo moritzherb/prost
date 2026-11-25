@@ -3284,18 +3284,20 @@ html[data-look='pop'] .sheet-dim {
 
 /* Part 2: pyramid & tiebreaker */
 
+/* minmax(0, 1fr): equal columns whatever the labels, so a long one wraps instead of pushing the row
+   out of the screen on a narrow phone. */
 .seg {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
 }
 
 .seg.two {
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .seg.three {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .seg-btn {
