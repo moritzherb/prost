@@ -538,23 +538,24 @@ const ART: Record<string, Art> = {
       <path d="M32 6L6 46h26z" fill="url(#ga-sand)" />
       <path d="M32 6l26 40H32z" fill="url(#ga-sand-d)" />
       <path d="M16 31h11M12 37.5h17M21 24.5h8" stroke="#a8702a" strokeWidth="1.4" opacity="0.4" strokeLinecap="round" />
-      {/* The rat, sitting in front, facing right. */}
-      <path d="M13 53c-.5 4.6-5.5 6.2-11.5 4.8" fill="none" stroke="#d9a3ae" strokeWidth="1.4" strokeLinecap="round" />
-      <ellipse cx="24" cy="49" rx="12" ry="9" fill="url(#ga-rat)" />
-      <path d="M30 42c5-3 11-2 15 3l-4 4c-3 2-8 2-11 0z" fill="url(#ga-rat)" />
-      <ellipse cx="33.4" cy="42.4" rx="3.6" ry="4.2" fill="#c98f9b" />
-      <ellipse cx="33.6" cy="42.8" rx="2.2" ry="2.9" fill="#f2b3c1" />
-      <circle cx="38.5" cy="44.5" r="1.5" fill="#1d1d1b" />
-      <circle cx="45" cy="46.5" r="1.6" fill="#e56b8a" />
-      <ellipse cx="21" cy="57.5" rx="3" ry="1.4" fill="#e9a3b5" />
-      <ellipse cx="30" cy="57.5" rx="3" ry="1.4" fill="#e9a3b5" />
-      {/* The screw, standing on the right. */}
-      <g transform="rotate(14 52 46)">
-        <rect x="49" y="40" width="6" height="18" rx="1" fill="url(#ga-steel)" />
-        <path d="M49 43.5l6-2M49 47.5l6-2M49 51.5l6-2M49 55.5l6-2" stroke="#6a7280" strokeWidth="1.4" />
-        <path d="M49 58l3 4 3-4z" fill="#8e96a4" />
-        <ellipse cx="52" cy="40" rx="6.5" ry="2.8" fill="url(#ga-steel)" />
-        <path d="M48.5 40h7" stroke="#5d6472" strokeWidth="1.5" strokeLinecap="round" />
+      {/* The rat, facing left toward the screw, tail curling up behind. */}
+      <path d="M55.5 53c4.5 1 6-4.5 3-8.5" fill="none" stroke="#d9a3ae" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M26 54c0-10 8-16 18-16 9 0 13 7 12 14 0 4-2 6-6 6H32c-4 0-6-1-6-4z" fill="url(#ga-rat)" />
+      <ellipse cx="45" cy="48" rx="6.5" ry="7.5" fill="#fff" opacity="0.16" />
+      <path d="M33 43c-3 0-7 3-12 8l.4 1.6c4 2 9 3 13 1.6z" fill="url(#ga-rat)" />
+      <ellipse cx="33.6" cy="43.4" rx="3.6" ry="4.2" fill="#c98f9b" />
+      <ellipse cx="33.8" cy="43.8" rx="2.2" ry="2.9" fill="#f2b3c1" />
+      <circle cx="27.6" cy="47.4" r="1.3" fill="#1d1d1b" />
+      <circle cx="21.2" cy="51.2" r="1.5" fill="#e56b8a" />
+      <path d="M23 52.4l-4.6-1.4M23 53.4l-4.6 1.2" stroke="#6a7280" strokeWidth="0.6" strokeLinecap="round" />
+      <ellipse cx="29" cy="58.4" rx="3.2" ry="1.4" fill="#e9a3b5" />
+      <ellipse cx="46" cy="58.4" rx="3.4" ry="1.4" fill="#e9a3b5" />
+      {/* The screw, standing left: domed Phillips head, threaded shaft. */}
+      <g transform="rotate(-9 11 46)">
+        <path d="M7.4 35h7.2v21l-3.6 5-3.6-5z" fill="url(#ga-steel)" />
+        <path d="M7.4 40.5l7.2-2.2M7.4 45.5l7.2-2.2M7.4 50.5l7.2-2.2M7.4 55l7.2-2.2" stroke="#6a7280" strokeWidth="1.3" strokeLinecap="round" />
+        <path d="M4 35c0-5 3-7.5 7-7.5s7 2.5 7 7.5z" fill="url(#ga-steel)" />
+        <path d="M11 29.6v4.4M8.8 31.8h4.4" stroke="#5d6472" strokeWidth="1.4" strokeLinecap="round" />
       </g>
     </>
   ),
