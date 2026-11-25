@@ -591,13 +591,15 @@ html[data-os='android'] .app-icon.sm {
 }
 
 .w-faces {
+  /* How far each face reaches over the next. */
+  --face-overlap: 7px;
   display: flex;
 }
 
 .w-face {
   width: 30px;
   height: 30px;
-  margin-right: -7px;
+  margin-right: calc(-1 * var(--face-overlap));
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -1092,7 +1094,7 @@ html[data-look='pop'] .os-home.android {
   display: grid;
   place-items: center;
   color: var(--pop-ink-on-color);
-  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.4)) drop-shadow(0 14px 14px rgba(0, 0, 0, 0.45));
+  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.45));
 }
 
 .w-cookie-shape {
@@ -1114,19 +1116,20 @@ html[data-look='pop'] .os-home.android {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font: 900 18px/0.9 var(--font-display);
+  font: 800 18px/0.9 var(--font-display);
   text-transform: uppercase;
 }
 
 .w-cookie-in .w-faces {
   /* The faces overlap by 7px each, which the row's own width doesn't count: half of it moves it back. */
   margin: 0 0 8px;
-  transform: translateX(-3.5px);
+  transform: translateX(calc(var(--face-overlap) / -2));
 }
 
 .w-cookie-in .w-face {
   /* A light ring, not the cookie's own pink: it would melt into it. */
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.92), 0 3px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ink) 90%, transparent);
+  text-shadow: none;
 }
 
 .la-grid {

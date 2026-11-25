@@ -53,7 +53,7 @@ export default function GameBar({
     </RoundButton>
   );
   const reset = onReset && (
-    <RoundButton label={t('Restart')} onClick={onReset}>
+    <RoundButton label={t('Start over')} onClick={onReset}>
       <ResetIcon />
     </RoundButton>
   );
