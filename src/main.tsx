@@ -4,6 +4,7 @@ import '@fontsource-variable/roboto';
 import './styles/global.css';
 import './styles/pop.css';
 import './styles/apple.css';
+import './styles/material.css';
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
