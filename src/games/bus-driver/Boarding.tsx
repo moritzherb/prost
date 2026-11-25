@@ -27,8 +27,8 @@ export default function Boarding({ driver, road, onRide, onDone }: { driver: Pla
       buzz(15);
     }, BOARDING_MS * 0.34);
     const go = window.setTimeout(() => buzz([20, 30, 40]), BOARDING_MS * 0.74);
-    // Where the fade-out begins (88%, see the boarding keyframes).
-    const ride = window.setTimeout(onRide, BOARDING_MS * 0.88);
+    // A beat before the fade-out begins (88%, see the boarding keyframes): a timer can come late, and the ride must be there under the still opaque picture, never the road picker.
+    const ride = window.setTimeout(onRide, BOARDING_MS * 0.8);
     const done = window.setTimeout(onDone, BOARDING_MS);
     return () => {
       window.clearTimeout(door);
