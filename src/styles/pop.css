@@ -149,6 +149,29 @@ html[data-look='pop'][data-os='android'] .big-btn {
   border-radius: 999px;
 }
 
+/* Material 3 on Android (m3.material.io: shape and motion tokens): a bottom sheet has the extra large
+   top corners (28dp), a 32 x 4dp drag handle, and comes up on the emphasized decelerate curve (400 ms)
+   and goes down on the emphasized accelerate curve (200 ms). */
+html[data-os='android'] .sheet {
+  border-radius: 28px 28px 0 0;
+}
+
+html[data-os='android'] .sheet-grabber {
+  width: 32px;
+  height: 4px;
+  border-radius: 2px;
+}
+
+html[data-os='android'] .sheet.slide-up {
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+
+html[data-os='android'] .sheet.slide-down {
+  animation-duration: 0.2s;
+  animation-timing-function: cubic-bezier(0.3, 0, 0.8, 0.15);
+}
+
 /* ---------- Tiles: raised, lit from above, floating on a soft shadow ---------- */
 
 html[data-look='pop'] .chip,
