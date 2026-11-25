@@ -4301,8 +4301,8 @@ html[data-look='pop'] .sheet-dim {
 /* The table: face-down cards in a messy circle around the King's Cup. */
 .kc-ring {
   position: relative;
-  /* As big as the free space allows, in both directions (not counting the button's room). */
-  width: min(calc(100 * var(--pqw)), calc(calc(100 * var(--pqh)) - var(--kc-under, 0px) - var(--kc-over) - 6px), 560px);
+  /* As big as the free space allows, in both directions. */
+  width: min(calc(100 * var(--pqw)), calc(calc(100 * var(--pqh)) - var(--kc-over) - 6px), 560px);
   flex: none;
   aspect-ratio: 1;
   isolation: isolate;
@@ -4612,17 +4612,14 @@ html[data-look='pop'] .sheet-dim {
   min-height: var(--kc-over);
 }
 
-/* Nothing else under the circle but the Next button (hidden while picking; `~`, not `+`: an open
-   sheet sits between them, and the circle used to jump up behind it): the table reaches
-   down to the bottom of the screen, so the circle is centred on all of it, while the spacer below
-   never gets shorter than the button's room (the circle never slides under it). */
-.kc-stage:has(~ .sticky-action) {
-  --kc-under: calc(98px + 20px + env(safe-area-inset-bottom));
-  margin-bottom: calc(-1 * var(--kc-under));
-}
+/* The Next button stands under the table (hidden while picking; `~`, not `+`: an open sheet sits
+   between them, and the circle used to jump up behind it): the circle is centred between the bar
+   above it and the button, the same room above and below. */
 
-.kc-stage:has(~ .sticky-action)::after {
-  min-height: calc(var(--kc-under) + 6px);
+/* While picking there is no button: its room stays, so the table (and the circle) doesn't change
+   when it comes. */
+.kc-stage:not(:has(~ .sticky-action)) {
+  margin-bottom: 98px;
 }
 
 .kc-stage ~ .sticky-action {
