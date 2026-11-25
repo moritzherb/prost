@@ -65,18 +65,20 @@ export default function Trash({ players, exit }: GameProps) {
             ))}
           </div>
         )}
-        {two.length === 2 && (
-          <>
+        {/* Always there once two have to be picked, hidden until they are: the screen is centred, and a block
+            coming in would move everything above it. */}
+        {(players.length > 2 || two.length === 2) && (
+          <div className="trash-deal" style={two.length === 2 ? undefined : { visibility: 'hidden' }} aria-hidden={two.length !== 2}>
             {players.length > 2 && <h3 className="section-title">{t('Who deals first?')}</h3>}
             <div className="seg two">
-              {two.map((p, i) => (
-                <button key={p.id} type="button" className={`seg-btn${dealer === i ? ' active' : ''}`} onClick={() => setDealer(i as Who)}>
+              {(two.length === 2 ? two : players.slice(0, 2)).map((p, i) => (
+                <button key={p.id} type="button" tabIndex={two.length === 2 ? undefined : -1} className={`seg-btn${dealer === i ? ' active' : ''}`} onClick={() => setDealer(i as Who)}>
                   <span className="seg-main">{p.name}</span>
                   <span className="seg-sub">{dealer === i ? 'Dealer' : t('starts')}</span>
                 </button>
               ))}
             </div>
-          </>
+          </div>
         )}
         <div className="sticky-action">
           <BigButton size="xl" disabled={two.length < 2} onClick={() => setG(newGame(dealer))}>

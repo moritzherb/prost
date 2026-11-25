@@ -1569,6 +1569,12 @@ li {
   color: var(--muted);
 }
 
+/* Trash's "who deals first?": the same layout as if its parts were the screen's own (the wrapper only
+   hides them, keeping their room, until two players are picked). */
+.trash-deal {
+  display: contents;
+}
+
 /* ---------- Bottom sheet ---------- */
 
 .sheet-backdrop {
@@ -1611,7 +1617,8 @@ html[data-look] .sheet-backdrop.has-dim {
   inset: 0;
   z-index: 0;
   background: rgba(0, 0, 0, 0.35);
-  animation: sheet-dim-in 0.2s linear;
+  /* There at once when a sheet opens (it fades only when it goes): the page behind is dimmed from the
+     first frame, while the sheet is still on its way up. */
 }
 
 html[data-look='pop'] .sheet-dim {
