@@ -126,8 +126,6 @@ export function useQuestionPick() {
       ))}
     </div>
   );
-  /** What a row says it has picked: everything, or how many of how many. */
-  const sum = (n: number, of: number) => (n === of ? t('All') : t('{n} of {m}', { n, m: of }));
   const row = (label: string, hint: string, key: 'cats' | 'kinds') => (
     <button type="button" className="setting-row" onClick={() => setOpen(key)}>
       <span className="setting-text">
@@ -141,9 +139,9 @@ export function useQuestionPick() {
   );
   const view = (
     <>
-      <div className="settings-list">
-        {row(t('Categories'), kinds.includes('classic') ? sum(cats.length, CATEGORIES.length) : t('Not used'), 'cats')}
-        {row(t('Question types'), sum(kinds.length, KINDS.length), 'kinds')}
+      <div className="settings-list pq-pick">
+        {row(t('Categories'), CATEGORIES.filter((c) => cats.includes(c)).map((c) => t(TOPIC_NAME[c])).join(', '), 'cats')}
+        {row(t('Question types'), KINDS.filter((k) => kinds.includes(k)).map((k) => t(KIND_NAME(k))).join(', '), 'kinds')}
       </div>
       {/* Pick as many as you like; a chip drops in after the one before it. */}
       <Sheet open={open === 'cats'} onClose={() => setOpen(null)} title={t('Categories')} closeLabel={t('Done')}>
@@ -336,8 +334,10 @@ export function VerdictFlash({ q }: { q: Quiz }) {
           )}
         </svg>
       </span>
-      <span className="pq-verdict-word">{v.right ? t('Right') : t('Wrong')}</span>
-      <span className="pq-verdict-name">{side.name}</span>
+      <div className="pq-verdict-text">
+        <span className="pq-verdict-word">{v.right ? t('Right') : t('Wrong')}</span>
+        <span className="pq-verdict-name">{side.name}</span>
+      </div>
     </div>
   );
 }
