@@ -381,22 +381,12 @@ html[data-look='pop'] .os-home {
   padding-bottom: calc(var(--ic, 60px) * 0.06);
   font-size: calc(var(--ic, 60px) * 0.5);
   line-height: 1;
-  /* As on the phone's own icons: lit from the top, bright, not dark at the bottom. */
-  background: linear-gradient(180deg, oklch(from var(--c) calc(l * 0.99) calc(c * 1.04) h), oklch(from var(--c) calc(l * 0.86) c h));
-  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 0 0 0.5px rgba(255, 255, 255, 0.14), 0 1px 3px rgba(0, 0, 0, 0.28), 0 6px 12px -6px rgba(0, 0, 0, 0.45);
+  /* Flat and matte, as the reference tile: one solid colour (no gradient, no gloss), a faint light
+     rim round the edge, no shadow under the tile. */
+  background: oklch(from var(--c) calc(l * 0.88) calc(c * 1.05) h);
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.16);
   transition: transform 0.15s var(--ease), box-shadow 0.15s;
-}
-
-/* The gloss: a soft light over the top half, under the art. */
-.app-icon::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0) 55%);
-  pointer-events: none;
 }
 
 @supports (corner-shape: squircle) {
@@ -443,7 +433,8 @@ html[data-os='android'] .app-icon {
   width: calc(var(--ic, 60px) * 0.76);
   height: calc(var(--ic, 60px) * 0.76);
   margin-top: calc(var(--ic, 60px) * 0.03);
-  filter: drop-shadow(0 calc(var(--ic, 60px) * 0.04) calc(var(--ic, 60px) * 0.04) rgba(0, 0, 0, 0.32));
+  /* A soft shadow under the art, as under the reference's white shape. */
+  filter: drop-shadow(0 calc(var(--ic, 60px) * 0.035) calc(var(--ic, 60px) * 0.055) rgba(0, 0, 0, 0.2));
 }
 
 .launch-emoji svg.game-art {
