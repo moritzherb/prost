@@ -1592,6 +1592,29 @@ li {
   pointer-events: none;
 }
 
+/* A sheet's dimming is a layer of its own (components/Sheet.tsx): the backdrop holds it and the sheet
+   and fades nothing itself, so the sheet is solid from its first frame. */
+.sheet-backdrop.has-dim,
+html[data-look] .sheet-backdrop.has-dim {
+  background: none;
+  animation: none;
+}
+
+.sheet-dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  animation: sheet-dim-in 0.2s linear;
+}
+
+html[data-look='pop'] .sheet-dim {
+  background: var(--dim);
+}
+
+.sheet-backdrop.leaving .sheet-dim {
+  animation: sheet-dim-out 0.16s linear forwards;
+}
+
 /* Up and down from wherever it is (Sheet sets --sheet-from / --backdrop-from when it turns round
    half way), else from the bottom and from clear. */
 .sheet.slide-up {

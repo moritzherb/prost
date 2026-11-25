@@ -28,6 +28,9 @@ export default function Sheet({ open, onClose, title, children, closeLabel = t('
   const titleId = useId();
   const box = useRef<HTMLDivElement>(null);
   const backdrop = useRef<HTMLDivElement>(null);
+  // The dimming, a layer of its own behind the sheet: it fades, the sheet itself never does (the
+  // sheet inside a fading backdrop showed through while it came up).
+  const dimmer = useRef<HTMLDivElement>(null);
   // Still on screen while it goes (then gone), what it showed kept as it was.
   const [shown, setShown] = useState(open);
   const last = useRef({ title, children, closeLabel });
@@ -39,7 +42,7 @@ export default function Sheet({ open, onClose, title, children, closeLabel = t('
   }, [open]);
   // The backdrop dims in and out (global.css), the strip under the clock with it, frame by frame,
   // until the sheet has gone.
-  useTopTint(backdrop, open || shown);
+  useTopTint(dimmer, open || shown);
   // Screen readers: move into the sheet when it opens, and back to where you were when it closes.
   useEffect(() => {
     if (!open) return;
@@ -85,7 +88,7 @@ export default function Sheet({ open, onClose, title, children, closeLabel = t('
   close.current = onClose;
   useEffect(() => {
     const el = box.current;
-    const dim = backdrop.current;
+    const dim = dimmer.current;
     if (!open || !el || !dim) return;
     let at: { y: number; x: number; t: number; decided: boolean; dragging: boolean } | null = null;
     let dy = 0;
@@ -191,14 +194,14 @@ export default function Sheet({ open, onClose, title, children, closeLabel = t('
   if (was.current !== open) {
     was.current = open;
     from.current =
-      box.current && backdrop.current
-        ? ({ '--sheet-from': getComputedStyle(box.current).transform, '--backdrop-from': getComputedStyle(backdrop.current).opacity } as CSSProperties)
+      box.current && dimmer.current
+        ? ({ '--sheet-from': getComputedStyle(box.current).transform, '--backdrop-from': getComputedStyle(dimmer.current).opacity } as CSSProperties)
         : undefined;
   }
 
   // A pull's own position stays only until the sheet turns (the animation then takes over from it).
   useLayoutEffect(() => {
-    for (const el of [box.current, backdrop.current]) {
+    for (const el of [box.current, dimmer.current]) {
       if (!el) continue;
       el.style.transform = '';
       el.style.opacity = '';
@@ -210,7 +213,8 @@ export default function Sheet({ open, onClose, title, children, closeLabel = t('
   const leaving = !open;
   const view = last.current;
   return (
-    <div className={`sheet-backdrop${leaving ? ' leaving' : ''}`} ref={backdrop} style={from.current} onClick={leaving ? undefined : onClose}>
+    <div className={`sheet-backdrop has-dim${leaving ? ' leaving' : ''}`} ref={backdrop} style={from.current} onClick={leaving ? undefined : onClose}>
+      <div className="sheet-dim" ref={dimmer} />
       <div
         ref={box}
         style={from.current}
