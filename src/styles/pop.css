@@ -370,35 +370,23 @@ html[data-look='pop'] .os-home {
 .app-icon {
   --c: #6d6a5f;
   position: relative;
-  isolation: isolate;
   width: var(--ic, 60px);
   height: var(--ic, 60px);
   flex: none;
-  /* Apple's app icon corner: 22.37% of the side, and continuous (a squircle) where the browser can. */
-  border-radius: calc(var(--ic, 60px) * 0.2237);
+  border-radius: calc(var(--ic, 60px) * 0.24);
   display: grid;
   place-items: center;
   padding-bottom: calc(var(--ic, 60px) * 0.06);
   font-size: calc(var(--ic, 60px) * 0.5);
   line-height: 1;
-  /* Flat and matte, as the reference tile: one solid colour (no gradient, no gloss), a faint light
-     rim round the edge, no shadow under the tile. */
-  background: oklch(from var(--c) calc(l * 0.88) calc(c * 1.05) h);
-  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.22);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  background: linear-gradient(170deg, oklch(from var(--c) calc(l * 0.93) calc(c * 1.05) h), oklch(from var(--c) calc(l * 0.76) c h));
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.38);
+  box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.4), inset 0 0 0 0.5px rgba(255, 255, 255, 0.07), 0 1px 2px rgba(0, 0, 0, 0.35), 0 10px 16px -8px rgba(0, 0, 0, 0.75);
   transition: transform 0.15s var(--ease), box-shadow 0.15s;
-}
-
-@supports (corner-shape: squircle) {
-  .app-icon {
-    corner-shape: squircle;
-    border-radius: calc(var(--ic, 60px) * 0.3);
-  }
 }
 
 html[data-os='android'] .app-icon {
   border-radius: 50%;
-  corner-shape: round;
 }
 
 .app-icon.lime {
@@ -430,11 +418,10 @@ html[data-os='android'] .app-icon {
 }
 
 .app-icon svg.game-art {
-  width: calc(var(--ic, 60px) * 0.76);
-  height: calc(var(--ic, 60px) * 0.76);
+  width: calc(var(--ic, 60px) * 0.68);
+  height: calc(var(--ic, 60px) * 0.68);
   margin-top: calc(var(--ic, 60px) * 0.03);
-  /* A soft shadow under the art, as under the reference's white shape. */
-  filter: drop-shadow(0 calc(var(--ic, 60px) * 0.035) calc(var(--ic, 60px) * 0.055) rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 calc(var(--ic, 60px) * 0.04) calc(var(--ic, 60px) * 0.04) rgba(0, 0, 0, 0.32));
 }
 
 .launch-emoji svg.game-art {
