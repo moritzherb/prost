@@ -371,10 +371,10 @@ li {
    to the end it stands exactly where it stood while scrolling (else it rose by that padding there).
    A sheet open after it (it is a child of the same box) doesn't count as something after it: the box
    mustn't change size when a sheet opens or closes, or a centred setup page jumps by half of it. */
-.screen:not(.game-detail) > .sticky-action:not(:has(~ :not(.sheet-backdrop))),
-.screen:not(.game-detail) > .bd:not(:has(~ :not(.sheet-backdrop))) > .sticky-action:not(:has(~ :not(.sheet-backdrop))),
+.screen:not(.game-detail) > .sticky-action:not(:has(~ :not(.sheet-backdrop, .boarding))),
+.screen:not(.game-detail) > .bd:not(:has(~ :not(.sheet-backdrop, .boarding))) > .sticky-action:not(:has(~ :not(.sheet-backdrop, .boarding))),
 /* The same in a game's own box (.fk, .who-drinks, .kc, …): its button stands where the setup's did. */
-.screen.play-screen:not(.game-detail) > :not(.sticky-action, .top-bar, .bd):not(:has(~ :not(.sheet-backdrop))) > .sticky-action:not(:has(~ :not(.sheet-backdrop))) {
+.screen.play-screen:not(.game-detail) > :not(.sticky-action, .top-bar, .bd):not(:has(~ :not(.sheet-backdrop, .boarding))) > .sticky-action:not(:has(~ :not(.sheet-backdrop, .boarding))) {
   margin-bottom: calc(-20px - env(safe-area-inset-bottom));
 }
 
