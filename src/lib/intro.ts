@@ -93,22 +93,24 @@ function shrinkIntoIcon(icon: HTMLElement | null) {
   if (r.right <= 0 || r.left >= w || r.bottom <= 0 || r.top >= h) return;
   // The tile's paint is the icon's `--tile` (pop.css: its ::before carries it, the icon has no background).
   const look = getComputedStyle(icon);
-  const card = document.createElement('div');
-  card.setAttribute('aria-hidden', 'true');
-  card.style.cssText = `position:fixed;inset:0;z-index:50;pointer-events:none;background:${look.getPropertyValue('--tile').trim() || look.backgroundColor}`;
-  document.body.append(card);
-  // A circle that closes onto the icon (the icon is round here), from one that reaches the farthest corner.
+  // A circle that closes onto the icon (the icon is round here): one big enough to reach the farthest
+  // corner, scaled down about its middle, which sits on the icon's. Transform and opacity only, so it
+  // runs on the compositor (a clip-path animation is drawn again every frame on the main thread).
   const cx = r.left + r.width / 2;
   const cy = r.top + r.height / 2;
   const reach = Math.hypot(Math.max(cx, w - cx), Math.max(cy, h - cy));
-  const end = `circle(${r.width / 2}px at ${cx}px ${cy}px)`;
+  const card = document.createElement('div');
+  card.setAttribute('aria-hidden', 'true');
+  card.style.cssText = `position:fixed;left:${cx - reach}px;top:${cy - reach}px;width:${2 * reach}px;height:${2 * reach}px;border-radius:50%;z-index:50;pointer-events:none;will-change:transform,opacity;background:${look.getPropertyValue('--tile').trim() || look.backgroundColor}`;
+  document.body.append(card);
+  const end = `scale(${r.width / (2 * reach)})`;
   const anim = card.animate(
     [
-      { clipPath: `circle(${reach}px at ${cx}px ${cy}px)`, opacity: 1, easing: EMPHASIZED },
-      { clipPath: end, opacity: 1, offset: 0.75, easing: 'ease-out' },
-      { clipPath: end, opacity: 0 },
+      { transform: 'none', opacity: 1, easing: EMPHASIZED },
+      { transform: end, opacity: 1, offset: 0.78 },
+      { transform: end, opacity: 0 },
     ],
-    { duration: 320, fill: 'forwards' },
+    { duration: 280, fill: 'forwards' },
   );
   const gone = () => card.remove();
   anim.onfinish = gone;
