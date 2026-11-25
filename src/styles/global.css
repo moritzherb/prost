@@ -1592,6 +1592,12 @@ li {
   pointer-events: none;
 }
 
+/* The sheet stands over its dimming (a positioned layer paints over an unpositioned one). */
+.sheet-backdrop.has-dim > .sheet {
+  position: relative;
+  z-index: 1;
+}
+
 /* A sheet's dimming is a layer of its own (components/Sheet.tsx): the backdrop holds it and the sheet
    and fades nothing itself, so the sheet is solid from its first frame. */
 .sheet-backdrop.has-dim,
@@ -1603,6 +1609,7 @@ html[data-look] .sheet-backdrop.has-dim {
 .sheet-dim {
   position: absolute;
   inset: 0;
+  z-index: 0;
   background: rgba(0, 0, 0, 0.35);
   animation: sheet-dim-in 0.2s linear;
 }
