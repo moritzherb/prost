@@ -7,7 +7,7 @@ import { useApp } from '../../state/AppState';
 import SoloEnd from '../solo/SoloEnd';
 import type { GameProps } from '../types';
 import { buzz, judge, newQuiz, skip, type Quiz } from './logic';
-import { Board, COUNTS, End, LEVELS, TOPIC_NAME, useQuestionPick, VerdictFlash } from './PubQuiz';
+import { Board, COUNTS, End, LEVELS, QuestionText, TOPIC_NAME, useQuestionPick, VerdictFlash } from './PubQuiz';
 import { QUESTIONS, type Level } from './questions';
 
 /** How long a verdict shows (.pq-verdict in global.css): the buttons stay locked until it is gone. */
@@ -117,7 +117,7 @@ export default function PubQuizSolo({ players, exit }: GameProps) {
         <span className="pq-meta">
           {t('Question {n} of {m}', { n: q.at + 1, m: q.deck.length })} · {t(TOPIC_NAME[item.topic])}
         </span>
-        <p className="pq-question">{item.q[lang]}</p>
+        <QuestionText text={item.q[lang]} />
         {/* There from the start, unseen: the card doesn't grow when it shows. */}
         <p className="pq-answer" style={shown ? undefined : { visibility: 'hidden' }} aria-hidden={!shown}>
           <span>{t('Answer')}</span> {item.a[lang]}

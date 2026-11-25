@@ -19483,6 +19483,50 @@ html.table-phone .game-bar .top-bar-side.right {
   text-wrap: balance;
 }
 
+.pq-lead {
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* The lead of "Zwei Wahrheiten, eine Lüge – Pinguine" is quiet, the subject is the noun to read. */
+.pq-from {
+  color: var(--muted);
+}
+
+/* A) B) C): a row each, the letter in a small round badge. */
+.pq-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pq-options li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.pq-options b {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.8rem;
+}
+
 .pq-answer {
   margin: 0;
   padding: 12px 14px;

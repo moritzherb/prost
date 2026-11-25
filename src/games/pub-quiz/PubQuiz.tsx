@@ -52,6 +52,44 @@ export const TOPIC_NAME: Record<Topic, string> = {
   decades: tx('Decades'),
 };
 
+/**
+ * A question as the card shows it. The text is one string; its parts are told apart here: a lead-in
+ * before a colon ("Wahr oder falsch: …") becomes a small line over the question, a subject after a
+ * dash ("Zwei Wahrheiten, eine Lüge – Pinguine") is set apart from its lead, and the options
+ * "A) … B) … C) …" each get a row of their own.
+ */
+export function QuestionText({ text }: { text: string }) {
+  const opts = text.match(/^(.*?)\s*A\)\s*(.*?)\s*B\)\s*(.*?)\s*C\)\s*(.*)$/s);
+  const whole = opts ? opts[1].replace(/:\s*$/, '') : text;
+  const lead = !opts ? whole.match(/^([^:]{3,40}):\s+(.+)$/s) : null;
+  const body = lead ? lead[2] : whole;
+  const [from, subject] = body.split(/\s+[–-]\s+/, 2);
+  return (
+    <>
+      {lead && <span className="pq-lead">{lead[1]}</span>}
+      <p className="pq-question">
+        {subject ? (
+          <>
+            <span className="pq-from">{from}</span> – {subject}
+          </>
+        ) : (
+          body
+        )}
+      </p>
+      {opts && (
+        <ol className="pq-options">
+          {opts.slice(2).map((o, i) => (
+            <li key={i}>
+              <b>{'ABC'[i]}</b>
+              <span>{o}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+    </>
+  );
+}
+
 /** The categories of classic questions, in the order the setup shows them. */
 const CATEGORIES: Topic[] = ['general', 'film', 'sports', 'entertainment', 'history', 'geography', 'science', 'food', 'gaming', 'art', 'myth', 'trash', 'decades'];
 const KINDS: Kind[] = ['classic', ...TYPES];
@@ -300,7 +338,7 @@ function Master({ q, act, onNew }: { q: Quiz; act: (next: (q: Quiz) => Quiz) => 
         <span className="pq-meta">
           {t('Question {n} of {m}', { n: q.at + 1, m: q.deck.length })} · {t(TOPIC_NAME[item.topic])}
         </span>
-        <p className="pq-question">{item.q[lang]}</p>
+        <QuestionText text={item.q[lang]} />
         <p className="pq-answer">
           <span>{t('Answer')}</span> {item.a[lang]}
         </p>
