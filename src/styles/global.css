@@ -5303,6 +5303,9 @@ li {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  /* The same size for every player, 1 or 3 digits. */
+  justify-content: center;
+  width: 76px;
   height: 34px;
   padding: 0 11px 0 6px;
   border-radius: 999px;
@@ -16792,13 +16795,16 @@ html[data-look] .play-screen > .top-bar .round-btn {
 }
 
 .nf-players:not(:has(> :nth-child(5))) > .nf-chip {
-  flex: 0 1 auto;
+  flex: 1 1 0;
 }
 
 .nf-chip {
   display: flex;
   align-items: center;
   gap: 6px;
+  /* All the same width: with up to four they share the row, with more they wrap at this size. */
+  width: 112px;
+  max-width: 112px;
   min-width: 0;
   padding: 4px 10px 4px 4px;
   border-radius: 999px;
@@ -16819,7 +16825,8 @@ html[data-look] .play-screen > .top-bar .round-btn {
 }
 
 .nf-chip-name {
-  max-width: 7em;
+  flex: 1 1 auto;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -19438,6 +19445,8 @@ html.table-phone .game-bar .top-bar-side.right {
   display: flex;
   align-items: center;
   gap: 8px;
+  /* Every player's chip the same size, whatever the name (a long one is cut off). */
+  width: 116px;
   height: 36px;
   padding: 0 12px 0 10px;
   border-radius: 999px;
@@ -19456,7 +19465,8 @@ html.table-phone .game-bar .top-bar-side.right {
 }
 
 .pq-score-name {
-  max-width: 110px;
+  flex: 1 1 auto;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
