@@ -386,6 +386,8 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
   };
 
   const dice = box.dice;
+  // The dice on the felt fade as soon as the flaps go down (Flip down), not once they are down.
+  const feltDice = falling.length ? null : dice;
   const total = dice ? sum(dice) : 0;
   const mayOne = oneDieAllowed(box.open) && !dice && !box.over && !falling.length;
   const ready = !!dice && !box.rolling && !falling.length && isMove(box.open, dice, setup.level, box.picked);
@@ -412,7 +414,7 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
   // What's written on the felt: the clock, the hint or the choice of one die (on both boxes).
   const feltWriting = (withDice: boolean): ReactNode => (
     <>
-      {withDice && <FeltDice values={dice} rolls={box.rolls} />}
+      {withDice && <FeltDice values={feltDice} rolls={box.rolls} />}
       <div className="nf-hint-row">
         {mayOne ? (
           <div className="nf-one" role="radiogroup" aria-label={t('How many dice')}>
@@ -544,7 +546,7 @@ function Play({ m, setM, players, byId, known, onSetup }: PlayProps) {
           <Box3DView
             size={setup.size}
             flaps={flapState}
-            dice={dice}
+            dice={feltDice}
             rolls={box.rolls}
             square={square ? squareSides : undefined}
             onTap={tap}
