@@ -11,8 +11,8 @@ import type { Player } from '../state/AppState';
 import { GameGlyph, glyphsOf } from './AppIcon';
 
 /** The crew's faces, overlapping a little. */
-function Faces({ players }: { players: Player[] }) {
-  const shown = players.slice(0, 4);
+function Faces({ players, max = 4 }: { players: Player[]; max?: number }) {
+  const shown = players.slice(0, max);
   return (
     <span className="w-faces">
       {shown.length ? (
@@ -91,7 +91,8 @@ export function CrewCookie({ players }: { players: Player[] }) {
     <Tap className="w-cookie" onClick={() => navigate(paths.players())} ariaLabel={`${t('The crew')}: ${t('{n} players', { n: players.length })}`}>
       <span className="w-cookie-shape" style={{ clipPath: COOKIE }} aria-hidden />
       <span className="w-cookie-in">
-        <Faces players={players} />
+        {/* Three at most: more would reach out over the cookie's bumps. */}
+        <Faces players={players} max={3} />
         {players.length ? t('{n} players', { n: players.length }) : t('The crew')}
       </span>
     </Tap>
