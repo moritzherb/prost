@@ -259,10 +259,10 @@ function MaexchenTable({
       <div className="sticky-action stack mx-actions">
         {r.phase === 'shake' && (
           <>
+            <span className="mx-slot" />
             <BigButton onClick={() => doShake()} disabled={shaking}>
               {t('Shake')}
             </BigButton>
-            <span className="mx-slot" />
           </>
         )}
         {r.phase === 'look' && (
@@ -289,10 +289,10 @@ function MaexchenTable({
         )}
         {r.phase === 'reveal' && r.verdict && (
           <>
+            <span className="mx-slot" />
             <BigButton onClick={() => setR(newRound(r.verdict!.loser))}>
               {t('New round: {name} starts', { name: players[r.verdict.loser].name })}
             </BigButton>
-            <span className="mx-slot" />
           </>
         )}
       </div>
