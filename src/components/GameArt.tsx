@@ -538,31 +538,23 @@ const ART: Record<string, Art> = {
       <path d="M32 6L6 46h26z" fill="url(#ga-sand)" />
       <path d="M32 6l26 40H32z" fill="url(#ga-sand-d)" />
       <path d="M16 31h11M12 37.5h17M21 24.5h8" stroke="#a8702a" strokeWidth="1.4" opacity="0.4" strokeLinecap="round" />
-      {/* The rat: front-on face with big ears, shoulders cut by the edge. */}
-      <path d="M10 60.5c-5 .5-8-2-7.4-6 .4-2.4 2.6-3.4 4-2.2" fill="none" stroke="#d9a3ae" strokeWidth="1.7" strokeLinecap="round" />
-      <ellipse cx="23" cy="58" rx="15" ry="6.5" fill="url(#ga-rat)" />
-      <circle cx="12.5" cy="30.5" r="6.8" fill="#aeb4be" />
-      <circle cx="12.5" cy="30.8" r="4.2" fill="#f2a5b8" />
-      <circle cx="33.5" cy="30.5" r="6.8" fill="#aeb4be" />
-      <circle cx="33.5" cy="30.8" r="4.2" fill="#f2a5b8" />
-      <ellipse cx="23" cy="42" rx="14" ry="12.5" fill="url(#ga-rat)" />
-      <ellipse cx="23" cy="47.5" rx="6.5" ry="5" fill="#eceff3" />
-      <circle cx="17.5" cy="40" r="2" fill="#1d1d1b" />
-      <circle cx="28.5" cy="40" r="2" fill="#1d1d1b" />
-      <circle cx="18.1" cy="39.3" r="0.6" fill="#fff" />
-      <circle cx="29.1" cy="39.3" r="0.6" fill="#fff" />
-      <ellipse cx="23" cy="44.6" rx="2.2" ry="1.6" fill="#e56b8a" />
-      <path d="M23 46.2v2.2M23 48.4c-1.5 1.4-3 1.2-4 .2M23 48.4c1.5 1.4 3 1.2 4 .2" fill="none" stroke="#6a7280" strokeWidth="0.7" strokeLinecap="round" />
-      <rect x="21.4" y="48.7" width="1.6" height="2.8" rx="0.6" fill="#fff" stroke="#9aa1ad" strokeWidth="0.4" />
-      <rect x="23" y="48.7" width="1.6" height="2.8" rx="0.6" fill="#fff" stroke="#9aa1ad" strokeWidth="0.4" />
-      <path d="M17 47.5L5 45.5M17 49L5 50M29 47.5l12-2M29 49l12 1" stroke="#fff" strokeWidth="0.7" strokeLinecap="round" opacity="0.85" />
-      {/* The screw: Phillips head, threaded shaft, driven in at a slant. */}
-      <g transform="translate(-5 3) rotate(16 52 44)">
-        <path d="M48.6 28h6.8v26l-3.4 7-3.4-7z" fill="url(#ga-steel)" />
-        <path d="M48.6 36l6.8-2.4M48.6 41l6.8-2.4M48.6 46l6.8-2.4M48.6 51l6.8-2.4" stroke="#6a7280" strokeWidth="1.3" strokeLinecap="round" />
-        <path d="M43.5 27v2.2c0 2 3.8 3.6 8.5 3.6s8.5-1.6 8.5-3.6V27z" fill="#8e96a4" />
-        <ellipse cx="52" cy="27" rx="8.5" ry="3.6" fill="url(#ga-steel)" />
-        <path d="M52 24.8v4.4M49.6 27h4.8" stroke="#5d6472" strokeWidth="1.5" strokeLinecap="round" />
+      {/* The rat, sitting in front, facing right. */}
+      <path d="M14 55c-6 0-9-3-6-6 2-2 5-1 7 0" fill="none" stroke="#c98fa0" strokeWidth="2.2" strokeLinecap="round" />
+      <ellipse cx="24" cy="49" rx="12" ry="9" fill="url(#ga-rat)" />
+      <path d="M30 42c5-3 11-2 15 3l-4 4c-3 2-8 2-11 0z" fill="url(#ga-rat)" />
+      <circle cx="31" cy="39.5" r="4.6" fill="url(#ga-rat)" />
+      <circle cx="31" cy="39.5" r="2.6" fill="#f2a5b8" />
+      <circle cx="38.5" cy="44.5" r="1.5" fill="#1d1d1b" />
+      <circle cx="45" cy="46.5" r="1.6" fill="#e56b8a" />
+      <ellipse cx="21" cy="57.5" rx="3" ry="1.4" fill="#e9a3b5" />
+      <ellipse cx="30" cy="57.5" rx="3" ry="1.4" fill="#e9a3b5" />
+      {/* The screw, standing on the right. */}
+      <g transform="rotate(14 52 46)">
+        <rect x="49" y="40" width="6" height="18" rx="1" fill="url(#ga-steel)" />
+        <path d="M49 43.5l6-2M49 47.5l6-2M49 51.5l6-2M49 55.5l6-2" stroke="#6a7280" strokeWidth="1.4" />
+        <path d="M49 58l3 4 3-4z" fill="#8e96a4" />
+        <ellipse cx="52" cy="40" rx="6.5" ry="2.8" fill="url(#ga-steel)" />
+        <path d="M48.5 40h7" stroke="#5d6472" strokeWidth="1.5" strokeLinecap="round" />
       </g>
     </>
   ),
