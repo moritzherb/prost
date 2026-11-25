@@ -538,24 +538,30 @@ const ART: Record<string, Art> = {
       <path d="M32 6L6 46h26z" fill="url(#ga-sand)" />
       <path d="M32 6l26 40H32z" fill="url(#ga-sand-d)" />
       <path d="M16 31h11M12 37.5h17M21 24.5h8" stroke="#a8702a" strokeWidth="1.4" opacity="0.4" strokeLinecap="round" />
-      {/* The rat, facing left toward the screw, tail curling up behind. */}
-      <path d="M55.5 53c4.5 1 6-4.5 3-8.5" fill="none" stroke="#d9a3ae" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M26 54c0-10 8-16 18-16 9 0 13 7 12 14 0 4-2 6-6 6H32c-4 0-6-1-6-4z" fill="url(#ga-rat)" />
-      <ellipse cx="45" cy="48" rx="6.5" ry="7.5" fill="#fff" opacity="0.16" />
-      <path d="M33 43c-3 0-7 3-12 8l.4 1.6c4 2 9 3 13 1.6z" fill="url(#ga-rat)" />
-      <ellipse cx="33.6" cy="43.4" rx="3.6" ry="4.2" fill="#c98f9b" />
-      <ellipse cx="33.8" cy="43.8" rx="2.2" ry="2.9" fill="#f2b3c1" />
-      <circle cx="27.6" cy="47.4" r="1.3" fill="#1d1d1b" />
-      <circle cx="21.2" cy="51.2" r="1.5" fill="#e56b8a" />
-      <path d="M23 52.4l-4.6-1.4M23 53.4l-4.6 1.2" stroke="#6a7280" strokeWidth="0.6" strokeLinecap="round" />
-      <ellipse cx="29" cy="58.4" rx="3.2" ry="1.4" fill="#e9a3b5" />
-      <ellipse cx="46" cy="58.4" rx="3.4" ry="1.4" fill="#e9a3b5" />
-      {/* The screw, standing left: domed Phillips head, threaded shaft. */}
-      <g transform="rotate(-9 11 46)">
-        <path d="M7.4 35h7.2v21l-3.6 5-3.6-5z" fill="url(#ga-steel)" />
-        <path d="M7.4 40.5l7.2-2.2M7.4 45.5l7.2-2.2M7.4 50.5l7.2-2.2M7.4 55l7.2-2.2" stroke="#6a7280" strokeWidth="1.3" strokeLinecap="round" />
-        <path d="M4 35c0-5 3-7.5 7-7.5s7 2.5 7 7.5z" fill="url(#ga-steel)" />
-        <path d="M11 29.6v4.4M8.8 31.8h4.4" stroke="#5d6472" strokeWidth="1.4" strokeLinecap="round" />
+      {/* The rat: front-on face with big ears, shoulders cut by the edge. */}
+      <ellipse cx="23" cy="58" rx="15" ry="6.5" fill="url(#ga-rat)" />
+      <circle cx="12.5" cy="30.5" r="6.8" fill="#aeb4be" />
+      <circle cx="12.5" cy="30.8" r="4.2" fill="#f2a5b8" />
+      <circle cx="33.5" cy="30.5" r="6.8" fill="#aeb4be" />
+      <circle cx="33.5" cy="30.8" r="4.2" fill="#f2a5b8" />
+      <ellipse cx="23" cy="42" rx="14" ry="12.5" fill="url(#ga-rat)" />
+      <ellipse cx="23" cy="47.5" rx="6.5" ry="5" fill="#eceff3" />
+      <circle cx="17.5" cy="40" r="2" fill="#1d1d1b" />
+      <circle cx="28.5" cy="40" r="2" fill="#1d1d1b" />
+      <circle cx="18.1" cy="39.3" r="0.6" fill="#fff" />
+      <circle cx="29.1" cy="39.3" r="0.6" fill="#fff" />
+      <ellipse cx="23" cy="44.6" rx="2.2" ry="1.6" fill="#e56b8a" />
+      <path d="M23 46.2v2.2M23 48.4c-1.5 1.4-3 1.2-4 .2M23 48.4c1.5 1.4 3 1.2 4 .2" fill="none" stroke="#6a7280" strokeWidth="0.7" strokeLinecap="round" />
+      <rect x="21.4" y="48.7" width="1.6" height="2.8" rx="0.6" fill="#fff" stroke="#9aa1ad" strokeWidth="0.4" />
+      <rect x="23" y="48.7" width="1.6" height="2.8" rx="0.6" fill="#fff" stroke="#9aa1ad" strokeWidth="0.4" />
+      <path d="M17 47.5L5 45.5M17 49L5 50M29 47.5l12-2M29 49l12 1" stroke="#fff" strokeWidth="0.7" strokeLinecap="round" opacity="0.85" />
+      {/* The screw: Phillips head, threaded shaft, driven in at a slant. */}
+      <g transform="translate(-5 3) rotate(16 52 44)">
+        <path d="M48.6 28h6.8v26l-3.4 7-3.4-7z" fill="url(#ga-steel)" />
+        <path d="M48.6 36l6.8-2.4M48.6 41l6.8-2.4M48.6 46l6.8-2.4M48.6 51l6.8-2.4" stroke="#6a7280" strokeWidth="1.3" strokeLinecap="round" />
+        <path d="M43.5 27v2.2c0 2 3.8 3.6 8.5 3.6s8.5-1.6 8.5-3.6V27z" fill="#8e96a4" />
+        <ellipse cx="52" cy="27" rx="8.5" ry="3.6" fill="url(#ga-steel)" />
+        <path d="M52 24.8v4.4M49.6 27h4.8" stroke="#5d6472" strokeWidth="1.5" strokeLinecap="round" />
       </g>
     </>
   ),
