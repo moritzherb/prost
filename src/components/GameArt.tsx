@@ -539,6 +539,7 @@ const ART: Record<string, Art> = {
       <path d="M32 6l26 40H32z" fill="url(#ga-sand-d)" />
       <path d="M16 31h11M12 37.5h17M21 24.5h8" stroke="#a8702a" strokeWidth="1.4" opacity="0.4" strokeLinecap="round" />
       {/* The rat: front-on face with big ears, shoulders cut by the edge. */}
+      <path d="M10 60.5c-5 .5-8-2-7.4-6 .4-2.4 2.6-3.4 4-2.2" fill="none" stroke="#d9a3ae" strokeWidth="1.7" strokeLinecap="round" />
       <ellipse cx="23" cy="58" rx="15" ry="6.5" fill="url(#ga-rat)" />
       <circle cx="12.5" cy="30.5" r="6.8" fill="#aeb4be" />
       <circle cx="12.5" cy="30.8" r="4.2" fill="#f2a5b8" />
