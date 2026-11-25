@@ -92,10 +92,11 @@ function shrinkIntoIcon(icon: HTMLElement | null) {
   const h = window.innerHeight;
   // An icon off the screen (another page of home) has nowhere to go back into.
   if (r.right <= 0 || r.left >= w || r.bottom <= 0 || r.top >= h) return;
+  // The tile's paint is the icon's `--tile` (pop.css: its ::before carries it, the icon has no background).
   const look = getComputedStyle(icon);
   const card = document.createElement('div');
   card.setAttribute('aria-hidden', 'true');
-  card.style.cssText = `position:fixed;inset:0;z-index:50;pointer-events:none;background:${look.background || look.backgroundColor}`;
+  card.style.cssText = `position:fixed;inset:0;z-index:50;pointer-events:none;background:${look.getPropertyValue('--tile').trim() || look.backgroundColor}`;
   document.body.append(card);
   const radius = Math.min(r.width / 2, parseFloat(look.borderTopLeftRadius) || r.width * 0.25);
   const anim = card.animate(
