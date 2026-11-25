@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { createPortal } from 'react-dom';
 import Avatar from '../../components/Avatar';
 import BigButton from '../../components/BigButton';
 import Bump from '../../components/Bump';
@@ -319,7 +320,8 @@ export function VerdictFlash({ q }: { q: Quiz }) {
   }, [v?.n]);
   const side = v && q.sides.find((s) => s.id === v.side);
   if (!v || !side || v.n === first) return null;
-  return (
+  // On the body: a transformed page around it would make `fixed` mean that page's box, not the screen.
+  return createPortal(
     <div key={v.n} className={`pq-verdict ${v.right ? 'right' : 'wrong'}`} style={{ '--chip': side.color } as CSSProperties} role="status">
       <span className="pq-verdict-mark">
         {/* Drawn in, stroke by stroke (pathLength 1 for the dash animation). */}
@@ -338,7 +340,8 @@ export function VerdictFlash({ q }: { q: Quiz }) {
         <span className="pq-verdict-word">{v.right ? t('Right') : t('Wrong')}</span>
         <span className="pq-verdict-name">{side.name}</span>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

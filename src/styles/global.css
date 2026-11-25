@@ -372,8 +372,19 @@ li {
    A sheet open after it (it is a child of the same box) doesn't count as something after it: the box
    mustn't change size when a sheet opens or closes, or a centred setup page jumps by half of it. */
 .screen:not(.game-detail) > .sticky-action:not(:has(~ :not(.sheet-backdrop))),
-.screen:not(.game-detail) > .bd:not(:has(~ :not(.sheet-backdrop))) > .sticky-action:not(:has(~ :not(.sheet-backdrop))) {
+.screen:not(.game-detail) > .bd:not(:has(~ :not(.sheet-backdrop))) > .sticky-action:not(:has(~ :not(.sheet-backdrop))),
+/* The same in a game's own box (.fk, .who-drinks, .kc, …): its button stands where the setup's did. */
+.screen.play-screen:not(.game-detail) > :not(.sticky-action, .top-bar, .bd):not(:has(~ :not(.sheet-backdrop))) > .sticky-action:not(:has(~ :not(.sheet-backdrop))) {
   margin-bottom: calc(-20px - env(safe-area-inset-bottom));
+}
+
+/* Games whose button row is their own box rather than a .sticky-action: the same, last in its column. */
+.screen.play-screen:not(.game-detail) :is(.bd-foot, .pq-judge, .vt-next, .sol-foot):last-child {
+  margin-bottom: calc(-18px - env(safe-area-inset-bottom));
+}
+
+.screen.play-screen:not(.game-detail) .sol-foot:last-child {
+  margin-bottom: calc(-27px - env(safe-area-inset-bottom));
 }
 
 /*
@@ -19869,12 +19880,9 @@ html.table-phone .game-bar .top-bar-side.right {
   animation-delay: 0.36s;
 }
 
-/* The disc is the middle of the screen; the word and the name hang under it. */
+/* Disc, word and name are one group, and the group is the middle of the screen. */
 .pq-verdict-text {
-  position: absolute;
-  top: calc(50% + 52px + 18px);
-  left: 0;
-  right: 0;
+  margin-top: 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
