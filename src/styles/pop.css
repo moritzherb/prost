@@ -370,23 +370,45 @@ html[data-look='pop'] .os-home {
 .app-icon {
   --c: #6d6a5f;
   position: relative;
+  isolation: isolate;
   width: var(--ic, 60px);
   height: var(--ic, 60px);
   flex: none;
-  border-radius: calc(var(--ic, 60px) * 0.24);
+  /* Apple's app icon corner: 22.37% of the side, and continuous (a squircle) where the browser can. */
+  border-radius: calc(var(--ic, 60px) * 0.2237);
   display: grid;
   place-items: center;
   padding-bottom: calc(var(--ic, 60px) * 0.06);
   font-size: calc(var(--ic, 60px) * 0.5);
   line-height: 1;
-  background: linear-gradient(170deg, oklch(from var(--c) calc(l * 0.93) calc(c * 1.05) h), oklch(from var(--c) calc(l * 0.76) c h));
-  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.38);
-  box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.4), inset 0 0 0 0.5px rgba(255, 255, 255, 0.07), 0 1px 2px rgba(0, 0, 0, 0.35), 0 10px 16px -8px rgba(0, 0, 0, 0.75);
+  /* As on the phone's own icons: lit from the top, bright, not dark at the bottom. */
+  background: linear-gradient(180deg, oklch(from var(--c) calc(l * 0.99) calc(c * 1.04) h), oklch(from var(--c) calc(l * 0.86) c h));
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 0 0 0.5px rgba(255, 255, 255, 0.14), 0 1px 3px rgba(0, 0, 0, 0.28), 0 6px 12px -6px rgba(0, 0, 0, 0.45);
   transition: transform 0.15s var(--ease), box-shadow 0.15s;
+}
+
+/* The gloss: a soft light over the top half, under the art. */
+.app-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0) 55%);
+  pointer-events: none;
+}
+
+@supports (corner-shape: squircle) {
+  .app-icon {
+    corner-shape: squircle;
+    border-radius: calc(var(--ic, 60px) * 0.3);
+  }
 }
 
 html[data-os='android'] .app-icon {
   border-radius: 50%;
+  corner-shape: round;
 }
 
 .app-icon.lime {
@@ -418,8 +440,8 @@ html[data-os='android'] .app-icon {
 }
 
 .app-icon svg.game-art {
-  width: calc(var(--ic, 60px) * 0.68);
-  height: calc(var(--ic, 60px) * 0.68);
+  width: calc(var(--ic, 60px) * 0.76);
+  height: calc(var(--ic, 60px) * 0.76);
   margin-top: calc(var(--ic, 60px) * 0.03);
   filter: drop-shadow(0 calc(var(--ic, 60px) * 0.04) calc(var(--ic, 60px) * 0.04) rgba(0, 0, 0, 0.32));
 }
