@@ -11044,7 +11044,8 @@ html[data-look='pop'] .sheet-dim {
 .avatar-letter {
   display: grid;
   place-items: center;
-  font-size: 50cqw;
+  /* Never under the 11pt the HIG sets as the smallest text. */
+  font-size: max(11px, 50cqw);
   font-weight: 600;
   line-height: 1;
   letter-spacing: 0;
