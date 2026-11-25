@@ -3,6 +3,8 @@ import Avatar from '../../components/Avatar';
 import BigButton from '../../components/BigButton';
 import Bump from '../../components/Bump';
 import Finished from '../../components/Finished';
+import { ChevronIcon } from '../../components/Icons';
+import Sheet from '../../components/Sheet';
 import Tap from '../../components/Tap';
 import { getLang, t, tx } from '../../i18n';
 import { buzz as vibrate, celebrate, sfx } from '../../lib/fx';
@@ -107,29 +109,51 @@ const KINDS: Kind[] = ['classic', ...TYPES];
 const KIND_NAME = (k: Kind) => (k === 'classic' ? tx('Classic questions') : TOPIC_NAME[k]);
 
 /**
- * The setup's pick of questions: which categories (for classic questions) and which question types,
- * as many of each as you like (at least one). Categories only count for classic questions, so they
- * dim while classic questions are off.
+ * The setup's pick of questions: two rows, categories (for classic questions) and question types;
+ * each opens a sheet to tick as many as you like (at least one). Categories only count for classic
+ * questions, so their row says so while those are off.
  */
 export function useQuestionPick() {
   const [cats, setCats] = useState<Topic[]>(CATEGORIES);
   const [kinds, setKinds] = useState<Kind[]>(KINDS);
+  const [open, setOpen] = useState<'cats' | 'kinds' | null>(null);
   const flip = <T,>(set: (f: (x: T[]) => T[]) => void, v: T) => set((x) => (x.includes(v) ? (x.length > 1 ? x.filter((y) => y !== v) : x) : [...x, v]));
-  const chips = <T extends string>(all: T[], on: T[], name: (v: T) => string, tap: (v: T) => void, off = false) => (
+  const chips = <T extends string>(all: T[], on: T[], name: (v: T) => string, tap: (v: T) => void) => (
     <div className="pq-chips">
-      {all.map((v) => (
-        <button key={v} type="button" className={`chip${on.includes(v) ? ' active' : ''}`} aria-pressed={on.includes(v)} disabled={off} onClick={() => tap(v)}>
+      {all.map((v, i) => (
+        <button key={v} type="button" className={`chip${on.includes(v) ? ' active' : ''}`} style={{ '--i': i } as CSSProperties} aria-pressed={on.includes(v)} onClick={() => tap(v)}>
           {t(name(v))}
         </button>
       ))}
     </div>
   );
+  /** What a row says it has picked: everything, or how many of how many. */
+  const sum = (n: number, of: number) => (n === of ? t('All') : t('{n} of {m}', { n, m: of }));
+  const row = (label: string, hint: string, key: 'cats' | 'kinds') => (
+    <button type="button" className="setting-row" onClick={() => setOpen(key)}>
+      <span className="setting-text">
+        <span className="setting-label">{label}</span>
+        <span className="setting-hint">{hint}</span>
+      </span>
+      <span className="look-chevron" aria-hidden="true">
+        <ChevronIcon />
+      </span>
+    </button>
+  );
   const view = (
     <>
-      <h3 className="section-title">{t('Categories')}</h3>
-      {chips(CATEGORIES, cats, (v) => TOPIC_NAME[v], (v) => flip(setCats, v), !kinds.includes('classic'))}
-      <h3 className="section-title">{t('Question types')}</h3>
-      {chips(KINDS, kinds, KIND_NAME, (v) => flip(setKinds, v))}
+      <div className="settings-list">
+        {row(t('Categories'), kinds.includes('classic') ? sum(cats.length, CATEGORIES.length) : t('Not used'), 'cats')}
+        {row(t('Question types'), sum(kinds.length, KINDS.length), 'kinds')}
+      </div>
+      {/* Pick as many as you like; a chip drops in after the one before it. */}
+      <Sheet open={open === 'cats'} onClose={() => setOpen(null)} title={t('Categories')} closeLabel={t('Done')}>
+        {chips(CATEGORIES, cats, (v) => TOPIC_NAME[v], (v) => flip(setCats, v))}
+        {!kinds.includes('classic') && <p className="fine-print">{t('Categories only count for classic questions.')}</p>}
+      </Sheet>
+      <Sheet open={open === 'kinds'} onClose={() => setOpen(null)} title={t('Question types')} closeLabel={t('Done')}>
+        {chips(KINDS, kinds, KIND_NAME, (v) => flip(setKinds, v))}
+      </Sheet>
     </>
   );
   return { view, keep: picked(cats, kinds) };
