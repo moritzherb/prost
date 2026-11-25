@@ -1123,7 +1123,8 @@ html[data-look='pop'] .os-home.android {
 }
 
 .w-cookie-in .w-face {
-  box-shadow: 0 0 0 1.5px #c24f86, 0 3px 5px rgba(0, 0, 0, 0.3);
+  /* A light ring, not the cookie's own pink: it would melt into it. */
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.92), 0 3px 5px rgba(0, 0, 0, 0.3);
 }
 
 .la-grid {
