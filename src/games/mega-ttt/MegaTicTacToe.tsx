@@ -203,7 +203,7 @@ function Match({ pair, onSwap }: { pair: [Player, Player]; onSwap: () => void })
         <Alert
           title={t('Start over?')}
           text={t('The board is cleared and X starts again.')}
-          action={t('Restart')}
+          action={t('Start over')}
           onConfirm={() => {
             setAsking(false);
             restart(false);

@@ -379,14 +379,16 @@ li {
 }
 
 /* Games whose button row is their own box rather than a .sticky-action: the same, last in its column. */
-.screen.play-screen:not(.game-detail) .bd-foot:last-child {
-  margin-bottom: calc(-18px - env(safe-area-inset-bottom));
+/* A game's own button row (Bus Driver, Pub Quiz, 10/10) stands where a game page's Start game button does:
+   2px and the phone's bottom area above the edge, which is the screen's bottom room (20px and that area)
+   less --foot-gap. */
+.screen.play-screen:not(.game-detail) {
+  --foot-gap: 18px;
 }
 
-/* Pub Quiz and 10/10: their button stands where a game page's Start game button does (2px and the phone's bottom
-   area above the edge): the screen's bottom room less 18px. */
-.screen.play-screen:not(.game-detail) :is(.pq-judge, .vt-next):last-child {
-  margin-bottom: -18px;
+.screen.play-screen:not(.game-detail) :is(.bd-foot, .pq-judge, .vt-next):last-child {
+  margin-bottom: calc(-1 * var(--foot-gap));
+  padding-bottom: 0;
 }
 
 /*
@@ -4581,7 +4583,7 @@ html[data-look='pop'] .sheet-dim {
   color: var(--muted);
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: calc(4 * var(--qw));
+  font-size: max(13px, calc(4 * var(--qw)));
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
@@ -4589,6 +4591,7 @@ html[data-look='pop'] .sheet-dim {
 /* The circle sits in the middle of the free space between player row and button. */
 .kc-stage {
   --kc-over: 40px;
+  --kc-under: 98px;
   position: relative;
   flex: 1 1 0;
   min-height: 220px;
@@ -4618,8 +4621,9 @@ html[data-look='pop'] .sheet-dim {
 
 /* While picking there is no button: its room stays, so the table (and the circle) doesn't change
    when it comes. */
+/* The button's room: its row (98px). */
 .kc-stage:not(:has(~ .sticky-action)) {
-  margin-bottom: 98px;
+  margin-bottom: var(--kc-under);
 }
 
 .kc-stage ~ .sticky-action {

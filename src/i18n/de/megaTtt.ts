@@ -26,7 +26,7 @@ const megaTtt: Record<string, string> = {
   '{n} boards': '{n} Bretter',
   '1 board': '1 Brett',
   Empty: 'Leer',
-  Restart: 'Neu starten',
+  'Start over': 'Neu anfangen',
   'Start over?': 'Neu anfangen?',
   'The board is cleared and X starts again.': 'Das Brett wird geleert und X fängt wieder an.',
   '{name} takes {place}': '{name} holt {place}',

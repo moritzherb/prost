@@ -99,7 +99,7 @@ export default function BeatTheDeck({ exit }: GameProps) {
         <Alert
           title={t('Start over?')}
           text={t('The cards are shuffled and dealt again.')}
-          action={t('Restart')}
+          action={t('Start over')}
           onConfirm={() => {
             setAsking(false);
             setG(newGame());
