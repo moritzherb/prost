@@ -35,7 +35,6 @@ export type Topic =
   | 'odd'
   | 'words'
   | 'plot'
-  | 'beforeafter'
   | 'connect'
   | 'decades';
 export type Level = 1 | 2 | 3 | 4;
@@ -328,12 +327,6 @@ export const QUESTIONS: Question[] = ([] as Row[])
       ['plot', 3, 'Schlecht erklärt: Ein alter Mann bindet Luftballons an sein Haus, um nicht ins Altenheim zu müssen.', 'Oben', 'Badly explained: an old man ties balloons to his house to avoid a care home.', 'Up'],
       ['plot', 3, 'Schlecht erklärt: Eine Gruppe wandert quer durchs Land, um ein Schmuckstück zurückzugeben.', 'Der Herr der Ringe', 'Badly explained: a group walks across the land to return a piece of jewellery.', 'The Lord of the Rings'],
       ['plot', 4, 'Schlecht erklärt: Ein Mann verliert seinen Hund und legt sich dafür mit einer ganzen Verbrecherbande an.', 'John Wick', 'Badly explained: a man loses his dog and takes on an entire crime gang for it.', 'John Wick'],
-    ],
-    // Before & after: two answers that share a word
-    [
-      ['beforeafter', 2, 'Vorher-Nachher: eine gelbe Blume, die der Sonne folgt + ein weißes Gemüse.', 'Sonnenblumenkohl (Sonnenblume + Blumenkohl)', 'Before & after: the boy who never grew up + a flat breakfast food.', 'Peter Pancake (Peter Pan + pancake)'],
-      ['beforeafter', 2, 'Vorher-Nachher: der Eingang zu deinem Haus + womit man ihn absperrt.', 'Haustürschloss (Haustür + Türschloss)', 'Before & after: a famous Disney mouse + a device to catch one.', 'Mickey Mousetrap (Mickey Mouse + mousetrap)'],
-      ['beforeafter', 3, 'Vorher-Nachher: ein Sport mit rundem Leder + ein Kleid für den großen Abend.', 'Fußballkleid (Fußball + Ballkleid)', 'Before & after: the boy wizard + what a potter spins clay on.', 'Harry Potter’s Wheel (Harry Potter + potter’s wheel)'],
     ],
     // Connections & missing links
     [

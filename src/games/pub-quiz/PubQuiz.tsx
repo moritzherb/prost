@@ -43,47 +43,46 @@ export const TOPIC_NAME: Record<Topic, string> = {
   myth: tx('Mythology'),
   trash: tx('Reality TV'),
   truefalse: tx('True or false'),
-  estimate: tx('Estimate: closest wins'),
+  estimate: tx('Estimate'),
   first: tx('What came first?'),
   lie: tx('Two truths and a lie'),
   odd: tx('Odd one out'),
   words: tx('Wordplay & logic'),
-  plot: tx('Badly explained plots'),
-  beforeafter: tx('Before & after'),
+  plot: tx('Badly explained'),
   connect: tx('Connections'),
   decades: tx('Decades'),
 };
 
+/** The lead-ins that only repeat the type shown on the card's top line (so they're left off the question). */
+const REPEATS = new Set(['True or false', 'Wahr oder falsch', 'Estimate', 'Schätzfrage', 'Schätzt', 'Odd one out', 'Was passt nicht', 'Badly explained', 'Schlecht erklärt']);
+/** A lead-in that is itself a question ("What comes next") gets its question mark. */
+const asked = (lead: string) => (/^(what|which|how|where|who|was|welche|wie|wo|wer|aus welchem)\b/i.test(lead) && !/[?]$/.test(lead) ? `${lead}?` : lead);
+const cap = (x: string) => x.charAt(0).toLocaleUpperCase() + x.slice(1);
+
 /**
- * A question as the card shows it. The text is one string; its parts are told apart here: a lead-in
- * before a colon ("Wahr oder falsch: …") becomes a small line over the question, a subject after a
- * dash ("Zwei Wahrheiten, eine Lüge – Pinguine") is set apart from its lead, and the options
- * "A) … B) … C) …" each get a row of their own.
+ * A question as the card shows it. The text is one string; its parts are told apart here. Every
+ * line starts with a capital. A lead-in before a colon ("What comes next: …") becomes a small line
+ * over the question, unless it only repeats the type on the top line. Two truths and a lie shows
+ * only its subject in big letters (the type is on the top line), the options "A) … B) … C) …" each
+ * on a row of their own.
  */
-export function QuestionText({ text }: { text: string }) {
+export function QuestionText({ text, topic }: { text: string; topic: Topic }) {
   const opts = text.match(/^(.*?)\s*A\)\s*(.*?)\s*B\)\s*(.*?)\s*C\)\s*(.*)$/s);
   const whole = opts ? opts[1].replace(/:\s*$/, '') : text;
   const lead = !opts ? whole.match(/^([^:]{3,40}):\s+(.+)$/s) : null;
-  const body = lead ? lead[2] : whole;
-  const [from, subject] = body.split(/\s+[–-]\s+/, 2);
+  const subject = topic === 'lie' ? whole.split(/\s+[–-]\s+/).slice(1).join(' – ') : '';
+  const body = subject || (lead ? lead[2] : whole);
+  const line = lead && !REPEATS.has(lead[1]) ? asked(lead[1]) : null;
   return (
     <>
-      {lead && <span className="pq-lead">{lead[1]}</span>}
-      <p className="pq-question">
-        {subject ? (
-          <>
-            <span className="pq-from">{from}</span> – {subject}
-          </>
-        ) : (
-          body
-        )}
-      </p>
+      {line && <span className="pq-lead">{cap(line)}</span>}
+      <p className="pq-question">{cap(body)}</p>
       {opts && (
         <ol className="pq-options">
           {opts.slice(2).map((o, i) => (
             <li key={i}>
               <b>{'ABC'[i]}</b>
-              <span>{o}</span>
+              <span>{cap(o)}</span>
             </li>
           ))}
         </ol>
@@ -376,7 +375,7 @@ function Master({ q, act, onNew }: { q: Quiz; act: (next: (q: Quiz) => Quiz) => 
           </span>
           <LevelDots level={item.level} />
         </div>
-        <QuestionText text={item.q[lang]} />
+        <QuestionText text={item.q[lang]} topic={item.topic} />
         <p className="pq-answer">
           <span>{t('Answer')}</span> {item.a[lang]}
         </p>

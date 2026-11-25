@@ -19529,11 +19529,6 @@ html.table-phone .game-bar .top-bar-side.right {
   font-weight: 700;
 }
 
-/* The lead of "Zwei Wahrheiten, eine Lüge – Pinguine" is quiet, the subject is the noun to read. */
-.pq-from {
-  color: var(--muted);
-}
-
 /* A) B) C): a row each, the letter in a small round badge. */
 .pq-options {
   display: flex;

@@ -88,7 +88,7 @@ export const sideOf = (q: Quiz, playerId: string) => q.sides.find((s) => s.membe
 export const ranking = (q: Quiz) => [...q.sides].sort((a, b) => q.scores[b.id] - q.scores[a.id]);
 
 /** The question types besides a classic question; any other topic is a category of classic ones. */
-export const TYPES = ['truefalse', 'estimate', 'first', 'lie', 'odd', 'words', 'plot', 'beforeafter', 'connect'] as const satisfies readonly Topic[];
+export const TYPES = ['truefalse', 'estimate', 'first', 'lie', 'odd', 'words', 'plot', 'connect'] as const satisfies readonly Topic[];
 export type Kind = 'classic' | (typeof TYPES)[number];
 const isType = (t: Topic): t is (typeof TYPES)[number] => (TYPES as readonly Topic[]).includes(t);
 
