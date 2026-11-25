@@ -9,7 +9,7 @@ import { buzz as vibrate, celebrate, sfx } from '../../lib/fx';
 import { useCrewButton } from '../../lib/turn';
 import { useShared } from '../../net/shared';
 import { useApp } from '../../state/AppState';
-import { buzz, canBuzz, judge, newQuiz, ranking, sideOf, skip, type Quiz, type Side } from './logic';
+import { buzz, canBuzz, judge, newQuiz, picked, ranking, sideOf, skip, TYPES, type Kind, type Quiz, type Side } from './logic';
 import { QUESTIONS, type Level, type Topic } from './questions';
 
 interface Shared {
@@ -51,6 +51,89 @@ export const TOPIC_NAME: Record<Topic, string> = {
   connect: tx('Connections'),
   decades: tx('Decades'),
 };
+
+/**
+ * A question as the card shows it. The text is one string; its parts are told apart here: a lead-in
+ * before a colon ("Wahr oder falsch: …") becomes a small line over the question, a subject after a
+ * dash ("Zwei Wahrheiten, eine Lüge – Pinguine") is set apart from its lead, and the options
+ * "A) … B) … C) …" each get a row of their own.
+ */
+export function QuestionText({ text }: { text: string }) {
+  const opts = text.match(/^(.*?)\s*A\)\s*(.*?)\s*B\)\s*(.*?)\s*C\)\s*(.*)$/s);
+  const whole = opts ? opts[1].replace(/:\s*$/, '') : text;
+  const lead = !opts ? whole.match(/^([^:]{3,40}):\s+(.+)$/s) : null;
+  const body = lead ? lead[2] : whole;
+  const [from, subject] = body.split(/\s+[–-]\s+/, 2);
+  return (
+    <>
+      {lead && <span className="pq-lead">{lead[1]}</span>}
+      <p className="pq-question">
+        {subject ? (
+          <>
+            <span className="pq-from">{from}</span> – {subject}
+          </>
+        ) : (
+          body
+        )}
+      </p>
+      {opts && (
+        <ol className="pq-options">
+          {opts.slice(2).map((o, i) => (
+            <li key={i}>
+              <b>{'ABC'[i]}</b>
+              <span>{o}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+    </>
+  );
+}
+
+/** How hard a question is: four small dots, as many filled as its level, named for screen readers. */
+export function LevelDots({ level }: { level: Level }) {
+  return (
+    <span className="pq-level" role="img" aria-label={t(LEVELS[level - 1].label)}>
+      {LEVELS.map((l) => (
+        <i key={l.id} className={l.id <= level ? 'on' : undefined} />
+      ))}
+    </span>
+  );
+}
+
+/** The categories of classic questions, in the order the setup shows them. */
+const CATEGORIES: Topic[] = ['general', 'film', 'sports', 'entertainment', 'history', 'geography', 'science', 'food', 'gaming', 'art', 'myth', 'trash', 'decades'];
+const KINDS: Kind[] = ['classic', ...TYPES];
+const KIND_NAME = (k: Kind) => (k === 'classic' ? tx('Classic questions') : TOPIC_NAME[k]);
+
+/**
+ * The setup's pick of questions: which categories (for classic questions) and which question types,
+ * as many of each as you like (at least one). Categories only count for classic questions, so they
+ * dim while classic questions are off.
+ */
+export function useQuestionPick() {
+  const [cats, setCats] = useState<Topic[]>(CATEGORIES);
+  const [kinds, setKinds] = useState<Kind[]>(KINDS);
+  const flip = <T,>(set: (f: (x: T[]) => T[]) => void, v: T) => set((x) => (x.includes(v) ? (x.length > 1 ? x.filter((y) => y !== v) : x) : [...x, v]));
+  const chips = <T extends string>(all: T[], on: T[], name: (v: T) => string, tap: (v: T) => void, off = false) => (
+    <div className="pq-chips">
+      {all.map((v) => (
+        <button key={v} type="button" className={`chip${on.includes(v) ? ' active' : ''}`} aria-pressed={on.includes(v)} disabled={off} onClick={() => tap(v)}>
+          {t(name(v))}
+        </button>
+      ))}
+    </div>
+  );
+  const view = (
+    <>
+      <h3 className="section-title">{t('Categories')}</h3>
+      {chips(CATEGORIES, cats, (v) => TOPIC_NAME[v], (v) => flip(setCats, v), !kinds.includes('classic'))}
+      <h3 className="section-title">{t('Question types')}</h3>
+      {chips(KINDS, kinds, KIND_NAME, (v) => flip(setKinds, v))}
+    </>
+  );
+  return { view, keep: picked(cats, kinds) };
+}
 
 /** Pub Quiz: this phone (the host's) asks; every other phone is a buzzer. */
 export default function PubQuiz() {
@@ -102,7 +185,8 @@ function Setup({ room, onStart }: { room: ReturnType<typeof useShared<Shared>>['
       )
     : players.map((p) => ({ id: p.id, name: p.name, color: p.color, members: [p.id] }));
   const toggle = (l: Level) => setLevels((x) => (x.includes(l) ? (x.length > 1 ? x.filter((y) => y !== l) : x) : [...x, l].sort()));
-  const pool = QUESTIONS.filter((q) => levels.includes(q.level)).length;
+  const { view: pickView, keep } = useQuestionPick();
+  const pool = QUESTIONS.filter((q) => levels.includes(q.level) && keep(q)).length;
   return (
     <div className="bd">
       <div className="bd-head">
@@ -110,6 +194,7 @@ function Setup({ room, onStart }: { room: ReturnType<typeof useShared<Shared>>['
         <h2 className="bd-title big">{t('Pub Quiz')}</h2>
         {!known && <p className="lead">{t('Read the question out. Whoever buzzes first answers; you say if it’s right.')}</p>}
       </div>
+      {pickView}
       <h3 className="section-title">{t('How hard?')}</h3>
       <div className="pq-chips">
         {LEVELS.map((l) => (
@@ -171,7 +256,7 @@ function Setup({ room, onStart }: { room: ReturnType<typeof useShared<Shared>>['
         </div>
       )}
       <div className="sticky-action">
-        <BigButton size="xl" disabled={sides.length < 1} onClick={() => onStart(newQuiz(sides, levels, Math.min(count, pool)))}>
+        <BigButton size="xl" disabled={sides.length < 1 || !pool} onClick={() => onStart(newQuiz(sides, levels, Math.min(count, pool), QUESTIONS, keep))}>
           {players.length ? t('Start the quiz') : t('Waiting for players…')}
         </BigButton>
       </div>
@@ -261,10 +346,13 @@ function Master({ q, act, onNew }: { q: Quiz; act: (next: (q: Quiz) => Quiz) => 
       <VerdictFlash q={q} />
       <Board q={q} />
       <div className="pq-card" key={q.at}>
-        <span className="pq-meta">
-          {t('Question {n} of {m}', { n: q.at + 1, m: q.deck.length })} · {t(TOPIC_NAME[item.topic])}
-        </span>
-        <p className="pq-question">{item.q[lang]}</p>
+        <div className="pq-meta">
+          <span>
+            {t('Question {n} of {m}', { n: q.at + 1, m: q.deck.length })} · {t(TOPIC_NAME[item.topic])}
+          </span>
+          <LevelDots level={item.level} />
+        </div>
+        <QuestionText text={item.q[lang]} />
         <p className="pq-answer">
           <span>{t('Answer')}</span> {item.a[lang]}
         </p>

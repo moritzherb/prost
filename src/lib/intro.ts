@@ -31,7 +31,7 @@ export function playIntro() {
   if (!home || typeof home.animate !== 'function' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   // An Android phone has no zoom: home's content settles in from a touch smaller, Material's emphasized curve.
   if (home.querySelector(':scope .la-grid, :scope .la-dock')) {
-    shrinkIntoIcon(home.querySelector<HTMLElement>(':scope .app.returning .app-icon'), EMPHASIZED, 420);
+    shrinkIntoIcon(home.querySelector<HTMLElement>(':scope .app.returning .app-icon'));
     for (const el of home.querySelectorAll<HTMLElement>(LAYERS)) {
       el.animate(
         [
@@ -43,8 +43,6 @@ export function playIntro() {
     }
     return;
   }
-  // As on an iPhone, the game's window goes back into its icon while home comes down around it.
-  shrinkIntoIcon(home.querySelector<HTMLElement>(':scope .app.returning .app-icon'), IOS_CLOSE, MS);
   const screen = home.getBoundingClientRect();
   const cx = screen.left + screen.width / 2;
   const cy = screen.top + screen.height / 2;
@@ -81,15 +79,13 @@ export function playIntro() {
 
 /** Android's emphasized curve, for its way back home. */
 const EMPHASIZED = 'cubic-bezier(0.05, 0.7, 0.1, 1)';
-/** The iOS-like drawer curve (Ionic's), for an iPhone app going back into its icon. */
-const IOS_CLOSE = 'cubic-bezier(0.32, 0.72, 0, 1)';
 
 /**
- * Back from a game, its window goes back into the icon it came from: a card in the
+ * Back from a game on Android, its window goes back into the icon it came from: a card in the
  * icon's colour, the whole screen at first, shrinks onto the icon (its corners rounding to the
  * icon's) and gives way to it at the end. Clip-path and opacity only, on the compositor.
  */
-function shrinkIntoIcon(icon: HTMLElement | null, easing: string, duration: number) {
+function shrinkIntoIcon(icon: HTMLElement | null) {
   if (!icon) return;
   const r = icon.getBoundingClientRect();
   const w = window.innerWidth;
@@ -104,11 +100,11 @@ function shrinkIntoIcon(icon: HTMLElement | null, easing: string, duration: numb
   const radius = Math.min(r.width / 2, parseFloat(look.borderTopLeftRadius) || r.width * 0.25);
   const anim = card.animate(
     [
-      { clipPath: 'inset(0px round 28px)', opacity: 1, easing },
+      { clipPath: 'inset(0px round 28px)', opacity: 1, easing: EMPHASIZED },
       { clipPath: `inset(${r.top}px ${w - r.right}px ${h - r.bottom}px ${r.left}px round ${radius}px)`, opacity: 1, offset: 0.75, easing: 'ease-out' },
       { clipPath: `inset(${r.top}px ${w - r.right}px ${h - r.bottom}px ${r.left}px round ${radius}px)`, opacity: 0 },
     ],
-    { duration, fill: 'forwards' },
+    { duration: 420, fill: 'forwards' },
   );
   const gone = () => card.remove();
   anim.onfinish = gone;

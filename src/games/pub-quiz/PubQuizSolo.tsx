@@ -7,7 +7,7 @@ import { useApp } from '../../state/AppState';
 import SoloEnd from '../solo/SoloEnd';
 import type { GameProps } from '../types';
 import { buzz, judge, newQuiz, skip, type Quiz } from './logic';
-import { Board, COUNTS, End, LEVELS, TOPIC_NAME, VerdictFlash } from './PubQuiz';
+import { Board, COUNTS, End, LEVELS, LevelDots, QuestionText, TOPIC_NAME, useQuestionPick, VerdictFlash } from './PubQuiz';
 import { QUESTIONS, type Level } from './questions';
 
 /** How long a verdict shows (.pq-verdict in global.css): the buttons stay locked until it is gone. */
@@ -21,6 +21,7 @@ export default function PubQuizSolo({ players, exit }: GameProps) {
   const known = useApp().knows('pub-quiz');
   const [levels, setLevels] = useState<Level[]>([1, 2]);
   const [count, setCount] = useState(20);
+  const { view: pickView, keep } = useQuestionPick();
   const [q, setQ] = useState<Quiz | null>(null);
   const [shown, setShown] = useState(false);
   const [locked, setLocked] = useState(false);
@@ -42,9 +43,9 @@ export default function PubQuizSolo({ players, exit }: GameProps) {
   }, [over, won, group]);
 
   const start = () => {
-    const pool = QUESTIONS.filter((x) => levels.includes(x.level)).length;
+    const pool = QUESTIONS.filter((x) => levels.includes(x.level) && keep(x)).length;
     const sides = group ? players.map((p) => ({ id: p.id, name: p.name, color: p.color, members: [p.id] })) : [{ id: 'me', name: t('You'), color: 'var(--accent)', members: ['me'] }];
-    setQ(newQuiz(sides, levels, Math.min(count, pool)));
+    setQ(newQuiz(sides, levels, Math.min(count, pool), QUESTIONS, keep));
     setShown(false);
     setLocked(false);
   };
@@ -58,6 +59,7 @@ export default function PubQuizSolo({ players, exit }: GameProps) {
           <h2 className="bd-title big">{t('Pub Quiz')}</h2>
           {!known && <p className="lead">{t('Think of the answer, then look, and say honestly if you knew it.')}</p>}
         </div>
+        {pickView}
         <h3 className="section-title">{t('How hard?')}</h3>
         <div className="pq-chips">
           {LEVELS.map((l) => (
@@ -112,10 +114,13 @@ export default function PubQuizSolo({ players, exit }: GameProps) {
       <VerdictFlash q={q} />
       <Board q={q} mine={on?.id} />
       <div className="pq-card" key={q.at}>
-        <span className="pq-meta">
-          {t('Question {n} of {m}', { n: q.at + 1, m: q.deck.length })} · {t(TOPIC_NAME[item.topic])}
-        </span>
-        <p className="pq-question">{item.q[lang]}</p>
+        <div className="pq-meta">
+          <span>
+            {t('Question {n} of {m}', { n: q.at + 1, m: q.deck.length })} · {t(TOPIC_NAME[item.topic])}
+          </span>
+          <LevelDots level={item.level} />
+        </div>
+        <QuestionText text={item.q[lang]} />
         {/* There from the start, unseen: the card doesn't grow when it shows. */}
         <p className="pq-answer" style={shown ? undefined : { visibility: 'hidden' }} aria-hidden={!shown}>
           <span>{t('Answer')}</span> {item.a[lang]}
