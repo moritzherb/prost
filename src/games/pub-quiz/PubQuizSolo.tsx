@@ -120,7 +120,7 @@ export default function PubQuizSolo({ players, exit }: GameProps) {
           </span>
           <LevelDots level={item.level} />
         </div>
-        <QuestionText text={item.q[lang]} />
+        <QuestionText text={item.q[lang]} topic={item.topic} />
         {/* There from the start, unseen: the card doesn't grow when it shows. */}
         <p className="pq-answer" style={shown ? undefined : { visibility: 'hidden' }} aria-hidden={!shown}>
           <span>{t('Answer')}</span> {item.a[lang]}

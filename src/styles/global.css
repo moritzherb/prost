@@ -19385,9 +19385,25 @@ html.table-phone .game-bar .top-bar-side.right {
   gap: 8px;
 }
 
-/* Categories while classic questions are off: they don't count then. */
-.pq-chips .chip:disabled {
-  opacity: 0.4;
+/* In a sheet the chips come up after it, one after the other (30 ms apart, from a touch lower and
+   smaller), so the pick reads as filling in rather than as a wall of buttons. */
+.sheet .pq-chips .chip {
+  animation: pq-chip-in 0.3s var(--ease-out) both;
+  animation-delay: calc(80ms + min(var(--i, 0), 12) * 30ms);
+}
+
+@keyframes pq-chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.94);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet .pq-chips .chip {
+    animation-name: fade-in;
+    animation-delay: 0s;
+  }
 }
 
 .pq-board {
@@ -19511,11 +19527,6 @@ html.table-phone .game-bar .top-bar-side.right {
   color: var(--muted);
   font-size: 0.95rem;
   font-weight: 700;
-}
-
-/* The lead of "Zwei Wahrheiten, eine Lüge – Pinguine" is quiet, the subject is the noun to read. */
-.pq-from {
-  color: var(--muted);
 }
 
 /* A) B) C): a row each, the letter in a small round badge. */
